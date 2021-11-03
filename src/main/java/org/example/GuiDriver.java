@@ -1,5 +1,7 @@
 package org.example;
 
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import org.example.GuiHelper.Dialog;
 import org.example.GuiHelper.NumberField;
 
@@ -18,80 +20,27 @@ import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.IOException;
+import java.util.Objects;
+
 public class GuiDriver extends Application {
 
-  private static Logger log = LogManager.getLogger(GuiDriver.class);
+  private static Stage stg;
 
-  private final static int
-      colIndex_0 = 0,
-      colIndex_1 = 1;
-
-  private final Button resetBtn = new Button(Conf.get("resetButton.text"));
-  private final TextField nameField = new TextField();
-  private final NumberField ageField = new NumberField();
-
-  public static void main(String[] args) {
-    launch(args);
-  }
-
-  public GuiDriver() {
-
-    resetBtn.setDisable(true);
-
-    nameField.textProperty().addListener(event -> {
-      log.info("Name value '" + nameField.getText() + "' has been entered");
-      resetBtn.setDisable(false);
-    });
-
-    ageField.textProperty().addListener(event -> {
-      log.info("Age value '" + ageField.getText() + "' has been entered");
-      resetBtn.setDisable(false);
-    });
-
-    resetBtn.setOnAction(event -> {
-      nameField.setText("");
-      ageField.setText("");
-      resetBtn.setDisable(true);
-      Dialog.showInfo(Conf.get("infoFieldReset"));
-      log.info("re-setting name field");
-    });
-  }
 
   @Override
-  public void start(final Stage primaryStage) {
+  public void start(final Stage primaryStage) throws Exception {
 
-    primaryStage.setTitle("Sample GUI");
-
-    final GridPane grid = new GridPane();
-    grid.setAlignment(Pos.CENTER);
-    grid.setHgap(10);
-    grid.setVgap(10);
-    grid.setPadding(new Insets(25, 25, 25, 25));
-
-    int currentRowIndex = 0;
-    final Text scenetitle = new Text("Simple GUI example");
-    scenetitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
-    grid.add(scenetitle, colIndex_0, currentRowIndex, 2, 1);
-
-    currentRowIndex++;
-    grid.add(new Label("Your name:"), colIndex_0, currentRowIndex);
-    grid.add(nameField, colIndex_1, currentRowIndex);
-
-    currentRowIndex++;
-    grid.add(new Label("Your age:"), colIndex_0, currentRowIndex);
-    grid.add(ageField, colIndex_1, currentRowIndex);
-
-    currentRowIndex++;
-    grid.add(resetBtn, colIndex_0, currentRowIndex);
-
-    final Scene scene = new Scene(grid, 300, 250);
-    primaryStage.setScene(scene);
+    stg = primaryStage;
+    primaryStage.setResizable(false);
+    Parent root = FXMLLoader.load(getClass().getResource("/fxml/login.fxml"));
+    primaryStage.setTitle("edits4credits");
+    primaryStage.setScene(new Scene(root,1280,720));
     primaryStage.show();
   }
-
-  @Override
-  public void stop() throws Exception {
-    super.stop();
-    log.info("Terminating application");
+  public void changeScene(String fxml) throws IOException {
+    Parent pane = FXMLLoader.load(getClass().getResource(fxml));
+    stg.getScene().setRoot(pane);
   }
+
 }

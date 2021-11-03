@@ -9,6 +9,8 @@ import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.Objects;
+
 /**
  * Driver class for a simple JavaFX demonstration.
  *
@@ -29,13 +31,13 @@ public class FxmlGuiDriver extends Application {
 
         log.info("Starting Hello JavaFX and Maven demonstration application");
 
-        final String fxmlFile = "/fxml/hello.fxml";
+        final String fxmlFile = "/fxml/login.fxml";
         log.debug("Loading FXML for main view from: {}", fxmlFile);
         final FXMLLoader loader = new FXMLLoader();
-        final Parent rootNode = (Parent) loader.load(getClass().getResourceAsStream(fxmlFile));
+        final Parent rootNode = (Parent) loader.load(Objects.requireNonNull(getClass().getResource(fxmlFile)));
 
         log.debug("Showing JFX scene");
-        final Scene scene = new Scene(rootNode, 400, 200);
+        final Scene scene = new Scene(rootNode, 1280, 720);
         //scene.getStylesheets().add("/styles/styles.css");
 
         stage.setTitle("Hello JavaFX and Maven");
