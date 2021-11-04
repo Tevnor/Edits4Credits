@@ -30,10 +30,10 @@ public class GuiDriver extends Application {
 
   @Override
   public void start(final Stage primaryStage) throws Exception {
-
-    stg = primaryStage;
-    primaryStage.setResizable(false);
     Parent root = FXMLLoader.load(getClass().getResource("/fxml/login.fxml"));
+    stg = primaryStage;
+
+    primaryStage.setResizable(false);
     primaryStage.setTitle("edits4credits");
     primaryStage.setScene(new Scene(root,1280,720));
     primaryStage.show();
@@ -42,5 +42,4 @@ public class GuiDriver extends Application {
     Parent pane = FXMLLoader.load(getClass().getResource(fxml));
     stg.getScene().setRoot(pane);
   }
-
 }

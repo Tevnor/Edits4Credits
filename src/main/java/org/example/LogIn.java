@@ -19,7 +19,6 @@ import java.io.IOException;
 
 public class LogIn {
     public LogIn(){
-
     }
 
     @FXML
@@ -42,12 +41,9 @@ public class LogIn {
 
             m.changeScene("/fxml/afterLogin.fxml");
         }
-
         else if(username.getText().isEmpty() && password.getText().isEmpty()) {
             loginError.setText("Please enter your data.");
         }
-
-
         else {
             loginError.setText("Wrong username or password!");
         }

@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 
 public class DatabaseConnection {
     public Connection databaseLink;
+
     public Connection getConnection() {
         String databaseName = "e4c_db";
         String databaseUser = "Tevin";
