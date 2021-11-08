@@ -15,7 +15,7 @@
    <children>
       <ImageView fitHeight="872.0" fitWidth="1280.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../images/backround.png" />
+            <Image url="@../images/e4c-bg.png" />
          </image>
       </ImageView>
       <Rectangle arcHeight="30.0" arcWidth="30.0" fill="#282828" height="57.0" layoutX="344.0" layoutY="32.0" opacity="0.7" stroke="TRANSPARENT" strokeType="INSIDE" style="-fx-background-radius: 15px;" width="594.0">
