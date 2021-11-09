@@ -1,4 +1,4 @@
-package basic.login;
+package org.example;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -15,6 +15,7 @@ public class DatabaseConnection {
         try{
             Class.forName("com.mysql.cj.jdbc.Driver");
             databaseLink = DriverManager.getConnection(url, databaseUser, databasePassword);
+            System.out.println("DB connected.");
         } catch (Exception e) {
             e.printStackTrace();
             e.getCause();
