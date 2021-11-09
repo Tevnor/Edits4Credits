@@ -4,6 +4,8 @@ module gui {
 
     requires javafx.controls;
     requires javafx.fxml;
+    requires javafx.swing;
+
     requires org.apache.logging.log4j;
     requires java.desktop;
 
