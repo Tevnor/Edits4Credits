@@ -308,7 +308,6 @@ public class Editor implements Initializable {
             e.getCause();
         }
     }
-
     public void setDroppedImage(Image droppedImage, String name) {
         fileName = name;
         sourceImage = droppedImage;

@@ -19,8 +19,6 @@ import java.util.ResourceBundle;
 
 public class Menu {
 
-    public ImageHandler imageHandler;
-
     @FXML
     private AnchorPane rootAnchorPane;
     @FXML
@@ -32,15 +30,7 @@ public class Menu {
 
     // Open editor in same window by replacing anchor pane contents
     public void openEditor(ActionEvent ae) {
-        //
-
-        imageHandler = new ImageHandler("nongrak2.jpg");
         try {
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(Objects.requireNonNull(getClass().getResource("/fxml/editor.fxml")));
-            Parent root = loader.load();
-            Editor editor = loader.getController();
-
             AnchorPane editorPane = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/editor.fxml")));
             rootAnchorPane.getChildren().setAll(editorPane);
         } catch (Exception e) {
