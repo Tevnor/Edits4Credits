@@ -22,16 +22,14 @@ public class Rectangle extends DrawOperation {
 
     void drawStroke(GraphicsContext gc) {
         gc.setStroke(color);
-        applyRotate(gc,r);
+        setAttributes(gc);
         gc.strokeRect(minX, minY, width, height);
-        resetRotation(gc);
     }
 
     void drawFill(GraphicsContext gc) {
         gc.setFill(color);
-        applyRotate(gc,r);
+        setAttributes(gc);
         gc.fillRect(minX, minY, width, height);
-        resetRotation(gc);
     }
 
     @Override
@@ -51,30 +49,20 @@ public class Rectangle extends DrawOperation {
     public double getMinX() {
         return minX;
     }
-
     public double getMinY() {
         return minY;
     }
-
     public double getWidth() {
         return width;
     }
-
     public double getHeight() {
         return height;
     }
-
     public Paint getColor() {
         return color;
     }
-
     public int getType() {
         return type;
-    }
-
-
-    public Rotate getR() {
-        return r;
     }
 
 }

@@ -17,17 +17,15 @@ public class RoundedRectangle extends Rectangle{
     @Override
     void drawStroke(GraphicsContext gc) {
         gc.setStroke(getColor());
-        applyRotate(gc,getR());
+        setAttributes(gc);
         gc.strokeRoundRect(getMinX(),getMinY(),getWidth(),getHeight(),this.arcWidth,this.arcHeigth);
-        resetRotation(gc);
     }
 
     @Override
     void drawFill(GraphicsContext gc){
         gc.setFill(getColor());
-        applyRotate(gc,getR());
+        setAttributes(gc);
         gc.fillRoundRect(getMinX(),getMinY(),getWidth(),getHeight(),this.arcWidth,this.arcHeigth);
-        resetRotation(gc);
     }
 
 

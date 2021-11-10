@@ -6,7 +6,9 @@ import javafx.scene.paint.Paint;
 
 public class Circle extends DrawOperation {
 
-    private final double minX, minY, radius, diameter;
+    private final double minX, minY;
+    private final double radius;
+    private final double diameter;
 
 
     public Circle(double minX, double minY, double radius, Paint color) {
@@ -20,11 +22,13 @@ public class Circle extends DrawOperation {
 
     private void drawStroke(GraphicsContext gc) {
         gc.setStroke(color);
+        setAttributes(gc);
         gc.strokeOval(minX, minY, diameter, diameter);
     }
 
     private void drawFill(GraphicsContext gc) {
         gc.setFill(color);
+        setAttributes(gc);
         gc.fillOval(minX, minY, diameter, diameter);
     }
 

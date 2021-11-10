@@ -1,18 +1,45 @@
 package basic.editor;
-import java.awt.image.BufferedImage;
+
+import basic.editor.tools.EditingTools;
+import basic.editor.tools.drawtool.DrawingTool;
+import javafx.scene.canvas.Canvas;
+import java.util.ArrayList;
+
 public class Image {
 
-    private BufferedImage art;
-    private int xDim;
-    private int yDim;
+    private long xDim;
+    private long yDim;
+    private javafx.scene.image.Image background;
+    private ArrayList<Canvas> layers;
 
-    public Image (){
+    public Image (long xDim,long yDim){
+
+        this.xDim = xDim;
+        this.yDim = yDim;
         //TODO constructor either completly new Image (blank) or load Image from local hard drive
     }
 
-    public void edit(){
-        //TODO main method for editing the Image (drawing, visual filter, cropping etc.)
+    public void setBackground(javafx.scene.image.Image background){
+        this.background = background;
     }
+
+
+    public void addLayer(){
+        layers.add(new Canvas(xDim,yDim));
+    }
+
+
+    private void editDraw(int layer){
+        DrawingTool dt = new DrawingTool(this.layers.get(layer));
+
+    }
+    private void editVisual(){
+
+    }
+    private void editTransform(){
+
+    }
+
 
     public void delete(){
         //TODO delete Image

@@ -23,16 +23,14 @@ public class Ellipse extends DrawOperation {
 
     private void drawStroke(GraphicsContext gc) {
         gc.setStroke(color);
-        applyRotate(gc,r);
+        setAttributes(gc);
         gc.strokeOval(minX, minY, width, height);
-        resetRotation(gc);
     }
 
     private void drawFill(GraphicsContext gc) {
         gc.setFill(color);
-        applyRotate(gc,r);
+        setAttributes(gc);
         gc.fillOval(minX, minY, width, height);
-        resetRotation(gc);
     }
 
     @Override

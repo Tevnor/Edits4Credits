@@ -47,17 +47,15 @@ public class Text extends DrawOperation {
     private void drawStroke(GraphicsContext gc) {
         gc.setFont(font);
         gc.setStroke(color);
-        applyRotate(gc,r);
+        setAttributes(gc);
         gc.strokeText(content,minX,minY);
-        resetRotation(gc);
     }
 
     private void drawFill(GraphicsContext gc) {
         gc.setFont(font);
         gc.setFill(color);
-        applyRotate(gc,r);
+        setAttributes(gc);
         gc.fillText(content,minX,minY);
-        resetRotation(gc);
     }
 
     private void outline(GraphicsContext gc){

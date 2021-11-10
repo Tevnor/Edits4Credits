@@ -48,15 +48,15 @@ public class Arc extends DrawOperation {
 
     private void drawFill(GraphicsContext gc) {
         gc.setFill(color);
-        applyRotate(gc,r);
+        setAttributes(gc);
         gc.fillArc(minX, minY, width, height, startAngle, arcExtent, closure);
-        resetRotation(gc);
+
     }
     private void drawStroke(GraphicsContext gc) {
         gc.setStroke(color);
-        applyRotate(gc,r);
+        setAttributes(gc);
         gc.strokeArc(minX, minY, width, height, startAngle, arcExtent, closure);
-        resetRotation(gc);
+
     }
 
 

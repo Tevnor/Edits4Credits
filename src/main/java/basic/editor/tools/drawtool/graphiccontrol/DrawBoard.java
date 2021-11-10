@@ -2,6 +2,8 @@ package basic.editor.tools.drawtool.graphiccontrol;
 
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.PixelWriter;
+import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +19,8 @@ public class DrawBoard {
 
     public void redraw() {
         Canvas c = gc.getCanvas();
-        gc.clearRect(0, 0, c.getWidth(), c.getHeight());
+        //gc.clearRect(1, 1, c.getWidth(), c.getHeight());
+        clearBoard();
         for (int i = 0; i <= historyIndex; i++) {
             operations.get(i).draw(gc);
         }
@@ -45,5 +48,19 @@ public class DrawBoard {
             historyIndex++;
             operations.get(historyIndex).draw(gc);
         }
+    }
+
+    public void clearBoard(){
+        PixelWriter pw = gc.getPixelWriter();
+        Canvas c = gc.getCanvas();
+
+        for(int x = 0; x <= c.getWidth(); x++){
+            for(int y = 0; y <= c.getHeight(); y++){
+
+                pw.setColor(x, y, Color.TRANSPARENT);
+            }
+        }
+
+
     }
 }

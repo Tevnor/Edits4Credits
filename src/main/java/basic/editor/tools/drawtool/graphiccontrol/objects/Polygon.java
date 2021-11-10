@@ -59,7 +59,7 @@ public class Polygon extends DrawOperation {
 
     private void drawStroke(GraphicsContext gc) {
         gc.setStroke(color);
-        applyRotate(gc,r);
+        setAttributes(gc);
 
         if(closed){
             gc.strokePolygon(xPoints,yPoints,nPoints);
@@ -67,14 +67,12 @@ public class Polygon extends DrawOperation {
             gc.strokePolyline(xPoints,yPoints,nPoints);
         }
 
-        resetRotation(gc);
     }
 
     private void drawFill(GraphicsContext gc) {
         gc.setFill(color);
-        applyRotate(gc,r);
+        setAttributes(gc);
         gc.fillPolygon(xPoints,yPoints,nPoints);
-        resetRotation(gc);
     }
 
 

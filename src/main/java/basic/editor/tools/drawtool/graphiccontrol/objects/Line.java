@@ -27,7 +27,7 @@ public class Line extends DrawOperation {
     @Override
     public void draw(GraphicsContext gc) {
         gc.setStroke(color);
-        applyRotate(gc,r);
+        setAttributes(gc);
         gc.strokeLine(xOne, yOne, xTwo, yTwo);
     }
 
