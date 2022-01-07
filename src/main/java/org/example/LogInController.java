@@ -10,6 +10,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 import java.sql.Connection;
@@ -19,10 +20,10 @@ import java.util.Objects;
 
 import java.io.IOException;
 
-public class LogIn {
+public class LogInController {
     public User user;
 
-    public LogIn(){
+    public LogInController(){
     }
 
     @FXML
@@ -35,11 +36,24 @@ public class LogIn {
     private Button logInButton;
     @FXML
     private Button cancelButton;
+    @FXML
+    private AnchorPane rootPane;
 
 
 
     public void userLogIn(ActionEvent event) throws IOException {
-        validateLogin();
+        //validateLogin();
+        replacementLogin();
+    }
+
+    public void replacementLogin(){
+        user = new User(username.getText());
+        if (username!=null && password != null){
+            enterApp();
+        }
+        else {
+            loginError.setText("Invalid login. Please try again.");
+        }
     }
 
     public void validateLogin(){
@@ -76,26 +90,9 @@ public class LogIn {
 
     public void enterApp() {
         try {
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(Objects.requireNonNull(getClass().getResource("/fxml/menu.fxml")));
-            Parent root = loader.load();
+            AnchorPane pane = FXMLLoader.load(getClass().getResource("/fxml/modeSelection.fxml"));
+            rootPane.getChildren().setAll(pane);
 
-            // Pass logged in user to menu class
-            Menu menu = loader.getController();
-            menu.initUserData(user);
-
-
-
-
-            Stage appStage = new Stage();
-            appStage.setResizable(false);
-            appStage.setTitle("E4C");
-
-            appStage.setScene(new Scene(root,1280,720));
-            appStage.centerOnScreen();
-            appStage.show();
-            Stage stage = (Stage) logInButton.getScene().getWindow();
-            stage.close();
 
         } catch (Exception e) {
             e.printStackTrace();

@@ -17,7 +17,7 @@
 Adding stylesheets="/styles/styles.css" yet does not work, see FxmlGuiDriver as well.
 -->
 
-<AnchorPane fx:id="rootAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Menu">
+<AnchorPane fx:id="rootAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.ModeSelectionController">
    <children>
       <ImageView fitHeight="765.0" fitWidth="1280.0" pickOnBounds="true" preserveRatio="true">
          <image>
