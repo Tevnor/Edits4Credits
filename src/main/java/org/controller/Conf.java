@@ -1,10 +1,10 @@
-package org.example;
+package org.controller;
 
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 public class Conf {
-	private static final String BUNDLE_NAME = "org.example.config";
+	private static final String BUNDLE_NAME = "org.controller.config";
 
 	private static final ResourceBundle RESOURCE_BUNDLE =
 			ResourceBundle.getBundle(BUNDLE_NAME);

@@ -1,6 +1,4 @@
-package org.example;
-
-import javafx.scene.image.Image;
+package org.controller;
 
 public class User {
     private String username;

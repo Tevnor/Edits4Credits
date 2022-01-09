@@ -11,14 +11,14 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane fx:id="rootAnchorPane" prefHeight="690.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.SettingsController">
+<AnchorPane fx:id="rootAnchorPane" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.controller.SettingsController">
    <children>
-      <ImageView fitHeight="872.0" fitWidth="1280.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="1112.0" fitWidth="1920.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../images/e4c-bg.png" />
          </image>
       </ImageView>
-      <Rectangle arcHeight="30.0" arcWidth="30.0" fill="#282828" height="57.0" layoutX="344.0" layoutY="32.0" opacity="0.7" stroke="TRANSPARENT" strokeType="INSIDE" style="-fx-background-radius: 15px;" width="594.0">
+      <Rectangle arcHeight="30.0" arcWidth="30.0" fill="#282828" height="57.0" layoutX="664.0" layoutY="216.0" opacity="0.7" stroke="TRANSPARENT" strokeType="INSIDE" style="-fx-background-radius: 15px;" width="594.0">
          <effect>
             <DropShadow blurType="GAUSSIAN" height="50.0" offsetX="-5.0" offsetY="5.0" radius="24.5" spread="0.2" width="50.0">
                <color>
@@ -26,7 +26,7 @@
                </color>
             </DropShadow>
          </effect></Rectangle>
-      <Rectangle arcHeight="30.0" arcWidth="30.0" fill="#727272" height="559.0" layoutX="343.0" layoutY="122.0" opacity="0.7" stroke="TRANSPARENT" strokeType="INSIDE" width="594.0">
+      <Rectangle arcHeight="30.0" arcWidth="30.0" fill="#727272" height="559.0" layoutX="663.0" layoutY="306.0" opacity="0.7" stroke="TRANSPARENT" strokeType="INSIDE" width="594.0">
          <effect>
             <DropShadow blurType="GAUSSIAN" height="50.0" offsetX="-5.0" offsetY="5.0" radius="24.5" spread="0.15" width="50.0">
                <color>
@@ -34,17 +34,17 @@
                </color>
             </DropShadow>
          </effect></Rectangle>
-      <Text fill="#eeeeee" layoutX="534.0" layoutY="72.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Project Settings">
+      <Text fill="#eeeeee" layoutX="854.0" layoutY="256.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Project Settings">
          <font>
             <Font name="Segoe UI Semibold" size="30.0" />
          </font>
       </Text>
-      <Text fill="#eeeeee" layoutX="566.0" layoutY="167.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Project Name">
+      <Text fill="#eeeeee" layoutX="886.0" layoutY="351.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Project Name">
          <font>
             <Font name="Segoe UI Semibold" size="24.0" />
          </font>
       </Text>
-      <TextField fx:id="projectName" alignment="CENTER" layoutX="381.0" layoutY="194.0" opacity="0.7" prefHeight="39.0" prefWidth="508.0" promptText="...Example" style="-fx-background-color: #282828; -fx-prompt-text-fill: #eeeeee; -fx-background-radius: 15; -fx-text-fill: #eeeeee;">
+      <TextField fx:id="projectName" alignment="CENTER" layoutX="701.0" layoutY="378.0" opacity="0.7" prefHeight="39.0" prefWidth="508.0" promptText="...Example" style="-fx-background-color: #282828; -fx-prompt-text-fill: #eeeeee; -fx-background-radius: 15; -fx-text-fill: #eeeeee;">
          <font>
             <Font name="Segoe UI Semibold" size="18.0" />
          </font>
@@ -56,7 +56,7 @@
             </DropShadow>
          </effect>
       </TextField>
-      <Button fx:id="logOut" layoutX="692.0" layoutY="600.0" mnemonicParsing="false" onAction="#handleLogOut" opacity="0.7" prefHeight="39.0" prefWidth="197.0" style="-fx-background-color: #282828; -fx-background-radius: 15px;" text="Log Out" textFill="#eeeeee">
+      <Button fx:id="logOut" layoutX="1012.0" layoutY="784.0" mnemonicParsing="false" onAction="#handleLogOut" opacity="0.7" prefHeight="39.0" prefWidth="197.0" style="-fx-background-color: #282828; -fx-background-radius: 15px;" text="Log Out" textFill="#eeeeee">
          <font>
             <Font name="Segoe UI Semibold" size="18.0" />
          </font>
@@ -68,17 +68,17 @@
             </DropShadow>
          </effect>
       </Button>
-      <Text fill="#eeeeee" layoutX="444.0" layoutY="283.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Width">
+      <Text fill="#eeeeee" layoutX="764.0" layoutY="467.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Width">
          <font>
             <Font name="Segoe UI Semibold" size="24.0" />
          </font>
       </Text>
-      <Text fill="#eeeeee" layoutX="752.0" layoutY="284.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Height">
+      <Text fill="#eeeeee" layoutX="1072.0" layoutY="468.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Height">
          <font>
             <Font name="Segoe UI Semibold" size="24.0" />
          </font>
       </Text>
-      <TextField fx:id="width" alignment="CENTER" layoutX="381.0" layoutY="311.0" opacity="0.7" prefHeight="39.0" prefWidth="197.0" promptText="...3840px" style="-fx-background-color: #282828; -fx-prompt-text-fill: #eeeeee; -fx-background-radius: 15; -fx-text-fill: #eeeeee;">
+      <TextField fx:id="width" alignment="CENTER" layoutX="701.0" layoutY="495.0" opacity="0.7" prefHeight="39.0" prefWidth="197.0" promptText="...3840px" style="-fx-background-color: #282828; -fx-prompt-text-fill: #eeeeee; -fx-background-radius: 15; -fx-text-fill: #eeeeee;">
          <font>
             <Font name="Segoe UI Semibold" size="18.0" />
          </font>
@@ -90,7 +90,7 @@
             </DropShadow>
          </effect>
       </TextField>
-      <TextField fx:id="height" alignment="CENTER" layoutX="692.0" layoutY="311.0" opacity="0.7" prefHeight="39.0" prefWidth="197.0" promptText="...2160px" style="-fx-background-color: #282828; -fx-prompt-text-fill: #eeeeee; -fx-background-radius: 15; -fx-text-fill: #eeeeee;">
+      <TextField fx:id="height" alignment="CENTER" layoutX="1012.0" layoutY="495.0" opacity="0.7" prefHeight="39.0" prefWidth="197.0" promptText="...2160px" style="-fx-background-color: #282828; -fx-prompt-text-fill: #eeeeee; -fx-background-radius: 15; -fx-text-fill: #eeeeee;">
          <font>
             <Font name="Segoe UI Semibold" size="18.0" />
          </font>
@@ -102,12 +102,12 @@
             </DropShadow>
          </effect>
       </TextField>
-      <Text fill="#eeeeee" layoutX="543.0" layoutY="411.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Background Color">
+      <Text fill="#eeeeee" layoutX="863.0" layoutY="595.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Background Color">
          <font>
             <Font name="Segoe UI Semibold" size="24.0" />
          </font>
       </Text>
-      <TextField fx:id="backgroundColor" alignment="CENTER" layoutX="381.0" layoutY="443.0" opacity="0.7" prefHeight="39.0" prefWidth="508.0" promptText="#000000" style="-fx-background-color: #282828; -fx-prompt-text-fill: #eeeeee; -fx-background-radius: 15; -fx-text-fill: #eeeeee;">
+      <TextField fx:id="backgroundColor" alignment="CENTER" layoutX="701.0" layoutY="627.0" opacity="0.7" prefHeight="39.0" prefWidth="508.0" promptText="#000000" style="-fx-background-color: #282828; -fx-prompt-text-fill: #eeeeee; -fx-background-radius: 15; -fx-text-fill: #eeeeee;">
          <font>
             <Font name="Segoe UI Semibold" size="18.0" />
          </font>
@@ -119,7 +119,7 @@
             </DropShadow>
          </effect>
       </TextField>
-      <Button fx:id="createProject" graphicTextGap="0.0" layoutX="381.0" layoutY="523.0" mnemonicParsing="false" onAction="#handleCreateProject" opacity="0.7" prefHeight="39.0" prefWidth="508.0" style="-fx-background-color: #282828; -fx-background-radius: 15px;" text="Create" textFill="#eeeeee">
+      <Button fx:id="createProject" graphicTextGap="0.0" layoutX="701.0" layoutY="707.0" mnemonicParsing="false" onAction="#handleCreateProject" opacity="0.7" prefHeight="39.0" prefWidth="508.0" style="-fx-background-color: #282828; -fx-background-radius: 15px;" text="Create" textFill="#eeeeee">
          <font>
             <Font name="Segoe UI Semibold" size="18.0" />
          </font>
@@ -131,7 +131,7 @@
             </DropShadow>
          </effect>
       </Button>
-      <Button fx:id="openGallery" layoutX="381.0" layoutY="600.0" mnemonicParsing="false" onAction="#handleOpenGallery" opacity="0.7" prefHeight="39.0" prefWidth="197.0" style="-fx-background-color: #282828; -fx-background-radius: 15px;" text="Gallery" textFill="#eeeeee">
+      <Button fx:id="openGallery" layoutX="701.0" layoutY="784.0" mnemonicParsing="false" onAction="#handleOpenGallery" opacity="0.7" prefHeight="39.0" prefWidth="197.0" style="-fx-background-color: #282828; -fx-background-radius: 15px;" text="Gallery" textFill="#eeeeee">
          <font>
             <Font name="Segoe UI Semibold" size="18.0" />
          </font>

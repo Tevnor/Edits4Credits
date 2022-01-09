@@ -17,14 +17,14 @@
 Adding stylesheets="/styles/styles.css" yet does not work, see FxmlGuiDriver as well.
 -->
 
-<AnchorPane fx:id="rootAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.ModeSelectionController">
+<AnchorPane fx:id="rootAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.controller.ModeSelectionController">
    <children>
-      <ImageView fitHeight="765.0" fitWidth="1280.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="1119.0" fitWidth="1920.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../images/e4c-bg.png" />
          </image>
       </ImageView>
-      <ImageView fx:id="profileImageView" fitHeight="150.0" fitWidth="150.0" layoutX="565.0" layoutY="30.0" opacity="0.7" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="profileImageView" fitHeight="150.0" fitWidth="150.0" layoutX="885.0" layoutY="210.0" opacity="0.7" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../images/buttons_typ.png" />
          </image>
@@ -36,17 +36,17 @@ Adding stylesheets="/styles/styles.css" yet does not work, see FxmlGuiDriver as 
             </DropShadow>
          </effect>
       </ImageView>
-      <Label layoutX="564.25" layoutY="190.0" text="Welcome back," textAlignment="CENTER" textFill="#eeeeee">
+      <Label layoutX="884.0" layoutY="370.0" text="Welcome back," textAlignment="CENTER" textFill="#eeeeee">
          <font>
             <Font name="Segoe UI Semibold" size="22.0" />
          </font>
       </Label>
-      <Label fx:id="usernameLabel" alignment="CENTER" layoutX="528.0" layoutY="220.0" prefHeight="32.0" prefWidth="225.0" text="username" textFill="#eeeeee">
+      <Label fx:id="usernameLabel" alignment="CENTER" layoutX="848.0" layoutY="400.0" prefHeight="32.0" prefWidth="225.0" text="username" textFill="#eeeeee">
          <font>
             <Font name="Segoe UI Semibold" size="22.0" />
          </font>
       </Label>
-      <Pane fx:id="editorPane" prefHeight="720.0" prefWidth="640.0">
+      <Pane fx:id="editorPane" layoutX="320.0" layoutY="180.0" prefHeight="720.0" prefWidth="640.0">
          <children>
             <Rectangle arcHeight="150.0" arcWidth="150.0" fill="#727272" height="450.0" layoutX="120.0" layoutY="135.0" opacity="0.7" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="400.0">
                <effect>
@@ -92,7 +92,7 @@ Adding stylesheets="/styles/styles.css" yet does not work, see FxmlGuiDriver as 
             </ImageView>
          </children>
       </Pane>
-      <Pane fx:id="marketplacePane" layoutX="640.0" prefHeight="720.0" prefWidth="640.0">
+      <Pane fx:id="marketplacePane" layoutX="960.0" layoutY="180.0" prefHeight="720.0" prefWidth="640.0">
          <children>
             <Rectangle arcHeight="150.0" arcWidth="150.0" fill="#727272" height="450.0" layoutX="120.0" layoutY="135.0" opacity="0.7" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="400.0">
                <effect>

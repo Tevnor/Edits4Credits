@@ -10,6 +10,6 @@ module gui {
     requires org.apache.logging.log4j;
     requires java.desktop;
 
-    opens org.example to javafx.fxml;
-    exports org.example;
+    opens org.controller to javafx.fxml;
+    exports org.controller;
 }

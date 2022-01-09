@@ -1,32 +1,19 @@
-package org.example;
+package org.controller;
 
-import javafx.animation.ScaleTransition;
-import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
-import javafx.scene.control.Slider;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.image.*;
 import javafx.scene.input.DragEvent;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.input.TransferMode;
-import javafx.scene.paint.Color;
-import javafx.scene.transform.Scale;
+import javafx.scene.layout.StackPane;
+import javafx.stage.FileChooser;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.net.URL;
-import java.util.List;
-import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class EditorController implements Initializable {
@@ -65,6 +52,10 @@ public class EditorController implements Initializable {
     private ToggleButton move;
     @FXML
     private ToggleButton drawOptions;
+    @FXML
+    private StackPane stack;
+
+    private File imagePath;
 
 
 
@@ -75,6 +66,7 @@ public class EditorController implements Initializable {
 
     
     public void handleOpenFile(ActionEvent event) {
+        importImageFromExplorer();
     }
 
     public void handleDeleteFile(ActionEvent event) {
@@ -95,6 +87,26 @@ public class EditorController implements Initializable {
     public void handleDragOver(DragEvent dragEvent) {
     }
 
-    public void handleButtonClick(ActionEvent event) {
+    public void handleImportButton(ActionEvent event) throws IOException {
+        importImageFromExplorer();
+        }
+
+    public void importImageFromExplorer(){
+        // opens file explore to choose image to edit
+        FileChooser chooser = new FileChooser();
+        File f = chooser.showOpenDialog(null);
+        // saves file path from image to file object
+        imagePath = f;
+        //sets ImageView to chosen picture
+        Image image = new Image(f.getPath());
+        editorImageView.setImage(image);
+        editorImageView.fitWidthProperty().bind(stack.widthProperty());
+
+
+        //disables import button if image was imported
+        if (editorImageView != null) {
+            importButton.setDisable(true);
+            importButton.setVisible(false);
+        }
     }
 }

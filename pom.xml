@@ -89,7 +89,7 @@
                 <version>0.0.4</version>
                 <configuration>
                     <launcher>E4Cdriver</launcher>
-                    <mainClass>org.example.GuiDriver</mainClass>
+                    <mainClass>org.controller.GuiDriver</mainClass>
                 </configuration>
             </plugin>
 

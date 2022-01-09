@@ -1,4 +1,4 @@
-package org.example;
+package org.controller;
 
 public class Project {
     private String projectName;

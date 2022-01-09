@@ -13,14 +13,14 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.StackPane?>
 
-<AnchorPane fx:id="rootAnchorPane" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.EditorController">
+<AnchorPane fx:id="rootAnchorPane" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.controller.EditorController">
    <children>
-      <ImageView fitHeight="872.0" fitWidth="1280.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="1139.0" fitWidth="1920.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../images/e4c-bg.png" />
          </image>
       </ImageView>
-      <ToolBar layoutY="120.0" orientation="VERTICAL" prefHeight="516.0" prefWidth="57.0">
+      <ToolBar layoutY="290.0" orientation="VERTICAL" prefHeight="516.0" prefWidth="57.0">
         <items>
             <ToggleButton fx:id="arc" mnemonicParsing="false" prefHeight="45.0" prefWidth="45.0" text="ToggleButton">
                <toggleGroup>
@@ -36,7 +36,7 @@
             <ToggleButton fx:id="drawOptions" mnemonicParsing="false" prefHeight="45.0" prefWidth="45.0" text="ToggleButton" toggleGroup="$shapeGroup" />
         </items>
       </ToolBar>
-      <MenuBar prefHeight="25.0" prefWidth="1280.0">
+      <MenuBar prefHeight="25.0" prefWidth="1920.0">
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
@@ -68,9 +68,9 @@
       </MenuBar>
       <StackPane fx:id="stack" layoutX="67.0" layoutY="33.0" prefHeight="674.0" prefWidth="1195.0">
          <children>
-            <Canvas fx:id="editorCanvas" height="673.0" width="1201.0" />
-            <ImageView fx:id="editorImageView" fitHeight="674.0" fitWidth="1201.0" onDragDropped="#handleDragDropped" onDragOver="#handleDragOver" pickOnBounds="true" preserveRatio="true" />
-            <Button fx:id="importButton" mnemonicParsing="false" onAction="#handleButtonClick" text="Import Image" />
+            <Canvas fx:id="editorCanvas" height="1024.0" width="1834.0" />
+            <ImageView fx:id="editorImageView" fitHeight="1029.0" fitWidth="1836.0" onDragDropped="#handleDragDropped" onDragOver="#handleDragOver" pickOnBounds="true" preserveRatio="true" />
+            <Button fx:id="importButton" mnemonicParsing="false" onAction="#handleImportButton" text="Import Image" />
          </children>
       </StackPane>
    </children>
