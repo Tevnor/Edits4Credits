@@ -4,11 +4,12 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.ToggleButton;
-import javafx.scene.image.*;
+import javafx.scene.image.Image;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
@@ -16,6 +17,7 @@ import javafx.stage.FileChooser;
 import org.controller.tools.drawingtool.DrawingTool;
 import org.controller.tools.drawingtool.graphiccontrol.handlers.HandlerFactory;
 
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -62,7 +64,8 @@ public class EditorController implements Initializable {
     private EventHandler<MouseEvent> drawer = event -> {}, mover = event -> {};
     private DrawingTool dt;
     private HandlerFactory handlerFactory;
-    Canvas editorCanvasImage = new Canvas();
+    Canvas editorCanvasImage;
+    Project project;
     private double width;
     private double height;
 
@@ -72,9 +75,6 @@ public class EditorController implements Initializable {
         //editorImageView.setImage();
         this.dt = new DrawingTool(editorCanvas, stack);
         handlerFactory = new HandlerFactory(dt);
-        editorCanvasImage.setHeight(height);
-        editorCanvasImage.setWidth(width);
-        stack.getChildren().add(editorCanvasImage);
     }
 
     public void handleArc(ActionEvent e){
@@ -162,9 +162,13 @@ public class EditorController implements Initializable {
         imagePath = f;
         //sets ImageView to chosen picture
         Image image = new Image(f.getPath());
+        editorCanvasImage = new Canvas(getResizedImageWidth(getImageAspectRatio(image)), getResizedImageHeight());
+        stack.getChildren().add(editorCanvasImage);
+        stack.setAlignment(editorCanvasImage, Pos.CENTER);
 
         GraphicsContext gc = editorCanvasImage.getGraphicsContext2D();
-        gc.drawImage(image,0, 0, height, width);
+        gc.drawImage(image,0, 0, getResizedImageWidth(getImageAspectRatio(image)), getResizedImageHeight());
+        System.out.println(width + height);
 
 
         //disables import button if image was imported
@@ -176,5 +180,57 @@ public class EditorController implements Initializable {
     public void setWidthAndHeight(Project project){
         this.width = project.getCanvasWidth();
         this.height = project.getCanvasHeight();
+    }
+
+    public double getResizedImageWidth(double ratio){
+        GraphicsDevice monitor = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+        int widthMonitor = monitor.getDisplayMode().getWidth();
+        int heightMonitor = monitor.getDisplayMode().getHeight();
+        double resizedHeight = 0;
+        double resizedWidth = 0;
+
+        if (heightMonitor > 1000 && heightMonitor < 1400){
+            resizedWidth = 900 / ratio;
+        }
+        else if (heightMonitor > 1400 && heightMonitor < 2160){
+            resizedWidth = 1300 / ratio;
+        }
+        else if (heightMonitor < 1000){
+            resizedWidth = 600 / ratio;
+        }
+        else if (heightMonitor > 2100){
+            resizedWidth = 1900 / ratio;
+        }
+
+        return resizedWidth;
+    }
+    public double getResizedImageHeight(){
+        GraphicsDevice monitor = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+        int widthMonitor = monitor.getDisplayMode().getWidth();
+        int heightMonitor = monitor.getDisplayMode().getHeight();
+        double resizedHeight = 0;
+        ;
+
+        if (heightMonitor > 1000 && heightMonitor < 1400){
+            resizedHeight = 900;
+        }
+        else if (heightMonitor > 1400 && heightMonitor < 2160){
+            resizedHeight = 1300;
+        }
+        else if (heightMonitor < 1000){
+            resizedHeight = 600;
+        }
+        else if (heightMonitor > 2100){
+            resizedHeight = 1900;
+        }
+
+        return resizedHeight;
+    }
+
+    public double getImageAspectRatio(Image image){
+        double height = image.getHeight();
+        double width = image.getWidth();
+        double ratio = height / width;
+        return ratio;
     }
 }

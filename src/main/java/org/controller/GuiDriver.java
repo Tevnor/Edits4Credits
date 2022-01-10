@@ -33,6 +33,7 @@ public class GuiDriver extends Application {
       GraphicsDevice monitor = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
       int width = monitor.getDisplayMode().getWidth();
       int height = monitor.getDisplayMode().getHeight();
+      System.out.println(height);
       Scene loginScene = new Scene(root, width, height, Color.TRANSPARENT);
       primaryStage.centerOnScreen();
       primaryStage.setScene(loginScene);

@@ -78,7 +78,7 @@
             <Font name="Segoe UI Semibold" size="24.0" />
          </font>
       </Text>
-      <TextField fx:id="width" alignment="CENTER" layoutX="701.0" layoutY="495.0" opacity="0.7" prefHeight="39.0" prefWidth="197.0" promptText="...3840px" style="-fx-background-color: #282828; -fx-prompt-text-fill: #eeeeee; -fx-background-radius: 15; -fx-text-fill: #eeeeee;">
+      <TextField fx:id="widthInput" alignment="CENTER" layoutX="701.0" layoutY="495.0" opacity="0.7" prefHeight="39.0" prefWidth="197.0" promptText="...3840px" style="-fx-background-color: #282828; -fx-prompt-text-fill: #eeeeee; -fx-background-radius: 15; -fx-text-fill: #eeeeee;">
          <font>
             <Font name="Segoe UI Semibold" size="18.0" />
          </font>
@@ -90,7 +90,7 @@
             </DropShadow>
          </effect>
       </TextField>
-      <TextField fx:id="height" alignment="CENTER" layoutX="1012.0" layoutY="495.0" opacity="0.7" prefHeight="39.0" prefWidth="197.0" promptText="...2160px" style="-fx-background-color: #282828; -fx-prompt-text-fill: #eeeeee; -fx-background-radius: 15; -fx-text-fill: #eeeeee;">
+      <TextField fx:id="heightInput" alignment="CENTER" layoutX="1012.0" layoutY="495.0" opacity="0.7" prefHeight="39.0" prefWidth="197.0" promptText="...2160px" style="-fx-background-color: #282828; -fx-prompt-text-fill: #eeeeee; -fx-background-radius: 15; -fx-text-fill: #eeeeee;">
          <font>
             <Font name="Segoe UI Semibold" size="18.0" />
          </font>

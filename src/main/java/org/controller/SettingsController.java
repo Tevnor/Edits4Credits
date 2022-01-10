@@ -38,16 +38,13 @@ public class SettingsController {
 
     public void handleCreateProject(ActionEvent event) throws IOException {
         try {
-            if (widthInput != null && heightInput != null) {
-                widthProject = Integer.parseInt(widthInput.getText());
-                heightProject = Integer.parseInt(heightInput.getText());
-            }
-            //FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/fxml/editor.fxml")));
-            //EditorController export = loader.getController();
-            //export.setWidthAndHeight(widthProject,heightProject);
-            //AnchorPane editorPane = loader.load();
+                widthProject = Double.parseDouble(widthInput.getText());
+                System.out.println(widthProject);
+                heightProject = Double.parseDouble(heightInput.getText());
+                System.out.println(heightProject);
 
             project = new Project("Project 1", widthProject, heightProject);
+            System.out.println(widthProject + heightProject);
             enterProject();
 
 
