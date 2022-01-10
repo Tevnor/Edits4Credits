@@ -1,6 +1,7 @@
 package org.controller;
 
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
@@ -8,8 +9,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.image.*;
 import javafx.scene.input.DragEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
+import org.controller.tools.drawingtool.DrawingTool;
+import org.controller.tools.drawingtool.graphiccontrol.handlers.HandlerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,33 +39,86 @@ public class EditorController implements Initializable {
     @FXML
     private ImageView editorImageView;
     @FXML
-    private ToggleButton arc;
+    private ToggleButton arcBtn;
     @FXML
-    private ToggleButton circle;
+    private ToggleButton circleBtn;
     @FXML
-    private ToggleButton ellipses;
+    private ToggleButton ellipseBtn;
     @FXML
-    private ToggleButton line;
+    private ToggleButton lineBtn;
     @FXML
-    private ToggleButton rectangle;
+    private ToggleButton rectangleBtn;
     @FXML
-    private ToggleButton polygon;
+    private ToggleButton polygonBtn;
     @FXML
-    private ToggleButton text;
+    private ToggleButton textBtn;
     @FXML
-    private ToggleButton move;
+    private ToggleButton moveBtn;
     @FXML
-    private ToggleButton drawOptions;
+    private ToggleButton drawOptionsBtn;
     @FXML
     private StackPane stack;
 
     private File imagePath;
-
-
+    private EventHandler<MouseEvent> drawer = event -> {}, mover = event -> {};
+    private DrawingTool dt;
+    private HandlerFactory handlerFactory;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //editorImageView.setImage();
+        this.dt = new DrawingTool(editorCanvas, stack);
+        handlerFactory = new HandlerFactory(dt);
+    }
+
+    public void handleArc(ActionEvent e){
+        stack.removeEventHandler(MouseEvent.ANY, mover);
+        stack.removeEventHandler(MouseEvent.ANY, drawer);
+        drawer = handlerFactory.getHandler(HandlerFactory.Handler.ARC);
+        stack.addEventHandler(MouseEvent.ANY,drawer);
+    }
+    public void handleMove(ActionEvent e){
+        stack.removeEventHandler(MouseEvent.ANY, drawer);
+        mover = handlerFactory.getHandler(HandlerFactory.Handler.MOVE);
+        stack.addEventHandler(MouseEvent.ANY,mover);
+    }
+    public void handleCircle(ActionEvent e){
+        stack.removeEventHandler(MouseEvent.ANY, mover);
+        stack.removeEventHandler(MouseEvent.ANY, drawer);
+        drawer = handlerFactory.getHandler(HandlerFactory.Handler.CIRCLE);
+        stack.addEventHandler(MouseEvent.ANY,drawer);
+    }
+    public void handleEllipses(ActionEvent e){
+        stack.removeEventHandler(MouseEvent.ANY, mover);
+        stack.removeEventHandler(MouseEvent.ANY, drawer);
+        drawer = handlerFactory.getHandler(HandlerFactory.Handler.ELLIPSES);
+        stack.addEventHandler(MouseEvent.ANY,drawer);
+
+    }
+    public void handleRectangle(ActionEvent e){
+        stack.removeEventHandler(MouseEvent.ANY, mover);
+        stack.removeEventHandler(MouseEvent.ANY, drawer);
+        drawer = handlerFactory.getHandler(HandlerFactory.Handler.RECTANGLE);
+        stack.addEventHandler(MouseEvent.ANY,drawer);
+    }
+    public void handleLine(ActionEvent e){
+        stack.removeEventHandler(MouseEvent.ANY, mover);
+        stack.removeEventHandler(MouseEvent.ANY, drawer);
+        drawer = handlerFactory.getHandler(HandlerFactory.Handler.LINE);
+        stack.addEventHandler(MouseEvent.ANY,drawer);
+    }
+    public void handleText(ActionEvent e){
+        //openTextOptions();
+        stack.removeEventHandler(MouseEvent.ANY, mover);
+        stack.removeEventHandler(MouseEvent.ANY, drawer);
+        drawer = handlerFactory.getHandler(HandlerFactory.Handler.TEXT);
+        stack.addEventHandler(MouseEvent.ANY,drawer);
+    }
+    public void handlePolygon(ActionEvent e){
+        stack.removeEventHandler(MouseEvent.ANY, mover);
+        stack.removeEventHandler(MouseEvent.ANY, drawer);
+        drawer = handlerFactory.getHandler(HandlerFactory.Handler.POLYGON);
+        stack.addEventHandler(MouseEvent.ANY,drawer);
     }
 
     

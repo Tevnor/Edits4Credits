@@ -22,18 +22,18 @@
       </ImageView>
       <ToolBar layoutY="290.0" orientation="VERTICAL" prefHeight="516.0" prefWidth="57.0">
         <items>
-            <ToggleButton fx:id="arc" mnemonicParsing="false" prefHeight="45.0" prefWidth="45.0" text="ToggleButton">
+            <ToggleButton fx:id="arcBtn" mnemonicParsing="false" onAction="#handleArc" prefHeight="45.0" prefWidth="45.0" text="Arc">
                <toggleGroup>
                   <ToggleGroup fx:id="shapeGroup" />
                </toggleGroup></ToggleButton>
-            <ToggleButton fx:id="circle" mnemonicParsing="false" prefHeight="45.0" prefWidth="45.0" text="ToggleButton" toggleGroup="$shapeGroup" />
-            <ToggleButton fx:id="ellipses" mnemonicParsing="false" prefHeight="45.0" prefWidth="45.0" text="ToggleButton" toggleGroup="$shapeGroup" />
-            <ToggleButton fx:id="line" mnemonicParsing="false" prefHeight="45.0" prefWidth="45.0" text="ToggleButton" toggleGroup="$shapeGroup" />
-            <ToggleButton fx:id="rectangle" mnemonicParsing="false" prefHeight="45.0" prefWidth="45.0" text="ToggleButton" toggleGroup="$shapeGroup" />
-            <ToggleButton fx:id="polygon" mnemonicParsing="false" prefHeight="45.0" prefWidth="45.0" text="ToggleButton" toggleGroup="$shapeGroup" />
-            <ToggleButton fx:id="text" mnemonicParsing="false" prefHeight="45.0" prefWidth="45.0" text="ToggleButton" toggleGroup="$shapeGroup" />
-            <ToggleButton fx:id="move" mnemonicParsing="false" prefHeight="45.0" prefWidth="45.0" text="ToggleButton" toggleGroup="$shapeGroup" />
-            <ToggleButton fx:id="drawOptions" mnemonicParsing="false" prefHeight="45.0" prefWidth="45.0" text="ToggleButton" toggleGroup="$shapeGroup" />
+            <ToggleButton fx:id="circleBtn" mnemonicParsing="false" onAction="#handleCircle" prefHeight="45.0" prefWidth="45.0" text="Circle" toggleGroup="$shapeGroup" />
+            <ToggleButton fx:id="ellipseBtn" mnemonicParsing="false" onAction="#handleEllipses" prefHeight="45.0" prefWidth="45.0" text="Ellipse" toggleGroup="$shapeGroup" />
+            <ToggleButton fx:id="lineBtn" mnemonicParsing="false" onAction="#handleLine" prefHeight="45.0" prefWidth="45.0" text="Line" toggleGroup="$shapeGroup" />
+            <ToggleButton fx:id="polygonBtn" mnemonicParsing="false" onAction="#handlePolygon" prefHeight="45.0" prefWidth="45.0" text="Polygon" toggleGroup="$shapeGroup" />
+            <ToggleButton fx:id="rectangleBtn" mnemonicParsing="false" onAction="#handleRectangle" prefHeight="45.0" prefWidth="45.0" text="Rectangle" toggleGroup="$shapeGroup" />
+            <ToggleButton fx:id="textBtn" mnemonicParsing="false" onAction="#handleText" prefHeight="45.0" prefWidth="45.0" text="Text" toggleGroup="$shapeGroup" />
+            <ToggleButton fx:id="moveBtn" mnemonicParsing="false" onAction="#handleMove" prefHeight="45.0" prefWidth="45.0" text="Move" toggleGroup="$shapeGroup" />
+            <ToggleButton fx:id="drawOptionsBtn" mnemonicParsing="false" prefHeight="45.0" prefWidth="45.0" text="DrawOptions" toggleGroup="$shapeGroup" />
         </items>
       </ToolBar>
       <MenuBar prefHeight="25.0" prefWidth="1920.0">
@@ -66,11 +66,11 @@
           </Menu>
         </menus>
       </MenuBar>
-      <StackPane fx:id="stack" layoutX="67.0" layoutY="33.0" prefHeight="674.0" prefWidth="1195.0">
+      <StackPane fx:id="stack" alignment="TOP_LEFT" layoutX="67.0" layoutY="33.0" prefHeight="674.0" prefWidth="1195.0">
          <children>
             <Canvas fx:id="editorCanvas" height="1024.0" width="1834.0" />
             <ImageView fx:id="editorImageView" fitHeight="1029.0" fitWidth="1836.0" onDragDropped="#handleDragDropped" onDragOver="#handleDragOver" pickOnBounds="true" preserveRatio="true" />
-            <Button fx:id="importButton" mnemonicParsing="false" onAction="#handleImportButton" text="Import Image" />
+            <Button fx:id="importButton" mnemonicParsing="false" onAction="#handleImportButton" text="Import Image" textAlignment="CENTER" StackPane.alignment="CENTER" />
          </children>
       </StackPane>
    </children>
