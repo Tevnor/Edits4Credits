@@ -5,6 +5,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.image.*;
@@ -37,8 +38,6 @@ public class EditorController implements Initializable {
     @FXML
     private javafx.scene.control.MenuItem openFile;
     @FXML
-    private ImageView editorImageView;
-    @FXML
     private ToggleButton arcBtn;
     @FXML
     private ToggleButton circleBtn;
@@ -63,12 +62,19 @@ public class EditorController implements Initializable {
     private EventHandler<MouseEvent> drawer = event -> {}, mover = event -> {};
     private DrawingTool dt;
     private HandlerFactory handlerFactory;
+    Canvas editorCanvasImage = new Canvas();
+    private double width;
+    private double height;
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //editorImageView.setImage();
         this.dt = new DrawingTool(editorCanvas, stack);
         handlerFactory = new HandlerFactory(dt);
+        editorCanvasImage.setHeight(height);
+        editorCanvasImage.setWidth(width);
+        stack.getChildren().add(editorCanvasImage);
     }
 
     public void handleArc(ActionEvent e){
@@ -156,14 +162,19 @@ public class EditorController implements Initializable {
         imagePath = f;
         //sets ImageView to chosen picture
         Image image = new Image(f.getPath());
-        editorImageView.setImage(image);
-        editorImageView.fitWidthProperty().bind(stack.widthProperty());
+
+        GraphicsContext gc = editorCanvasImage.getGraphicsContext2D();
+        gc.drawImage(image,0, 0, height, width);
 
 
         //disables import button if image was imported
-        if (editorImageView != null) {
+        if (imagePath != null) {
             importButton.setDisable(true);
             importButton.setVisible(false);
         }
+    }
+    public void setWidthAndHeight(Project project){
+        this.width = project.getCanvasWidth();
+        this.height = project.getCanvasHeight();
     }
 }

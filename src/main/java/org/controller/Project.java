@@ -2,30 +2,30 @@ package org.controller;
 
 public class Project {
     private String projectName;
-    private int canvasWidth;
-    private int canvasHeight;
-    private String backgroundColor;
+    private double canvasWidth;
+    private double canvasHeight;
+    //private String backgroundColor;
 
-    public Project(String projectName, int canvasWidth, int canvasHeight, String backgroundColor) {
+    public Project(String projectName, double canvasWidth, double canvasHeight) {
         this.projectName = projectName;
         this.canvasWidth = canvasWidth;
         this.canvasHeight = canvasHeight;
-        this.backgroundColor = backgroundColor;
+        //this.backgroundColor = backgroundColor;
     }
 
     public String getProjectName() {
         return projectName;
     }
 
-    public int getCanvasWidth() {
+    public double getCanvasWidth() {
         return canvasWidth;
     }
 
-    public int getCanvasHeight() {
+    public double getCanvasHeight() {
         return canvasHeight;
     }
 
-    public String getBackgroundColor() {
-        return backgroundColor;
-    }
+    //public String getBackgroundColor() {
+        //return backgroundColor;
+    //}
 }

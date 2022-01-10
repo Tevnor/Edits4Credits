@@ -69,7 +69,6 @@
       <StackPane fx:id="stack" alignment="TOP_LEFT" layoutX="67.0" layoutY="33.0" prefHeight="674.0" prefWidth="1195.0">
          <children>
             <Canvas fx:id="editorCanvas" height="1024.0" width="1834.0" />
-            <ImageView fx:id="editorImageView" fitHeight="1029.0" fitWidth="1836.0" onDragDropped="#handleDragDropped" onDragOver="#handleDragOver" pickOnBounds="true" preserveRatio="true" />
             <Button fx:id="importButton" mnemonicParsing="false" onAction="#handleImportButton" text="Import Image" textAlignment="CENTER" StackPane.alignment="CENTER" />
          </children>
       </StackPane>

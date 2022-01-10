@@ -3,6 +3,7 @@ package org.controller;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
@@ -15,9 +16,9 @@ public class SettingsController {
     @FXML
     private TextField projectName;
     @FXML
-    private TextField width;
+    private TextField widthInput;
     @FXML
-    private TextField height;
+    private TextField heightInput;
     @FXML
     private TextField backgroundColor;
     @FXML
@@ -29,13 +30,44 @@ public class SettingsController {
     @FXML
     private AnchorPane rootAnchorPane;
 
+    public static double heightProject;
+    public static double widthProject;
+    public Project project;
+
 
 
     public void handleCreateProject(ActionEvent event) throws IOException {
         try {
-            AnchorPane editorPane = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/editor.fxml")));
-            rootAnchorPane.getChildren().setAll(editorPane);
+            if (widthInput != null && heightInput != null) {
+                widthProject = Integer.parseInt(widthInput.getText());
+                heightProject = Integer.parseInt(heightInput.getText());
+            }
+            //FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/fxml/editor.fxml")));
+            //EditorController export = loader.getController();
+            //export.setWidthAndHeight(widthProject,heightProject);
+            //AnchorPane editorPane = loader.load();
+
+            project = new Project("Project 1", widthProject, heightProject);
+            enterProject();
+
+
         } catch (Exception e) {
+            e.printStackTrace();
+            e.getCause();
+        }
+
+    }
+
+    public void enterProject(){
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(Objects.requireNonNull(getClass().getResource("/fxml/editor.fxml")));
+            AnchorPane editorPane = loader.load();
+            EditorController export = loader.getController();
+            export.setWidthAndHeight(project);
+            rootAnchorPane.getChildren().setAll(editorPane);
+        }
+        catch (Exception e){
             e.printStackTrace();
             e.getCause();
         }
