@@ -48,7 +48,7 @@
           </Menu>
           <Menu mnemonicParsing="false" text="Filter">
             <items>
-              <MenuItem fx:id="addNoise" mnemonicParsing="false" onAction="#handleAddNouise" text="Add Noise" />
+              <MenuItem fx:id="addNoise" mnemonicParsing="false" onAction="#handleAddNoise" text="Add Noise" />
                   <MenuItem mnemonicParsing="false" text="Filter 2" />
                   <MenuItem mnemonicParsing="false" text="Filter 3" />
                   <MenuItem mnemonicParsing="false" text="Filter 4" />
@@ -66,9 +66,9 @@
           </Menu>
         </menus>
       </MenuBar>
-      <StackPane fx:id="stack" alignment="TOP_LEFT" layoutX="67.0" layoutY="33.0">
+      <StackPane fx:id="stack" alignment="TOP_LEFT" layoutX="67.0" layoutY="33.0" >
          <children>
-            <Canvas fx:id="editorCanvas" height="1024.0" width="1834.0" />
+            <Canvas fx:id="editorCanvas" height="1024.0" width="1834.0" onDragDropped="#handleDragDropped" onDragOver="#handleDragOver" />
             <Button fx:id="importButton" mnemonicParsing="false" onAction="#handleImportButton" text="Import Image" textAlignment="CENTER" StackPane.alignment="CENTER" />
          </children>
       </StackPane>

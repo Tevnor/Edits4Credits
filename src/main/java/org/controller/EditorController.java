@@ -12,6 +12,7 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.image.Image;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import org.controller.tools.drawingtool.DrawingTool;
@@ -19,6 +20,7 @@ import org.controller.tools.drawingtool.graphiccontrol.handlers.HandlerFactory;
 
 import java.awt.*;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -141,33 +143,63 @@ public class EditorController implements Initializable {
     public void handleSafeFile(ActionEvent event) {
     }
 
-    public void handleAddNouise(ActionEvent event) {
+    public void handleAddNoise(ActionEvent event) {
     }
 
-    public void handleDragDropped(DragEvent dragEvent) {
+    /*
+        Import images via drag and drop
+    */
+    @FXML
+    private void handleDragOver(DragEvent dragEvent) {
+        if (dragEvent.getDragboard().hasFiles()) {
+            dragEvent.acceptTransferModes(TransferMode.ANY);
+        }
+    }
+    @FXML
+    private void handleDragDropped(DragEvent dragEvent) {
+        try {
+            File f = dragEvent.getDragboard().getFiles().get(0);
+            imagePath = f;
+            Image droppedImage = new Image(new FileInputStream(f));
+
+            // Pass image to setter method
+            setImportedImage(droppedImage);
+        } catch (Exception e) {
+            e.printStackTrace();
+            e.getCause();
+        }
     }
 
-    public void handleDragOver(DragEvent dragEvent) {
-    }
-
+    /*
+        Import images from explorer
+    */
     public void handleImportButton(ActionEvent event) throws IOException {
         importImageFromExplorer();
         }
 
     public void importImageFromExplorer(){
+
         // opens file explore to choose image to edit
         FileChooser chooser = new FileChooser();
         File f = chooser.showOpenDialog(null);
+
         // saves file path from image to file object
         imagePath = f;
+
         //sets ImageView to chosen picture
         Image image = new Image(f.getPath());
-        editorCanvasImage = new Canvas(getResizedImageWidth(getImageAspectRatio(image)), getResizedImageHeight());
+
+        // Pass image to setter method
+        setImportedImage(image);
+    }
+
+    public void setImportedImage(Image importedImage) {
+        editorCanvasImage = new Canvas(getResizedImageWidth(getImageAspectRatio(importedImage)), getResizedImageHeight());
         stack.getChildren().add(editorCanvasImage);
         stack.setAlignment(editorCanvasImage, Pos.CENTER);
 
         GraphicsContext gc = editorCanvasImage.getGraphicsContext2D();
-        gc.drawImage(image,0, 0, getResizedImageWidth(getImageAspectRatio(image)), getResizedImageHeight());
+        gc.drawImage(importedImage,0, 0, getResizedImageWidth(getImageAspectRatio(importedImage)), getResizedImageHeight());
         System.out.println(width + height);
 
 
@@ -175,8 +207,10 @@ public class EditorController implements Initializable {
         if (imagePath != null) {
             importButton.setDisable(true);
             importButton.setVisible(false);
+            openFile.setDisable(true);
         }
     }
+
     public void setWidthAndHeight(Project project){
         this.width = project.getCanvasWidth();
         this.height = project.getCanvasHeight();

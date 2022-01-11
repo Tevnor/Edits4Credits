@@ -43,7 +43,7 @@ public class SettingsController {
                 heightProject = Double.parseDouble(heightInput.getText());
                 System.out.println(heightProject);
 
-            project = new Project("Project 1", widthProject, heightProject);
+            project = new Project(widthProject, heightProject);
             System.out.println(widthProject + heightProject);
             enterProject();
 
