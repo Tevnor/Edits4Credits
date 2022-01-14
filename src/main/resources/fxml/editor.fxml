@@ -33,7 +33,9 @@
             <ToggleButton fx:id="rectangleBtn" mnemonicParsing="false" onAction="#handleRectangle" prefHeight="45.0" prefWidth="45.0" text="Rectangle" toggleGroup="$shapeGroup" />
             <ToggleButton fx:id="textBtn" mnemonicParsing="false" onAction="#handleText" prefHeight="45.0" prefWidth="45.0" text="Text" toggleGroup="$shapeGroup" />
             <ToggleButton fx:id="moveBtn" mnemonicParsing="false" onAction="#handleMove" prefHeight="45.0" prefWidth="45.0" text="Move" toggleGroup="$shapeGroup" />
-            <ToggleButton fx:id="drawOptionsBtn" mnemonicParsing="false" prefHeight="45.0" prefWidth="45.0" text="DrawOptions" toggleGroup="$shapeGroup" />
+            <ToggleButton fx:id="drawOptionsBtn" mnemonicParsing="false" onAction="#openDrawOptions" prefHeight="45.0" prefWidth="45.0" text="DrawOptions" toggleGroup="$shapeGroup" />
+            <Button fx:id="btnDrawUndo" mnemonicParsing="false" onAction="#handleDrawUndo" prefHeight="25.0" prefWidth="45.0" text="Undo" />
+            <Button fx:id="btnDrawRedo" mnemonicParsing="false" onAction="#handleDrawRedo" prefHeight="25.0" prefWidth="45.0" text="Redo" />
         </items>
       </ToolBar>
       <MenuBar prefHeight="25.0" prefWidth="1920.0">
@@ -66,9 +68,9 @@
           </Menu>
         </menus>
       </MenuBar>
-      <StackPane fx:id="stack" alignment="TOP_LEFT" layoutX="67.0" layoutY="33.0" >
+      <StackPane fx:id="stack" alignment="TOP_LEFT" layoutX="67.0" layoutY="33.0">
          <children>
-            <Canvas fx:id="editorCanvas" height="1024.0" width="1834.0" onDragDropped="#handleDragDropped" onDragOver="#handleDragOver" />
+            <Canvas fx:id="editorCanvas" height="1024.0" onDragDropped="#handleDragDropped" onDragOver="#handleDragOver" width="1834.0" />
             <Button fx:id="importButton" mnemonicParsing="false" onAction="#handleImportButton" text="Import Image" textAlignment="CENTER" StackPane.alignment="CENTER" />
          </children>
       </StackPane>

@@ -72,6 +72,8 @@ public class EditorController implements Initializable {
     private ToggleButton drawOptionsBtn;
     @FXML
     private StackPane stack;
+    @FXML
+    private Button btnDrawUndo, btnDrawRedo;
 
     private File imagePath;
     private EventHandler<MouseEvent> drawer = event -> {}, mover = event -> {};
@@ -93,9 +95,6 @@ public class EditorController implements Initializable {
         this.dt = new DrawingTool(editorCanvas, stack);
         handlerFactory = new HandlerFactory(dt);
         initDrawOptions();
-    }
-    private void initPolyContextMenu(){
-
     }
 
     public void handleArc(ActionEvent e){
@@ -153,12 +152,19 @@ public class EditorController implements Initializable {
         drawer = handlerFactory.getHandler(HandlerFactory.Handler.POLYGON, options.getAttributes());
         stack.addEventHandler(MouseEvent.ANY,drawer);
     }
+    public void handleDrawUndo(ActionEvent e){
+        dt.backward();
+    }
+    public void handleDrawRedo(ActionEvent e){
+        dt.forward();
+    }
     public void openDrawOptions(ActionEvent e){
         drawOptStage.centerOnScreen();
         drawOptStage.show();
     }
     public void openDrawOptions(){
         drawOptStage.centerOnScreen();
+
         drawOptStage.show();
     }
     public void initDrawOptions(){
