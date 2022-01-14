@@ -3,16 +3,18 @@ package org.controller.tools.drawingtool.graphiccontrol.handlers;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.Color;
 import org.controller.tools.drawingtool.DrawingTool;
+import org.controller.tools.drawingtool.graphiccontrol.Attributes;
 import org.controller.tools.drawingtool.graphiccontrol.objects.RoundedRectangle;
 
 public class RoundedRectDrawer implements EventHandler<MouseEvent> {
     private Point2D point1;
-    private DrawingTool dt;
+    private final DrawingTool dt;
+    private final Attributes attributes;
 
-    public RoundedRectDrawer(DrawingTool dt){
+    public RoundedRectDrawer(DrawingTool dt, Attributes attributes){
         this.dt = dt;
+        this.attributes = attributes;
     }
 
 
@@ -25,7 +27,7 @@ public class RoundedRectDrawer implements EventHandler<MouseEvent> {
                     new Point2D(mouseEvent.getX(),mouseEvent.getY()));
 
             dt.getDb().addDrawOperation(new RoundedRectangle(dims[0], dims[1], dims[2], dims[3],
-                    10.0,10.0, Color.BLACK));
+                    attributes));
 
         }
 

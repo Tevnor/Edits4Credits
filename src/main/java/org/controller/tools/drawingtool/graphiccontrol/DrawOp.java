@@ -27,6 +27,7 @@ public abstract class DrawOp {
     private final WritablePixelFormat<IntBuffer> format = WritablePixelFormat.getIntArgbInstance();
     private HashMap<Integer,Integer> changeValues;
     private boolean visible = true;
+    private int moveReference = 0;
 
     public abstract void draw(GraphicsContext gc);
 
@@ -78,6 +79,12 @@ public abstract class DrawOp {
     }
     public boolean isVisible() {
         return visible;
+    }
+    public void setReference(int i){
+        this.moveReference = i;
+    }
+    public int getMoveReference(){
+        return this.moveReference;
     }
 
 }

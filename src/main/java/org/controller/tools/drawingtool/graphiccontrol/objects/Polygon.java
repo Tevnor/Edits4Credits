@@ -5,12 +5,13 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Shape;
 import javafx.scene.transform.Rotate;
+import org.controller.tools.drawingtool.graphiccontrol.Attributes;
 
 public class Polygon extends Shapes {
 
-    private double[] xPoints;
-    private double[] yPoints;
-    private int nPoints;
+    private final double[] xPoints;
+    private final double[] yPoints;
+    private final int nPoints;
     private double maxX,maxY;
     private boolean closed = true;
 
@@ -31,11 +32,12 @@ public class Polygon extends Shapes {
     }
 
 
-    public Polygon(double[] xPoints, double[] yPoints, int nPoints, Paint color) {
+    public Polygon(double[] xPoints, double[] yPoints, int nPoints, Attributes attributes) {
         this.xPoints = xPoints;
         this.yPoints = yPoints;
         this.nPoints = nPoints;
-        this.color = color;
+        this.attributes = attributes;
+        setRotation(attributes.getRotation());
         this.type = POLYGON;
 
         double minX = Integer.MAX_VALUE;
@@ -66,14 +68,11 @@ public class Polygon extends Shapes {
 
 
 
-    public void changeClosedAttribute(){
-        this.closed = !closed;
-    }
 
     private void drawStroke(GraphicsContext gc) {
-        gc.setStroke(color);
+        gc.setStroke(attributes.getColor());
         setAttributes(gc);
-        if(closed){
+        if(attributes.isPolyClose()){
             gc.strokePolygon(xPoints,yPoints,nPoints);
         }else{
             gc.strokePolyline(xPoints,yPoints,nPoints);
@@ -82,7 +81,7 @@ public class Polygon extends Shapes {
     }
 
     private void drawFill(GraphicsContext gc) {
-        gc.setFill(color);
+        gc.setFill(attributes.getColor());
         setAttributes(gc);
         gc.fillPolygon(xPoints,yPoints,nPoints);
     }
@@ -91,10 +90,10 @@ public class Polygon extends Shapes {
     @Override
     public void draw(GraphicsContext gc) {
         writeBeforeARGB(gc);
-        if(drawingType == Shapes.TYPE_STROKE){
-            drawStroke(gc);
-        }else if(drawingType == Shapes.TYPE_FILL){
+        if(attributes.isFill()){
             drawFill(gc);
+        }else{
+            drawStroke(gc);
         }
         writeChangeARGB(gc);
     }
@@ -123,7 +122,7 @@ public class Polygon extends Shapes {
             reposY[i] = yPoints[i] - repos.getY();
         }
 
-        Polygon p = new Polygon(reposX,reposY, nPoints, color);
+        Polygon p = new Polygon(reposX,reposY, nPoints, attributes);
         p.setOpType(OpType.MOVE);
         return p;
     }

@@ -6,47 +6,38 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.ArcType;
 import javafx.scene.shape.Shape;
 import javafx.scene.transform.Rotate;
+import org.controller.tools.drawingtool.graphiccontrol.Attributes;
 
 public class Arc extends Shapes {
 
     private double startAngle;
     private double arcExtent;
-    private ArcType closure = ArcType.ROUND;
+    private ArcType closure;
     private Point2D getCenter(){
         return new Point2D(minX+width/2,minY+height/2);
     }
 
-    public double getStartAngle() {
-        return startAngle;
-    }
-    public double getArcExtent() {
-        return arcExtent;
-    }
-
-    public Arc(double minX, double minY, double width, double height, double startAngle, double arcExtent, Paint color){
+    public Arc(double minX, double minY, double width, double height, Attributes attributes){
         this.minX = minX;
         this.minY = minY;
         this.width = width;
         this.height = height;
-        this.startAngle = startAngle;
-        this.arcExtent = arcExtent;
-        this.color = color;
+        this.attributes = attributes;
+        this.startAngle = attributes.getStartAngle();
+        this.arcExtent = attributes.getArcExtent();
+        this.closure = attributes.getArcType();
+        setRotation(attributes.getRotation());
         this.type = ARC;
     }
 
-    public void changeClosure(ArcType arctype){
-
-        this.closure = arctype;
-    }
-
     private void drawFill(GraphicsContext gc) {
-        gc.setFill(color);
+        gc.setFill(attributes.getColor());
         setAttributes(gc);
         gc.fillArc(minX, minY, width, height, startAngle, arcExtent, closure);
 
     }
     private void drawStroke(GraphicsContext gc) {
-        gc.setStroke(color);
+        gc.setStroke(attributes.getColor());
         setAttributes(gc);
         gc.strokeArc(minX, minY, width, height, startAngle, arcExtent, closure);
 
@@ -56,10 +47,10 @@ public class Arc extends Shapes {
     @Override
     public void draw(GraphicsContext gc) {
         writeBeforeARGB(gc);
-        if(type == Shapes.TYPE_STROKE){
-            drawStroke(gc);
-        }else if(type == Shapes.TYPE_FILL){
+        if(attributes.isFill()){
             drawFill(gc);
+        }else{
+            drawStroke(gc);
         }
         writeChangeARGB(gc);
     }
@@ -76,7 +67,7 @@ public class Arc extends Shapes {
     }
     @Override
     public Shapes reposition(Point2D point) {
-        Arc a = new Arc(minX,minY,width,height,startAngle,arcExtent,color);
+        Arc a = new Arc(minX,minY,width,height,attributes);
         a.minX = point.getX();
         a.minY = point.getY();
         a.setOpType(OpType.MOVE);

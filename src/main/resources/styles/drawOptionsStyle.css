@@ -1,0 +1,47 @@
+#outerGrid{
+	-fx-border-radius : 20 20 20 20;
+	-fx-background-radius: 20 20 20 20;
+	-fx-background-color: #282828;
+}
+.tabGrid{
+	-fx-border-color: #282828;
+	-fx-border-width: 1 2 2 2;
+	-fx-border-radius : 0 0 20 20;
+	-fx-background-radius: 0 0 20 20;
+	-fx-background-color: #727272;
+}
+.tabTag{
+	-fx-border-width: 0 0.5 0.5 0;
+	-fx-border-color: red;
+}
+.round{
+	-fx-border-radius : 20 20 20 20;
+	-fx-background-radius: 20 20 20 20;
+}
+.roundBottom{
+	-fx-border-radius : 0 0 20 20;
+	-fx-background-radius: 0 0 20 20;
+	-fx-box-border: transparent;
+}
+.gray{
+	-fx-background-color: #727272;
+}
+.txtInput{
+	-fx-prompt-text-fill:  #e8e8e8;
+	-fx-text-fill: #e8e8e8;
+	-fx-background-radius: 20 20 20 20;
+	-fx-background-color:  #282828;
+}
+.darkGray{
+	-fx-background-color:  #282828;
+}
+.tab-pane .tab-header-background {
+	-fx-background-color: #282828;
+}
+.tab-label{
+	-fx-font-weight: bold;
+}
+.tab-header-area .tab {
+	-fx-border-width: 0 1 0 1;
+	-fx-border-color: #282828;
+}

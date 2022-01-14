@@ -4,6 +4,7 @@ package org.controller.tools.drawingtool.graphiccontrol.handlers;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 import org.controller.tools.drawingtool.DrawingTool;
+import org.controller.tools.drawingtool.graphiccontrol.Attributes;
 
 public class HandlerFactory {
     private final DrawingTool dt;
@@ -23,36 +24,36 @@ public class HandlerFactory {
     public HandlerFactory(DrawingTool dt){
         this.dt = dt;
     }
-    public EventHandler<MouseEvent> getHandler(Handler handler){
+    public EventHandler<MouseEvent> getHandler(Handler handler, Attributes attributes){
         EventHandler<MouseEvent> drawer= null;
         switch(handler){
 
             case ARC:
-                drawer = new ArcDrawer(dt);
+                drawer = new ArcDrawer(dt,attributes);
                 break;
             case CIRCLE:
-                drawer = new CircleDrawer(dt);
+                drawer = new CircleDrawer(dt,attributes);
                 break;
             case ELLIPSES:
-                drawer = new EllipsesDrawer(dt);
+                drawer = new EllipsesDrawer(dt,attributes);
                 break;
             case LINE:
-                drawer = new LineDrawer(dt);
+                drawer = new LineDrawer(dt,attributes);
                 break;
             case MOVE:
                 drawer = new MoveHandler(dt);
                 break;
             case POLYGON:
-                drawer = new PolygonDrawer(dt);
+                drawer = new PolygonDrawer(dt,attributes);
                 break;
             case RECTANGLE:
-                drawer = new RectangleDrawer(dt);
+                drawer = new RectangleDrawer(dt,attributes);
                 break;
             case ROUNDED_RECTANGLE:
-                drawer = new RoundedRectDrawer(dt);
+                drawer = new RoundedRectDrawer(dt,attributes);
                 break;
             case TEXT:
-                drawer = new TextDrawer(dt);
+                drawer = new TextDrawer(dt,attributes);
                 break;
         }
 

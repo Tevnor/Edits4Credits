@@ -3,19 +3,29 @@ package org.controller;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.image.Image;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.controller.tools.drawingtool.DrawingTool;
+import org.controller.tools.drawingtool.graphiccontrol.Attributes;
 import org.controller.tools.drawingtool.graphiccontrol.handlers.HandlerFactory;
 
 import java.awt.*;
@@ -23,6 +33,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class EditorController implements Initializable {
@@ -70,63 +81,104 @@ public class EditorController implements Initializable {
     Project project;
     private double width;
     private double height;
-
+    private Parent drawOptRoot;
+    private FXMLLoader drawOptLoader;
+    private DrawOptionsController options;
+    private Stage drawOptStage = new Stage();
+    private Attributes attributes = new Attributes();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //editorImageView.setImage();
         this.dt = new DrawingTool(editorCanvas, stack);
         handlerFactory = new HandlerFactory(dt);
+        initDrawOptions();
+    }
+    private void initPolyContextMenu(){
+
     }
 
     public void handleArc(ActionEvent e){
         stack.removeEventHandler(MouseEvent.ANY, mover);
         stack.removeEventHandler(MouseEvent.ANY, drawer);
-        drawer = handlerFactory.getHandler(HandlerFactory.Handler.ARC);
+        openDrawOptions();
+        drawer = handlerFactory.getHandler(HandlerFactory.Handler.ARC, options.getAttributes());
         stack.addEventHandler(MouseEvent.ANY,drawer);
     }
     public void handleMove(ActionEvent e){
         stack.removeEventHandler(MouseEvent.ANY, drawer);
-        mover = handlerFactory.getHandler(HandlerFactory.Handler.MOVE);
+        mover = handlerFactory.getHandler(HandlerFactory.Handler.MOVE, options.getAttributes());
         stack.addEventHandler(MouseEvent.ANY,mover);
     }
     public void handleCircle(ActionEvent e){
         stack.removeEventHandler(MouseEvent.ANY, mover);
         stack.removeEventHandler(MouseEvent.ANY, drawer);
-        drawer = handlerFactory.getHandler(HandlerFactory.Handler.CIRCLE);
+        openDrawOptions();
+        drawer = handlerFactory.getHandler(HandlerFactory.Handler.CIRCLE, options.getAttributes());
         stack.addEventHandler(MouseEvent.ANY,drawer);
     }
     public void handleEllipses(ActionEvent e){
         stack.removeEventHandler(MouseEvent.ANY, mover);
         stack.removeEventHandler(MouseEvent.ANY, drawer);
-        drawer = handlerFactory.getHandler(HandlerFactory.Handler.ELLIPSES);
+        openDrawOptions();
+        drawer = handlerFactory.getHandler(HandlerFactory.Handler.ELLIPSES, options.getAttributes());
         stack.addEventHandler(MouseEvent.ANY,drawer);
 
     }
     public void handleRectangle(ActionEvent e){
         stack.removeEventHandler(MouseEvent.ANY, mover);
         stack.removeEventHandler(MouseEvent.ANY, drawer);
-        drawer = handlerFactory.getHandler(HandlerFactory.Handler.RECTANGLE);
+        openDrawOptions();
+        drawer = handlerFactory.getHandler(HandlerFactory.Handler.RECTANGLE, options.getAttributes());
         stack.addEventHandler(MouseEvent.ANY,drawer);
     }
     public void handleLine(ActionEvent e){
         stack.removeEventHandler(MouseEvent.ANY, mover);
         stack.removeEventHandler(MouseEvent.ANY, drawer);
-        drawer = handlerFactory.getHandler(HandlerFactory.Handler.LINE);
+        openDrawOptions();
+        drawer = handlerFactory.getHandler(HandlerFactory.Handler.LINE, options.getAttributes());
         stack.addEventHandler(MouseEvent.ANY,drawer);
     }
     public void handleText(ActionEvent e){
-        //openTextOptions();
         stack.removeEventHandler(MouseEvent.ANY, mover);
         stack.removeEventHandler(MouseEvent.ANY, drawer);
-        drawer = handlerFactory.getHandler(HandlerFactory.Handler.TEXT);
+        openDrawOptions();
+        drawer = handlerFactory.getHandler(HandlerFactory.Handler.TEXT, options.getAttributes());
         stack.addEventHandler(MouseEvent.ANY,drawer);
     }
     public void handlePolygon(ActionEvent e){
         stack.removeEventHandler(MouseEvent.ANY, mover);
         stack.removeEventHandler(MouseEvent.ANY, drawer);
-        drawer = handlerFactory.getHandler(HandlerFactory.Handler.POLYGON);
+        openDrawOptions();
+        drawer = handlerFactory.getHandler(HandlerFactory.Handler.POLYGON, options.getAttributes());
         stack.addEventHandler(MouseEvent.ANY,drawer);
+    }
+    public void openDrawOptions(ActionEvent e){
+        drawOptStage.centerOnScreen();
+        drawOptStage.show();
+    }
+    public void openDrawOptions(){
+        drawOptStage.centerOnScreen();
+        drawOptStage.show();
+    }
+    public void initDrawOptions(){
+        try{
+            drawOptLoader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/fxml/options.fxml")));
+            drawOptRoot = drawOptLoader.load();
+            options = drawOptLoader.getController();
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
+        drawOptStage = new Stage();
+        Scene drawOptScene = new Scene(drawOptRoot);
+        drawOptScene.setFill(Color.TRANSPARENT);
+        drawOptStage.setScene(drawOptScene);
+        drawOptStage.centerOnScreen();
+        drawOptStage.initStyle(StageStyle.UNDECORATED);
+        drawOptStage.initStyle(StageStyle.TRANSPARENT);
+        drawOptStage.setTitle("Draw Options");
+        drawOptStage.setResizable(false);
+        drawOptStage.initModality(Modality.APPLICATION_MODAL);
     }
 
     
@@ -243,7 +295,7 @@ public class EditorController implements Initializable {
         int widthMonitor = monitor.getDisplayMode().getWidth();
         int heightMonitor = monitor.getDisplayMode().getHeight();
         double resizedHeight = 0;
-        ;
+
 
         if (heightMonitor > 1000 && heightMonitor < 1400){
             resizedHeight = 900;

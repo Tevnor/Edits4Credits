@@ -3,30 +3,21 @@ package org.controller.tools.drawingtool.graphiccontrol.objects;
 
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Paint;
+import org.controller.tools.drawingtool.graphiccontrol.Attributes;
 
-/**
- *
- */
 public class Circle extends Shapes {
 
     private final double radius, diameter;
 
 
-    public double getRadius() {
-        return radius;
-    }
-    public double getDiameter() {
-        return diameter;
-    }
     public Point2D getCenter(){
         return new Point2D(minX+radius,minY+radius);
     }
-    public Circle(double minX, double minY, double radius, Paint color) {
+    public Circle(double minX, double minY, double radius, Attributes attributes) {
         this.minX = minX;
         this.minY = minY;
         this.radius = radius;
-        this.color = color;
+        this.attributes = attributes;
         this.diameter = 2*radius;
         this.width = diameter;
         this.height = diameter;
@@ -35,13 +26,13 @@ public class Circle extends Shapes {
 
 
     private void drawStroke(GraphicsContext gc) {
-        gc.setStroke(color);
+        gc.setStroke(attributes.getColor());
         setAttributes(gc);
         gc.strokeOval(minX, minY, diameter, diameter);
     }
 
     private void drawFill(GraphicsContext gc) {
-        gc.setFill(color);
+        gc.setFill(attributes.getColor());
         setAttributes(gc);
         gc.fillOval(minX, minY, diameter, diameter);
     }
@@ -50,10 +41,10 @@ public class Circle extends Shapes {
     @Override
     public void draw(GraphicsContext gc) {
         writeBeforeARGB(gc);
-        if(drawingType == Shapes.TYPE_STROKE){
-            drawStroke(gc);
-        }else if(drawingType == Shapes.TYPE_FILL){
+        if(attributes.isFill()){
             drawFill(gc);
+        }else{
+            drawStroke(gc);
         }
         writeChangeARGB(gc);
     }
@@ -69,7 +60,7 @@ public class Circle extends Shapes {
 
     @Override
     public Shapes reposition(Point2D point) {
-        Circle c = new Circle(minX,minY,radius,color);
+        Circle c = new Circle(minX,minY,radius,attributes);
         c.minX = point.getX();
         c.minY = point.getY();
         c.setOpType(OpType.MOVE);

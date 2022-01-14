@@ -2,21 +2,21 @@ package org.controller.tools.drawingtool.graphiccontrol.objects;
 
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Paint;
 import javafx.scene.transform.Rotate;
+import org.controller.tools.drawingtool.graphiccontrol.Attributes;
 
 public class Line extends Shapes {
 
     private double xOne, yOne, xTwo, yTwo;
-    private double lineWidth = 1;
 
-    public Line(double xOne, double yOne, double xTwo, double yTwo, Paint color){
+    public Line(double xOne, double yOne, double xTwo, double yTwo, Attributes attributes){
 
         this.xOne = xOne;
         this.yOne = yOne;
         this.xTwo = xTwo;
         this.yTwo = yTwo;
-        this.color = color;
+        this.attributes = attributes;
+        setRotation(attributes.getRotation());
         setDims();
         this.type = LINE;
 
@@ -39,7 +39,7 @@ public class Line extends Shapes {
         newStart = getStart().subtract(connect);
         newEnd = getEnd().subtract(connect);
 
-        Line l = new Line(xOne,yOne,xTwo,yTwo,color);
+        Line l = new Line(xOne,yOne,xTwo,yTwo,attributes);
 
         l.xOne = newStart.getX();
         l.yOne = newStart.getY();
@@ -80,9 +80,9 @@ public class Line extends Shapes {
     @Override
     public void draw(GraphicsContext gc) {
         writeBeforeARGB(gc);
-        gc.setStroke(color);
+        gc.setStroke(attributes.getColor());
         setAttributes(gc);
-        gc.setLineWidth(lineWidth);
+        gc.setLineWidth(attributes.getLineWidth());
         gc.strokeLine(xOne, yOne, xTwo, yTwo);
         writeChangeARGB(gc);
     }
@@ -108,12 +108,6 @@ public class Line extends Shapes {
     }
     public Point2D getEnd(){
         return new Point2D(xTwo,yTwo);
-    }
-    public double getLineWidth() {
-        return lineWidth;
-    }
-    public void setLineWidth(double v){
-        this.lineWidth = v;
     }
 
 }

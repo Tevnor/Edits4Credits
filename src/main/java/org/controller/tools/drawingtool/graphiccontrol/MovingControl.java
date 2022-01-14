@@ -13,6 +13,7 @@ public class MovingControl {
     private Shapes preSelectedShape;
     private Shape movingShape;
     private Point2D offset, end;
+    private int moveRef;
 
     public MovingControl(){
         this.preSelectedShape = null;
@@ -50,9 +51,11 @@ public class MovingControl {
                 if (point.getX() >= minX && point.getX() <= maxX &&
                         point.getY() >= minY && point.getY() <= maxY && shape.isVisible()) {
                     overShape = true;
+                    moveRef = i;
                     preSelectedShape = (Shapes) op.get(i);
                     if (!overTrueShape(point)) {
                         overShape = false;
+                        moveRef = 0;
                     }
                 }
             }
@@ -155,7 +158,10 @@ public class MovingControl {
 
 
     public Shapes getPostSelectedShape() {
-        return preSelectedShape.reposition(end);
+        Shapes shape = preSelectedShape.reposition(end);
+        shape.setReference(moveRef);
+        this.moveRef = 0;
+        return shape;
     }
 }
 

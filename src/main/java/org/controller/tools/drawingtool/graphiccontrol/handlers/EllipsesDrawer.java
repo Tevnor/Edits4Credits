@@ -3,16 +3,18 @@ package org.controller.tools.drawingtool.graphiccontrol.handlers;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.Color;
 import org.controller.tools.drawingtool.DrawingTool;
+import org.controller.tools.drawingtool.graphiccontrol.Attributes;
 import org.controller.tools.drawingtool.graphiccontrol.objects.Ellipses;
 
 public class EllipsesDrawer implements EventHandler<MouseEvent> {
     private Point2D point1;
-    private DrawingTool dt;
+    private final DrawingTool dt;
+    private final Attributes attributes;
 
-    public EllipsesDrawer(DrawingTool dt){
+    public EllipsesDrawer(DrawingTool dt, Attributes attributes){
         this.dt = dt;
+        this.attributes = attributes;
     }
 
 
@@ -24,7 +26,7 @@ public class EllipsesDrawer implements EventHandler<MouseEvent> {
             double[] dims = dt.getDc().calculateMinXMinYWidthHeight(point1,
                     new Point2D(mouseEvent.getX(),mouseEvent.getY()));
 
-            dt.getDb().addDrawOperation(new Ellipses(dims[0], dims[1], dims[2], dims[3], Color.BLACK));
+            dt.getDb().addDrawOperation(new Ellipses(dims[0], dims[1], dims[2], dims[3], attributes));
 
         }
 

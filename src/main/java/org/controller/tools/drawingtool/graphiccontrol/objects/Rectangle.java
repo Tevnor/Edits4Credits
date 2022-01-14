@@ -6,28 +6,30 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Shape;
 import javafx.scene.transform.Rotate;
+import org.controller.tools.drawingtool.graphiccontrol.Attributes;
 
 public class Rectangle extends Shapes {
 
 
 
-    public Rectangle(double minX, double minY, double width, double height, Paint color){
+    public Rectangle(double minX, double minY, double width, double height, Attributes attributes){
         this.minX = minX;
         this.minY = minY;
         this.width = width;
         this.height = height;
-        this.color = color;
+        this.attributes = attributes;
+        setRotation(attributes.getRotation());
         this.type = RECTANGLE;
     }
 
     void drawStroke(GraphicsContext gc) {
-        gc.setStroke(color);
+        gc.setStroke(attributes.getColor());
         setAttributes(gc);
         gc.strokeRect(minX, minY, width, height);
     }
 
     void drawFill(GraphicsContext gc) {
-        gc.setFill(color);
+        gc.setFill(attributes.getColor());
         setAttributes(gc);
         gc.fillRect(minX, minY, width, height);
     }
@@ -35,10 +37,10 @@ public class Rectangle extends Shapes {
     @Override
     public void draw(GraphicsContext gc) {
         writeBeforeARGB(gc);
-        if(drawingType == Shapes.TYPE_STROKE){
-            drawStroke(gc);
-        }else if(drawingType == Shapes.TYPE_FILL){
+        if(attributes.isFill()){
             drawFill(gc);
+        }else{
+            drawStroke(gc);
         }
         writeChangeARGB(gc);
     }
@@ -57,7 +59,7 @@ public class Rectangle extends Shapes {
 
     @Override
     public Shapes reposition(Point2D point) {
-        Rectangle r = new Rectangle(minX,minY,width,height,color);
+        Rectangle r = new Rectangle(minX,minY,width,height,attributes);
         r.minX = point.getX();
         r.minY = point.getY();
         r.setOpType(OpType.MOVE);

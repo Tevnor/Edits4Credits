@@ -6,6 +6,7 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Shape;
 import javafx.scene.transform.Rotate;
+import org.controller.tools.drawingtool.graphiccontrol.Attributes;
 
 public class Ellipses extends Shapes {
 
@@ -14,24 +15,25 @@ public class Ellipses extends Shapes {
     }
 
 
-    public Ellipses(double minX, double minY, double width, double height, Paint color) {
+    public Ellipses(double minX, double minY, double width, double height, Attributes attributes) {
         this.minX = minX;
         this.minY = minY;
         this.width = width;
         this.height = height;
-        this.color = color;
+        this.attributes = attributes;
+        setRotation(attributes.getRotation());
         this.type = ELLIPSES;
     }
 
 
     private void drawStroke(GraphicsContext gc) {
-        gc.setStroke(color);
+        gc.setStroke(attributes.getColor());
         setAttributes(gc);
         gc.strokeOval(minX, minY, width, height);
     }
 
     private void drawFill(GraphicsContext gc) {
-        gc.setFill(color);
+        gc.setFill(attributes.getColor());
         setAttributes(gc);
         gc.fillOval(minX, minY, width, height);
     }
@@ -39,10 +41,10 @@ public class Ellipses extends Shapes {
     @Override
     public void draw(GraphicsContext gc) {
         writeBeforeARGB(gc);
-        if(drawingType == Shapes.TYPE_STROKE){
-            drawStroke(gc);
-        }else if(drawingType == Shapes.TYPE_FILL){
+        if(attributes.isFill()){
             drawFill(gc);
+        }else{
+            drawStroke(gc);
         }
         writeChangeARGB(gc);
     }
@@ -61,7 +63,7 @@ public class Ellipses extends Shapes {
 
     @Override
     public Shapes reposition(Point2D point) {
-        Ellipses e = new Ellipses(minX,minY,width,height,color);
+        Ellipses e = new Ellipses(minX,minY,width,height,attributes);
         e.minX = point.getX();
         e.minY = point.getY();
         e.setOpType(OpType.MOVE);

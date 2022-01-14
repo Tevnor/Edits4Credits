@@ -41,11 +41,23 @@ public class DrawBoard {
             historyIndex++;
             op.draw(gc);
         }else if(op.getOpType() == DrawOp.OpType.MOVE){
-            writeUndo(pw,operations.get(historyIndex));
-            operations.get(historyIndex).setVisible(false);
+            int ref = op.getMoveReference();
+            if(ref != historyIndex && ref != 0){
+                writeUndo(pw,operations.get(ref));
+                operations.get(ref).setVisible(false);
+                for(int i = ref+1; i < operations.size();i++){
+                    if(operations.get(i).isVisible()){
+                        operations.get(i).draw(gc);
+                    }
+                }
+            }else{
+                writeUndo(pw,operations.get(historyIndex));
+                operations.get(historyIndex).setVisible(false);
+            }
             historyIndex++;
             operations.add(op);
             op.draw(gc);
+
         }
 
     }

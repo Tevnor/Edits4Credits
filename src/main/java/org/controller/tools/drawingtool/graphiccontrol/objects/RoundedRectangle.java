@@ -5,16 +5,18 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Shape;
+import org.controller.tools.drawingtool.graphiccontrol.Attributes;
 
 public class RoundedRectangle extends Rectangle{
 
     private double arcWidth;
     private double arcHeigth;
 
-    public RoundedRectangle(double minX, double minY, double width, double height, double arcWidth, double arcHeight, Paint color) {
-        super(minX, minY, width, height, color);
-        this.arcWidth = arcWidth;
-        this.arcHeigth = arcHeight;
+    public RoundedRectangle(double minX, double minY, double width, double height, Attributes attributes) {
+        super(minX, minY, width, height, attributes);
+        setRotation(attributes.getRotation());
+        this.arcWidth = attributes.getArcWidth();
+        this.arcHeigth = attributes.getArcHeight();
         this.type = ROUNDED_RECT;
     }
 
@@ -103,7 +105,7 @@ public class RoundedRectangle extends Rectangle{
 
     @Override
     public Shapes reposition(Point2D point) {
-        RoundedRectangle r = new RoundedRectangle(minX,minY,width,height,arcWidth,arcHeigth,color);
+        RoundedRectangle r = new RoundedRectangle(minX,minY,width,height,attributes);
         r.minX = point.getX();
         r.minY = point.getY();
         r.setOpType(OpType.MOVE);
