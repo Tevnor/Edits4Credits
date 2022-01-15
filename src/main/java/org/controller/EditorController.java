@@ -91,8 +91,8 @@ public class EditorController implements Initializable, ControlScreen {
 
     private ScreensController screensController;
     private Window window;
-    private int screenWidth;
-    private int screenHeight;
+    private double screenWidth;
+    private double screenHeight;
     private double canvasWidth;
     private double canvasHeight;
 
