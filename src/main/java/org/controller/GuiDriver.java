@@ -21,11 +21,8 @@ public class GuiDriver  extends Application {
 
   private Window window;
   private ScreensController sc;
-  private int screenWidth;
-  private int screenHeight;
-
-  private static Stage primaryStage;
-  private static Scene loginScene;
+  private double screenWidth;
+  private double screenHeight;
 
   public static String modeScreenID = "modeSelection";
   public static String modeScreenFile = "/fxml/modeSelection.fxml";
@@ -36,15 +33,13 @@ public class GuiDriver  extends Application {
   public static String editorScreenID = "editor";
   public static String editorScreenFile = "/fxml/editor.fxml";
 
-  @Override
+ @Override
   public void start(Stage primaryStage) {
     sc = new ScreensController();
-
     sc.getMonitorInfo();
-    screenWidth = sc.getWindow().getScreenWidth();
-    screenHeight = sc.getWindow().getScreenHeight();
-
-    window = new Window(screenWidth, screenHeight);
+    this.window = sc.getWindow();
+    screenWidth = window.getScreenWidth();
+    screenHeight = window.getScreenHeight();
 
     openLogin();
   }
