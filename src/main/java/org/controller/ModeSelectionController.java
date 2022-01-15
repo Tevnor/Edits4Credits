@@ -24,8 +24,8 @@ public class ModeSelectionController implements Initializable, ControlScreen {
 
     ScreensController screensController;
     Window window;
-    private int screenWidth;
-    private int screenHeight;
+    private double screenWidth;
+    private double screenHeight;
 
     @FXML
     private AnchorPane rootAnchorPane;
