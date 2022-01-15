@@ -36,7 +36,7 @@ import java.net.URL;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
-public class EditorController implements Initializable {
+public class EditorController implements Initializable, ControlScreen {
 
     @FXML
     private Button importButton;
@@ -89,6 +89,13 @@ public class EditorController implements Initializable {
     private Stage drawOptStage = new Stage();
     private Attributes attributes = new Attributes();
 
+    private ScreensController screensController;
+    private Window window;
+    private int screenWidth;
+    private int screenHeight;
+    private double canvasWidth;
+    private double canvasHeight;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //editorImageView.setImage();
@@ -96,6 +103,24 @@ public class EditorController implements Initializable {
         handlerFactory = new HandlerFactory(dt);
         initDrawOptions();
     }
+
+    @Override
+    public void setScreenParent(ScreensController screenPage) {
+        this.screensController = screenPage;
+    }
+
+    @Override
+    public void setWindow(Window window) {
+        this.window = window;
+        this.screenWidth = window.getScreenWidth();
+        this.screenHeight = window.getScreenHeight();
+    }
+
+    public void setCanvas(Project project) {
+        this.canvasWidth = project.getCanvasWidth();
+        this.canvasHeight = project.getCanvasHeight();
+    }
+
 
     public void handleArc(ActionEvent e){
         stack.removeEventHandler(MouseEvent.ANY, mover);

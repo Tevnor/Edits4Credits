@@ -11,6 +11,7 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
 
 <AnchorPane fx:id="rootAnchorPane" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.controller.EditorController">
@@ -20,59 +21,64 @@
             <Image url="@../images/e4c-bg.png" />
          </image>
       </ImageView>
-      <ToolBar layoutY="290.0" orientation="VERTICAL" prefHeight="516.0" prefWidth="57.0">
-        <items>
-            <ToggleButton fx:id="arcBtn" mnemonicParsing="false" onAction="#handleArc" prefHeight="45.0" prefWidth="45.0" text="Arc">
-               <toggleGroup>
-                  <ToggleGroup fx:id="shapeGroup" />
-               </toggleGroup></ToggleButton>
-            <ToggleButton fx:id="circleBtn" mnemonicParsing="false" onAction="#handleCircle" prefHeight="45.0" prefWidth="45.0" text="Circle" toggleGroup="$shapeGroup" />
-            <ToggleButton fx:id="ellipseBtn" mnemonicParsing="false" onAction="#handleEllipses" prefHeight="45.0" prefWidth="45.0" text="Ellipse" toggleGroup="$shapeGroup" />
-            <ToggleButton fx:id="lineBtn" mnemonicParsing="false" onAction="#handleLine" prefHeight="45.0" prefWidth="45.0" text="Line" toggleGroup="$shapeGroup" />
-            <ToggleButton fx:id="polygonBtn" mnemonicParsing="false" onAction="#handlePolygon" prefHeight="45.0" prefWidth="45.0" text="Polygon" toggleGroup="$shapeGroup" />
-            <ToggleButton fx:id="rectangleBtn" mnemonicParsing="false" onAction="#handleRectangle" prefHeight="45.0" prefWidth="45.0" text="Rectangle" toggleGroup="$shapeGroup" />
-            <ToggleButton fx:id="textBtn" mnemonicParsing="false" onAction="#handleText" prefHeight="45.0" prefWidth="45.0" text="Text" toggleGroup="$shapeGroup" />
-            <ToggleButton fx:id="moveBtn" mnemonicParsing="false" onAction="#handleMove" prefHeight="45.0" prefWidth="45.0" text="Move" toggleGroup="$shapeGroup" />
-            <ToggleButton fx:id="drawOptionsBtn" mnemonicParsing="false" onAction="#openDrawOptions" prefHeight="45.0" prefWidth="45.0" text="DrawOptions" toggleGroup="$shapeGroup" />
-            <Button fx:id="btnDrawUndo" mnemonicParsing="false" onAction="#handleDrawUndo" prefHeight="25.0" prefWidth="45.0" text="Undo" />
-            <Button fx:id="btnDrawRedo" mnemonicParsing="false" onAction="#handleDrawRedo" prefHeight="25.0" prefWidth="45.0" text="Redo" />
-        </items>
-      </ToolBar>
-      <MenuBar prefHeight="25.0" prefWidth="1920.0">
-        <menus>
-          <Menu mnemonicParsing="false" text="File">
-            <items>
-              <MenuItem fx:id="openFile" mnemonicParsing="false" onAction="#handleOpenFile" text="Open File" />
-                  <MenuItem fx:id="deleteFile" mnemonicParsing="false" onAction="#handleDeleteFile" text="Delete File" />
-                  <MenuItem fx:id="openFileSettings" mnemonicParsing="false" onAction="#handleFileSettings" text="File Settings" />
-                  <MenuItem fx:id="saveFile" mnemonicParsing="false" onAction="#handleSafeFile" text="Safe File" />
-            </items>
-          </Menu>
-          <Menu mnemonicParsing="false" text="Filter">
-            <items>
-              <MenuItem fx:id="addNoise" mnemonicParsing="false" onAction="#handleAddNoise" text="Add Noise" />
-                  <MenuItem mnemonicParsing="false" text="Filter 2" />
-                  <MenuItem mnemonicParsing="false" text="Filter 3" />
-                  <MenuItem mnemonicParsing="false" text="Filter 4" />
-            </items>
-          </Menu>
-            <Menu mnemonicParsing="false" text="Gallery">
-              <items>
-                <MenuItem mnemonicParsing="false" text="Action 1" />
-              </items>
-            </Menu>
-          <Menu mnemonicParsing="false" text="Help">
-            <items>
-              <MenuItem mnemonicParsing="false" text="About" />
-            </items>
-          </Menu>
-        </menus>
-      </MenuBar>
-      <StackPane fx:id="stack" alignment="TOP_LEFT" layoutX="67.0" layoutY="33.0">
+      <Pane fx:id="editorElementsPane">
          <children>
-            <Canvas fx:id="editorCanvas" height="1024.0" onDragDropped="#handleDragDropped" onDragOver="#handleDragOver" width="1834.0" />
-            <Button fx:id="importButton" mnemonicParsing="false" onAction="#handleImportButton" text="Import Image" textAlignment="CENTER" StackPane.alignment="CENTER" />
+            <ToolBar layoutY="290.0" orientation="VERTICAL" prefHeight="516.0" prefWidth="57.0">
+              <items>
+                  <ToggleButton fx:id="arcBtn" mnemonicParsing="false" onAction="#handleArc" prefHeight="45.0" prefWidth="45.0" text="Arc">
+                     <toggleGroup>
+                        <ToggleGroup fx:id="shapeGroup" />
+                     </toggleGroup>
+                  </ToggleButton>
+                  <ToggleButton fx:id="circleBtn" mnemonicParsing="false" onAction="#handleCircle" prefHeight="45.0" prefWidth="45.0" text="Circle" toggleGroup="$shapeGroup" />
+                  <ToggleButton fx:id="ellipseBtn" mnemonicParsing="false" onAction="#handleEllipses" prefHeight="45.0" prefWidth="45.0" text="Ellipse" toggleGroup="$shapeGroup" />
+                  <ToggleButton fx:id="lineBtn" mnemonicParsing="false" onAction="#handleLine" prefHeight="45.0" prefWidth="45.0" text="Line" toggleGroup="$shapeGroup" />
+                  <ToggleButton fx:id="polygonBtn" mnemonicParsing="false" onAction="#handlePolygon" prefHeight="45.0" prefWidth="45.0" text="Polygon" toggleGroup="$shapeGroup" />
+                  <ToggleButton fx:id="rectangleBtn" mnemonicParsing="false" onAction="#handleRectangle" prefHeight="45.0" prefWidth="45.0" text="Rectangle" toggleGroup="$shapeGroup" />
+                  <ToggleButton fx:id="textBtn" mnemonicParsing="false" onAction="#handleText" prefHeight="45.0" prefWidth="45.0" text="Text" toggleGroup="$shapeGroup" />
+                  <ToggleButton fx:id="moveBtn" mnemonicParsing="false" onAction="#handleMove" prefHeight="45.0" prefWidth="45.0" text="Move" toggleGroup="$shapeGroup" />
+                  <ToggleButton fx:id="drawOptionsBtn" mnemonicParsing="false" onAction="#openDrawOptions" prefHeight="45.0" prefWidth="45.0" text="DrawOptions" toggleGroup="$shapeGroup" />
+                  <Button fx:id="btnDrawUndo" mnemonicParsing="false" onAction="#handleDrawUndo" prefHeight="25.0" prefWidth="45.0" text="Undo" />
+                  <Button fx:id="btnDrawRedo" mnemonicParsing="false" onAction="#handleDrawRedo" prefHeight="25.0" prefWidth="45.0" text="Redo" />
+              </items>
+            </ToolBar>
+            <MenuBar prefHeight="25.0" prefWidth="1920.0">
+              <menus>
+                <Menu mnemonicParsing="false" text="File">
+                  <items>
+                    <MenuItem fx:id="openFile" mnemonicParsing="false" onAction="#handleOpenFile" text="Open File" />
+                        <MenuItem fx:id="deleteFile" mnemonicParsing="false" onAction="#handleDeleteFile" text="Delete File" />
+                        <MenuItem fx:id="openFileSettings" mnemonicParsing="false" onAction="#handleFileSettings" text="File Settings" />
+                        <MenuItem fx:id="saveFile" mnemonicParsing="false" onAction="#handleSafeFile" text="Safe File" />
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Filter">
+                  <items>
+                    <MenuItem fx:id="addNoise" mnemonicParsing="false" onAction="#handleAddNoise" text="Add Noise" />
+                        <MenuItem mnemonicParsing="false" text="Filter 2" />
+                        <MenuItem mnemonicParsing="false" text="Filter 3" />
+                        <MenuItem mnemonicParsing="false" text="Filter 4" />
+                  </items>
+                </Menu>
+                  <Menu mnemonicParsing="false" text="Gallery">
+                    <items>
+                      <MenuItem mnemonicParsing="false" text="Action 1" />
+                    </items>
+                  </Menu>
+                <Menu mnemonicParsing="false" text="Help">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="About" />
+                  </items>
+                </Menu>
+              </menus>
+            </MenuBar>
+            <StackPane fx:id="stack" alignment="TOP_LEFT" layoutX="67.0" layoutY="33.0">
+               <children>
+                  <Canvas fx:id="editorCanvas" height="1024.0" onDragDropped="#handleDragDropped" onDragOver="#handleDragOver" width="1834.0" />
+                  <Button fx:id="importButton" mnemonicParsing="false" onAction="#handleImportButton" text="Import Image" textAlignment="CENTER" StackPane.alignment="CENTER" />
+               </children>
+            </StackPane>
          </children>
-      </StackPane>
+      </Pane>
    </children>
 </AnchorPane>
