@@ -99,11 +99,11 @@ public class ScreensController extends StackPane {
 
     public void setCenter(String name) {
         switch (name)  {
-            case "modeSelection":   setLayoutX(window.getScreenWidth() / 4d - 500);
-            setLayoutY(window.getScreenHeight() / 4d - 300);
+            case "modeSelection":   setLayoutX(window.getScreenWidth() / (2 * window.getScaleX()) - 500);
+                                    setLayoutY(window.getScreenHeight() / (2 * window.getScaleY()) - 300);
                                     break;
-            case "settings":        setLayoutX(window.getScreenWidth() / 4d - 300);
-                                    setLayoutY(window.getScreenHeight() / 4d - 300);
+            case "settings":        setLayoutX(window.getScreenWidth() / (2 * window.getScaleX()) - 300);
+                                    setLayoutY(window.getScreenHeight() / (2 * window.getScaleY()) - 300);
                                     break;
             default:                setLayoutX(0);
                                     setLayoutY(0);
