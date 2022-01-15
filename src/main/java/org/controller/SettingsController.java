@@ -20,8 +20,8 @@ public class SettingsController implements Initializable, ControlScreen {
 
     ScreensController screensController;
     Window window;
-    private int screenWidth;
-    private int screenHeight;
+    private double screenWidth;
+    private double screenHeight;
 
     private Project project;
 
