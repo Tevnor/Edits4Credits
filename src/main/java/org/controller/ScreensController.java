@@ -53,8 +53,11 @@ public class ScreensController extends StackPane {
         double width = monitor.getDisplayMode().getWidth();
         double height = monitor.getDisplayMode().getHeight();
 
-        // change to double
-        window = new Window((int) width,(int) height);
+        Screen screen = Screen.getPrimary();
+        double scaleX = screen.getOutputScaleX();
+        double scaleY = screen.getOutputScaleY();
+
+        this.window = new Window(width, height, scaleX, scaleY);
     }
 
     public Window getWindow() {
