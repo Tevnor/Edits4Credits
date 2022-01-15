@@ -81,8 +81,8 @@ public class LogInController implements Initializable, ControlScreen {
         this.window = window;
     }
     public void setCenter() {
-        double xCenter = window.getScreenWidth() / 4d;
-        double yCenter = window.getScreenHeight() / 4d;
+        double xCenter = window.getScreenWidth() / (2 * window.getScaleX());
+        double yCenter = window.getScreenHeight() / (2 * window.getScaleY());
 
         rootPane.setLayoutX(xCenter - 200);
         rootPane.setLayoutY(yCenter - 300);
