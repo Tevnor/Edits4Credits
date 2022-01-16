@@ -23,7 +23,7 @@
       </ImageView>
       <Pane fx:id="editorElementsPane">
          <children>
-            <ToolBar layoutY="290.0" orientation="VERTICAL" prefHeight="516.0" prefWidth="57.0">
+            <ToolBar fx:id="toolBar" layoutY="290.0" orientation="VERTICAL" prefHeight="516.0" prefWidth="57.0">
               <items>
                   <ToggleButton fx:id="arcBtn" mnemonicParsing="false" onAction="#handleArc" prefHeight="45.0" prefWidth="45.0" text="Arc">
                      <toggleGroup>
@@ -42,7 +42,7 @@
                   <Button fx:id="btnDrawRedo" mnemonicParsing="false" onAction="#handleDrawRedo" prefHeight="25.0" prefWidth="45.0" text="Redo" />
               </items>
             </ToolBar>
-            <MenuBar prefHeight="25.0" prefWidth="1920.0">
+            <MenuBar fx:id="menuBar" prefHeight="25.0" prefWidth="1920.0">
               <menus>
                 <Menu mnemonicParsing="false" text="File">
                   <items>

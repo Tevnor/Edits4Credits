@@ -10,14 +10,14 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.*;
 import javafx.scene.control.Button;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.ToggleButton;
+import javafx.scene.control.MenuBar;
 import javafx.scene.image.Image;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
@@ -74,6 +74,13 @@ public class EditorController implements Initializable, ControlScreen {
     private StackPane stack;
     @FXML
     private Button btnDrawUndo, btnDrawRedo;
+    @FXML
+    private MenuBar menuBar;
+    @FXML
+    private AnchorPane rootAnchorpane;
+    @FXML
+    private ToolBar toolBar;
+
 
     private File imagePath;
     private EventHandler<MouseEvent> drawer = event -> {}, mover = event -> {};
@@ -83,6 +90,7 @@ public class EditorController implements Initializable, ControlScreen {
     Project project;
     private double width;
     private double height;
+    private double projectAspectRatio;
     private Parent drawOptRoot;
     private FXMLLoader drawOptLoader;
     private DrawOptionsController options;
@@ -96,9 +104,9 @@ public class EditorController implements Initializable, ControlScreen {
     private double canvasWidth;
     private double canvasHeight;
 
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        //editorImageView.setImage();
         this.dt = new DrawingTool(editorCanvas, stack);
         handlerFactory = new HandlerFactory(dt);
         initDrawOptions();
@@ -117,8 +125,8 @@ public class EditorController implements Initializable, ControlScreen {
     }
 
     public void setCanvas(Project project) {
-        this.canvasWidth = project.getCanvasWidth();
-        this.canvasHeight = project.getCanvasHeight();
+        this.canvasWidth = project.getProjectWidth();
+        this.canvasHeight = project.getProjectHeight();
     }
 
 
@@ -276,10 +284,55 @@ public class EditorController implements Initializable, ControlScreen {
         setImportedImage(image);
     }
 
+    public double getMenuBarHeight(){
+        double menuBarHeight = menuBar.getPrefHeight();
+        return menuBarHeight;
+    }
+    public double getToolBarWidth(){
+        double toolBarHeight = toolBar.getPrefWidth();
+        return toolBarHeight;
+    }
+
+    public void setStackPane() {
+        double maxStackHeight = screenHeight - getMenuBarHeight();
+        double maxStackWidth = screenWidth - getToolBarWidth();
+
+        if (useWidthOrHeight()){
+            double stackHeight = screenHeight - getMenuBarHeight();
+            double stackWidth = stackHeight * projectAspectRatio;
+            if (stackWidth > maxStackWidth){
+                stackWidth = maxStackWidth;
+                stackHeight = stackWidth * projectAspectRatio;
+            }
+            stack.setPrefHeight(stackHeight);
+            stack.setPrefWidth(stackWidth);
+        }
+        else {
+            double stackWidth = screenWidth - getToolBarWidth();
+            double stackHeight = stackWidth * (1 / projectAspectRatio);
+            if (stackWidth > maxStackWidth){
+                stackWidth = maxStackWidth;
+                stackHeight = stackWidth * projectAspectRatio;
+            }
+            //else if (stackHeight >)
+            stack.setPrefHeight(stackHeight);
+            stack.setPrefWidth(stackWidth);
+        }
+
+    }
+    public boolean useWidthOrHeight(){
+        boolean useHeight = true;
+        if (projectAspectRatio > 1) {
+            useHeight = false;
+        }
+        return useHeight;
+    }
+
     public void setImportedImage(Image importedImage) {
         editorCanvasImage = new Canvas(getResizedImageWidth(getImageAspectRatio(importedImage)), getResizedImageHeight());
         stack.getChildren().add(editorCanvasImage);
         stack.setAlignment(editorCanvasImage, Pos.CENTER);
+        editorCanvasImage.toBack();
 
         GraphicsContext gc = editorCanvasImage.getGraphicsContext2D();
         gc.drawImage(importedImage,0, 0, getResizedImageWidth(getImageAspectRatio(importedImage)), getResizedImageHeight());
@@ -294,9 +347,18 @@ public class EditorController implements Initializable, ControlScreen {
         }
     }
 
-    public void setWidthAndHeight(Project project){
-        this.width = project.getCanvasWidth();
-        this.height = project.getCanvasHeight();
+    public void setWidthHeightAspectRatio(Project project){
+        this.width = project.getProjectWidth();
+        this.height = project.getProjectHeight();
+        this.projectAspectRatio = project.getProjectAspectRatio();
+    }
+
+
+    public double getImageAspectRatio(Image image){
+        double height = image.getHeight();
+        double width = image.getWidth();
+        double ratio = height / width;
+        return ratio;
     }
 
     public double getResizedImageWidth(double ratio){
@@ -344,10 +406,5 @@ public class EditorController implements Initializable, ControlScreen {
         return resizedHeight;
     }
 
-    public double getImageAspectRatio(Image image){
-        double height = image.getHeight();
-        double width = image.getWidth();
-        double ratio = height / width;
-        return ratio;
-    }
+
 }

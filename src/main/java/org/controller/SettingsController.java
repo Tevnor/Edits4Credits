@@ -59,19 +59,8 @@ public class SettingsController implements Initializable, ControlScreen {
         this.window = window;
         this.screenWidth = window.getScreenWidth();
         this.screenHeight = window.getScreenHeight();
-        setCenter();
     }
 
-    public void setCenter() {
-        double xCenter = screenWidth / 4d;
-        double yCenter = screenHeight / 4d;
-
-//        this.screensController.setLayoutX(xCenter - 300);
-//        this.screensController.setLayoutY(yCenter - 300);
-
-//        settingsPane.setLayoutX(xCenter - 300);
-//        settingsPane.setLayoutY(yCenter - 300);
-    }
 
     public void handleCreateProject(ActionEvent event) throws IOException {
         try {
@@ -81,10 +70,8 @@ public class SettingsController implements Initializable, ControlScreen {
 
             EditorController ec = new EditorController();
             ec.setCanvas(project);
-
-
-
             enterProject();
+
         } catch (Exception e) {
             e.printStackTrace();
             e.getCause();
@@ -107,6 +94,7 @@ public class SettingsController implements Initializable, ControlScreen {
 //            e.getCause();
 //        }
         screensController.setScreen(GuiDriver.editorScreenID);
+        setEditorPresets();
     }
 
     public void handleOpenGallery(ActionEvent event) {
@@ -114,6 +102,16 @@ public class SettingsController implements Initializable, ControlScreen {
 
     public void handleLogOut(ActionEvent event) {
     }
+
+    public void setEditorPresets(){
+        FXMLLoader editorLoader = screensController.getLoader();
+        EditorController ec = editorLoader.getController();
+        ec.setCanvas(project);
+        ec.setWidthHeightAspectRatio(project);
+        ec.setStackPane();
+
+    }
+
 
 
 }
