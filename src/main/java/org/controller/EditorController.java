@@ -5,6 +5,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -14,6 +15,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.MenuBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
@@ -35,6 +37,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import org.controller.NoiseController;
 
 public class EditorController implements Initializable, ControlScreen {
 
@@ -93,9 +96,14 @@ public class EditorController implements Initializable, ControlScreen {
     private double height;
     private double projectAspectRatio;
     private Parent drawOptRoot;
+    private Parent noiseOptRoot;
     private FXMLLoader drawOptLoader;
+    private FXMLLoader noiseOptLoader;
     private DrawOptionsController options;
+    private EditorController editorController;
+    private NoiseController noiseController;
     private Stage drawOptStage = new Stage();
+    private Stage noiseOptStage = new Stage();
     private Attributes attributes = new Attributes();
 
     ScreensController screensController;
@@ -228,7 +236,30 @@ public class EditorController implements Initializable, ControlScreen {
         drawOptStage.setResizable(false);
         drawOptStage.initModality(Modality.APPLICATION_MODAL);
     }
+    public void initAddNoiseOpt() {
 
+        try {
+
+            FXMLLoader noiseOptLoader = new FXMLLoader();
+            System.out.println(noiseOptLoader);
+            noiseOptLoader.setLocation(Objects.requireNonNull(getClass().getResource("/fxml/noiseOptions.fxml")));
+            Parent noiseOptRoot = noiseOptLoader.load();
+            System.out.println(noiseOptRoot);
+            NoiseController noiseController = noiseOptLoader.getController();
+
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
+        noiseOptStage = new Stage();
+        Scene noiseOptScene = new Scene(noiseOptRoot);
+        noiseOptStage.setScene(noiseOptScene);
+        noiseController = new NoiseController(this, editorCanvasImage);
+        //openAddNoiseOpt();
+        //setFilteredImage();
+    }
+    public void openAddNoiseOpt(){
+        noiseOptStage.show();
+    }
     
     public void handleOpenFile(ActionEvent event) {
         importImageFromExplorer();
@@ -243,7 +274,16 @@ public class EditorController implements Initializable, ControlScreen {
     public void handleSafeFile(ActionEvent event) {
     }
 
-    public void handleAddNoise(ActionEvent event) {
+    public void handleAddNoise(ActionEvent event) throws IOException {
+        initAddNoiseOpt();
+
+
+    }
+
+
+    public WritableImage createImageFromCanvas(Canvas canvas){
+        WritableImage filterImage = editorCanvasImage.snapshot(null, null);
+        return filterImage;
     }
 
     // Apply the checkerboard filter to the filterTool object that was instantiated at setImportedImage()
@@ -347,11 +387,15 @@ public class EditorController implements Initializable, ControlScreen {
         editorCanvasImage = new Canvas(stack.getPrefWidth(), stack.getPrefHeight());
         stack.getChildren().add(editorCanvasImage);
 
-        // TODO
-//        stack.setAlignment(editorCanvasImage, Pos.CENTER);
-
+        stack.setAlignment(editorCanvasImage, Pos.CENTER);
 
         editorCanvasImage.toBack();
+    }
+
+    public void setFilteredImage(){
+        WritableImage filteredImage = noiseController.getFilteredImage();
+        GraphicsContext gc = editorCanvasImage.getGraphicsContext2D();
+        gc.drawImage(filteredImage,0, 0, filteredImage.getWidth(), filteredImage.getHeight());
     }
 
     // draw selected image to the image canvas
@@ -386,6 +430,8 @@ public class EditorController implements Initializable, ControlScreen {
         // Create pixel array from resized image to enhance performance of future references
         this.filterTool = new FilterTool(resizedImage, editorCanvasImage, stack);
         this.filterTool.stepOne();
+
+
     }
 
     // Scale the imported source image to the maximum canvas size
