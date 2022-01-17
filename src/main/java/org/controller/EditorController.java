@@ -129,6 +129,11 @@ public class EditorController implements Initializable, ControlScreen {
         this.canvasHeight = project.getProjectHeight();
     }
 
+    public void setWidthHeightAspectRatio(Project project){
+        this.width = project.getProjectWidth();
+        this.height = project.getProjectHeight();
+        this.projectAspectRatio = project.getProjectAspectRatio();
+    }
 
     public void handleArc(ActionEvent e){
         stack.removeEventHandler(MouseEvent.ANY, mover);
@@ -281,6 +286,7 @@ public class EditorController implements Initializable, ControlScreen {
         Image image = new Image(f.getPath());
 
         // Pass image to setter method
+        setEditorCanvas();
         setImportedImage(image);
     }
 
@@ -310,11 +316,10 @@ public class EditorController implements Initializable, ControlScreen {
         else {
             double stackWidth = screenWidth - getToolBarWidth();
             double stackHeight = stackWidth * (1 / projectAspectRatio);
-            if (stackWidth > maxStackWidth){
-                stackWidth = maxStackWidth;
-                stackHeight = stackWidth * projectAspectRatio;
+            if (stackHeight > maxStackHeight){
+                stackHeight = maxStackHeight;
+                stackWidth = stackHeight * projectAspectRatio;
             }
-            //else if (stackHeight >)
             stack.setPrefHeight(stackHeight);
             stack.setPrefWidth(stackWidth);
         }
@@ -327,17 +332,24 @@ public class EditorController implements Initializable, ControlScreen {
         }
         return useHeight;
     }
-
-    public void setImportedImage(Image importedImage) {
-        editorCanvasImage = new Canvas(getResizedImageWidth(getImageAspectRatio(importedImage)), getResizedImageHeight());
+    public void setEditorCanvas(){
+        editorCanvasImage = new Canvas(stack.getPrefWidth(), stack.getPrefHeight());
         stack.getChildren().add(editorCanvasImage);
         stack.setAlignment(editorCanvasImage, Pos.CENTER);
         editorCanvasImage.toBack();
+    }
 
+    public void setImportedImage(Image importedImage) {
         GraphicsContext gc = editorCanvasImage.getGraphicsContext2D();
-        gc.drawImage(importedImage,0, 0, getResizedImageWidth(getImageAspectRatio(importedImage)), getResizedImageHeight());
-        System.out.println(width + height);
+        if (getImageAspectRatio(importedImage) > 1){
+            gc.drawImage(importedImage,0, 0, editorCanvasImage.getWidth(), getResizedImageHeight(editorCanvasImage.getWidth(), getImageAspectRatio(importedImage)));
 
+        }
+        else if (getImageAspectRatio(importedImage) < 1){
+            gc.drawImage(importedImage,0, 0, getResizedImageWidth(editorCanvasImage.getHeight(), getImageAspectRatio(importedImage)), editorCanvasImage.getHeight());
+            System.out.println(stack.getPrefWidth() + " " + stack.getPrefHeight());
+            System.out.println(getResizedImageWidth(editorCanvasImage.getWidth(), getImageAspectRatio(importedImage)) + " " + editorCanvasImage.getHeight());
+        }
 
         //disables import button if image was imported
         if (imagePath != null) {
@@ -347,64 +359,22 @@ public class EditorController implements Initializable, ControlScreen {
         }
     }
 
-    public void setWidthHeightAspectRatio(Project project){
-        this.width = project.getProjectWidth();
-        this.height = project.getProjectHeight();
-        this.projectAspectRatio = project.getProjectAspectRatio();
-    }
-
-
     public double getImageAspectRatio(Image image){
         double height = image.getHeight();
         double width = image.getWidth();
-        double ratio = height / width;
+        double ratio = width / height;
         return ratio;
     }
 
-    public double getResizedImageWidth(double ratio){
-        GraphicsDevice monitor = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-        int widthMonitor = monitor.getDisplayMode().getWidth();
-        int heightMonitor = monitor.getDisplayMode().getHeight();
-        double resizedHeight = 0;
-        double resizedWidth = 0;
-
-        if (heightMonitor > 1000 && heightMonitor < 1400){
-            resizedWidth = 900 / ratio;
-        }
-        else if (heightMonitor > 1400 && heightMonitor < 2160){
-            resizedWidth = 1300 / ratio;
-        }
-        else if (heightMonitor < 1000){
-            resizedWidth = 600 / ratio;
-        }
-        else if (heightMonitor > 2100){
-            resizedWidth = 1900 / ratio;
-        }
-
-        return resizedWidth;
-    }
-    public double getResizedImageHeight(){
-        GraphicsDevice monitor = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-        int widthMonitor = monitor.getDisplayMode().getWidth();
-        int heightMonitor = monitor.getDisplayMode().getHeight();
-        double resizedHeight = 0;
-
-
-        if (heightMonitor > 1000 && heightMonitor < 1400){
-            resizedHeight = 900;
-        }
-        else if (heightMonitor > 1400 && heightMonitor < 2160){
-            resizedHeight = 1300;
-        }
-        else if (heightMonitor < 1000){
-            resizedHeight = 600;
-        }
-        else if (heightMonitor > 2100){
-            resizedHeight = 1900;
-        }
-
+    public double getResizedImageHeight(double height, double ratio){
+        double resizedHeight = height * ratio;
         return resizedHeight;
     }
+    public double getResizedImageWidth(double width, double ratio){
+        double resizedWidth = width * ratio;
+        return resizedWidth;
+    }
+
 
 
 }
