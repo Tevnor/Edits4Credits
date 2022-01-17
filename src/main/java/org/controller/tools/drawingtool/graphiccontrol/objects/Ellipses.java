@@ -7,6 +7,7 @@ import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Shape;
 import javafx.scene.transform.Rotate;
 import org.controller.tools.drawingtool.graphiccontrol.Attributes;
+import static org.controller.tools.drawingtool.graphiccontrol.objects.Shapes.Type.ELLIPSES;
 
 public class Ellipses extends Shapes {
 
@@ -50,6 +51,15 @@ public class Ellipses extends Shapes {
     }
 
     @Override
+    public void drawAfterMove(GraphicsContext gc) {
+        if(attributes.isFill()){
+            drawFill(gc);
+        }else{
+            drawStroke(gc);
+        }
+    }
+
+    @Override
     public void setRotation(double angle) {
         this.r = new Rotate(angle, minX+(width/2), minY+(height/2));
     }
@@ -63,9 +73,7 @@ public class Ellipses extends Shapes {
 
     @Override
     public Shapes reposition(Point2D point) {
-        Ellipses e = new Ellipses(minX,minY,width,height,attributes);
-        e.minX = point.getX();
-        e.minY = point.getY();
+        Ellipses e = new Ellipses(point.getX(),point.getY(),width,height,attributes);
         e.setOpType(OpType.MOVE);
         return e;
     }

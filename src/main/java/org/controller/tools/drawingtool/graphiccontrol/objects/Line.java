@@ -5,6 +5,8 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.transform.Rotate;
 import org.controller.tools.drawingtool.graphiccontrol.Attributes;
 
+import static org.controller.tools.drawingtool.graphiccontrol.objects.Shapes.Type.LINE;
+
 public class Line extends Shapes {
 
     private double xOne, yOne, xTwo, yTwo;
@@ -39,12 +41,7 @@ public class Line extends Shapes {
         newStart = getStart().subtract(connect);
         newEnd = getEnd().subtract(connect);
 
-        Line l = new Line(xOne,yOne,xTwo,yTwo,attributes);
-
-        l.xOne = newStart.getX();
-        l.yOne = newStart.getY();
-        l.xTwo = newEnd.getX();
-        l.yTwo = newEnd.getY();
+        Line l = new Line(newStart.getX(),newStart.getY(),newEnd.getX(),newEnd.getY(),attributes);
         l.setDims();
         l.setOpType(OpType.MOVE);
 
@@ -85,6 +82,14 @@ public class Line extends Shapes {
         gc.setLineWidth(attributes.getLineWidth());
         gc.strokeLine(xOne, yOne, xTwo, yTwo);
         writeChangeARGB(gc);
+    }
+
+    @Override
+    public void drawAfterMove(GraphicsContext gc) {
+        gc.setStroke(attributes.getColor());
+        setAttributes(gc);
+        gc.setLineWidth(attributes.getLineWidth());
+        gc.strokeLine(xOne, yOne, xTwo, yTwo);
     }
 
     @Override

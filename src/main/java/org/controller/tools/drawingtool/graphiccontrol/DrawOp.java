@@ -17,8 +17,6 @@ public abstract class DrawOp {
         MOVE
     }
 
-
-
     private OpType opType = OpType.DRAW;
     private final SnapshotParameters sp = new SnapshotParameters();
     private WritableImage snapshot;
@@ -27,9 +25,10 @@ public abstract class DrawOp {
     private final WritablePixelFormat<IntBuffer> format = WritablePixelFormat.getIntArgbInstance();
     private HashMap<Integer,Integer> changeValues;
     private boolean visible = true;
-    private int moveReference = 0;
+    private int moveReference = -1;
 
     public abstract void draw(GraphicsContext gc);
+    public abstract void drawAfterMove(GraphicsContext gc);
 
     public void writeBeforeARGB(GraphicsContext gc){
         sp.setFill(Color.TRANSPARENT);

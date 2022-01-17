@@ -5,6 +5,8 @@ import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import org.controller.tools.drawingtool.graphiccontrol.Attributes;
 
+import static org.controller.tools.drawingtool.graphiccontrol.objects.Shapes.Type.CIRCLE;
+
 public class Circle extends Shapes {
 
     private final double radius, diameter;
@@ -50,6 +52,15 @@ public class Circle extends Shapes {
     }
 
     @Override
+    public void drawAfterMove(GraphicsContext gc) {
+        if(attributes.isFill()){
+            drawFill(gc);
+        }else{
+            drawStroke(gc);
+        }
+    }
+
+    @Override
     public void setRotation(double angle) {
     }
 
@@ -60,9 +71,7 @@ public class Circle extends Shapes {
 
     @Override
     public Shapes reposition(Point2D point) {
-        Circle c = new Circle(minX,minY,radius,attributes);
-        c.minX = point.getX();
-        c.minY = point.getY();
+        Circle c = new Circle(point.getX(),point.getY(),radius,attributes);
         c.setOpType(OpType.MOVE);
         return c;
     }

@@ -1,9 +1,12 @@
 package org.controller.tools.drawingtool.graphiccontrol;
 
 import javafx.geometry.Point2D;
+import javafx.geometry.VPos;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Shape;
+import javafx.scene.transform.Rotate;
 import org.controller.tools.drawingtool.graphiccontrol.objects.*;
+import org.controller.tools.drawingtool.graphiccontrol.objects.Shapes.Type;
 
 import java.util.ArrayList;
 
@@ -34,6 +37,7 @@ public class MovingControl {
         while(!overShape){
             if(!(op.get(i) instanceof Clear)) {
                 Shapes shape = (Shapes) op.get(i);
+                Rotate r = shape.getR();
 
                 if(shape instanceof Text) {
                     Text txt = (Text) shape;
@@ -48,8 +52,9 @@ public class MovingControl {
                     maxY = minY + shape.getHeight();
                 }
 
-                if (point.getX() >= minX && point.getX() <= maxX &&
-                        point.getY() >= minY && point.getY() <= maxY && shape.isVisible()) {
+                Point2D postR = r.inverseTransform(point.getX(),point.getY());
+                if (postR.getX() >= minX && postR.getX() <= maxX &&
+                        postR.getY() >= minY && postR.getY() <= maxY && shape.isVisible()) {
                     overShape = true;
                     moveRef = i;
                     preSelectedShape = (Shapes) op.get(i);
@@ -72,23 +77,21 @@ public class MovingControl {
     }
     public boolean overTrueShape(Point2D point){
         switch(preSelectedShape.getType()){
-            case Shapes.ARC:
+            case ARC:
                 return checkArc(point);
-            case Shapes.CIRCLE:
+            case CIRCLE:
                 return checkCircle(point);
-            case Shapes.CLEAR:
-                return false;
-            case Shapes.ELLIPSES:
+            case ELLIPSES:
                 return checkEllipses(point);
-            case Shapes.LINE:
+            case LINE:
                 return checkLine(point);
-            case Shapes.POLYGON:
+            case POLYGON:
                 return checkPolygon(point);
-            case Shapes.RECTANGLE:
+            case RECTANGLE:
                 return checkRectangle(point);
-            case Shapes.TEXT:
+            case TEXT:
                 return checkText(point);
-            case Shapes.ROUNDED_RECT:
+            case ROUNDED_RECT:
                 return checkRoundRect(point);
         }
         return false;
@@ -138,8 +141,14 @@ public class MovingControl {
         movingShape.setStroke(Color.MAGENTA);
     }
     public void positionMovingShape(Point2D p){
-        movingShape.setTranslateX(p.getX() - offset.getX());
-        movingShape.setTranslateY(p.getY() - offset.getY());
+
+        if(preSelectedShape instanceof Text){
+            movingShape.setTranslateY(p.getY() - offset.getY() - ((Text) preSelectedShape).getFm().getAscent());
+            movingShape.setTranslateX(p.getX() - offset.getX());
+        }else{
+            movingShape.setTranslateX(p.getX() - offset.getX());
+            movingShape.setTranslateY(p.getY() - offset.getY());
+        }
         end = p.subtract(offset);
     }
 
@@ -147,6 +156,7 @@ public class MovingControl {
         this.preSelectedShape = null;
         this.movingShape = null;
         this.offset = null;
+        this.end = null;
     }
 
     public Shapes getSelectedShape(){

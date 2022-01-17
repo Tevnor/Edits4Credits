@@ -266,13 +266,17 @@
                                                                 <Font size="15.0" />
                                                             </font>
                                                         </TextArea>
-                                                        <ComboBox fx:id="cbFontSize" editable="true" prefWidth="150.0" promptText="Font Size" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="2" GridPane.valignment="CENTER" GridPane.vgrow="NEVER" />
                                                         <ComboBox fx:id="cbFontFamily" prefWidth="150.0" promptText="Font Family" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="NEVER" />
                                                         <ChoiceBox fx:id="cbTxtAlignment" prefWidth="150.0" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="3" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
                                                             <GridPane.margin>
                                                                 <Insets bottom="20.0" />
                                                             </GridPane.margin>
                                                         </ChoiceBox>
+                                          <TextField fx:id="txtFontSize" maxWidth="150.0" promptText="Font Size" text="16" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="2" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
+                                             <GridPane.margin>
+                                                <Insets />
+                                             </GridPane.margin>
+                                          </TextField>
                                                     </children>
                                                 </GridPane>
                                             </content>

@@ -33,21 +33,20 @@ public class DrawBoard {
     }
 
     public void addDrawOperation(DrawOp op) {
-        // clear history after current position
-        operations.subList(historyIndex+1, operations.size()).clear();
+        operations.subList(historyIndex+1, operations.size()).clear();  // clear history after current position
         if(op.getOpType() == DrawOp.OpType.DRAW){
-            // add new drawing operation
-            operations.add(op);
+            operations.add(op);                                         // add new drawing operation
             historyIndex++;
             op.draw(gc);
         }else if(op.getOpType() == DrawOp.OpType.MOVE){
-            int ref = op.getMoveReference();
-            if(ref != historyIndex && ref != 0){
+            int ref = op.getMoveReference();                            //gets reference for moving operation
+
+            if(ref != historyIndex && ref != -1){                       //checks if ref is not last drawn shape
                 writeUndo(pw,operations.get(ref));
                 operations.get(ref).setVisible(false);
                 for(int i = ref+1; i < operations.size();i++){
                     if(operations.get(i).isVisible()){
-                        operations.get(i).draw(gc);
+                        operations.get(i).drawAfterMove(gc);
                     }
                 }
             }else{
@@ -59,6 +58,20 @@ public class DrawBoard {
             op.draw(gc);
 
         }
+
+    }
+
+    private void drawSnapshotAfterMove(int ref){
+        boolean movingShapeOverMovedShape = false;
+
+        while(!movingShapeOverMovedShape){
+
+
+
+        }
+
+
+
 
     }
 

@@ -8,6 +8,8 @@ import javafx.scene.shape.Shape;
 import javafx.scene.transform.Rotate;
 import org.controller.tools.drawingtool.graphiccontrol.Attributes;
 
+import static org.controller.tools.drawingtool.graphiccontrol.objects.Shapes.Type.ARC;
+
 public class Arc extends Shapes {
 
     private double startAngle;
@@ -54,6 +56,16 @@ public class Arc extends Shapes {
         }
         writeChangeARGB(gc);
     }
+
+    @Override
+    public void drawAfterMove(GraphicsContext gc) {
+        if(attributes.isFill()){
+            drawFill(gc);
+        }else{
+            drawStroke(gc);
+        }
+    }
+
     @Override
     protected void setRotation(double angle) {
         this.r = new Rotate(angle,minX+(width/2), minY+(height/2));
@@ -67,9 +79,7 @@ public class Arc extends Shapes {
     }
     @Override
     public Shapes reposition(Point2D point) {
-        Arc a = new Arc(minX,minY,width,height,attributes);
-        a.minX = point.getX();
-        a.minY = point.getY();
+        Arc a = new Arc(point.getX(),point.getY(),width,height,attributes);
         a.setOpType(OpType.MOVE);
         return a;
     }

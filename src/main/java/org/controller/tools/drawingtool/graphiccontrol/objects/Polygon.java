@@ -7,6 +7,8 @@ import javafx.scene.shape.Shape;
 import javafx.scene.transform.Rotate;
 import org.controller.tools.drawingtool.graphiccontrol.Attributes;
 
+import static org.controller.tools.drawingtool.graphiccontrol.objects.Shapes.Type.POLYGON;
+
 public class Polygon extends Shapes {
 
     private final double[] xPoints;
@@ -96,6 +98,15 @@ public class Polygon extends Shapes {
             drawStroke(gc);
         }
         writeChangeARGB(gc);
+    }
+
+    @Override
+    public void drawAfterMove(GraphicsContext gc) {
+        if(attributes.isFill()){
+            drawFill(gc);
+        }else{
+            drawStroke(gc);
+        }
     }
 
     @Override

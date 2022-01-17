@@ -16,9 +16,14 @@ import javafx.scene.shape.ArcType;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
+import javafx.util.converter.DoubleStringConverter;
+import javafx.util.converter.FormatStringConverter;
 import org.controller.tools.drawingtool.graphiccontrol.Attributes;
 
 import java.net.URL;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.ResourceBundle;
 
@@ -56,7 +61,7 @@ public class DrawOptionsController implements Initializable {
     @FXML
     private ComboBox<String> cbFontFamily;
     @FXML
-    private ComboBox<Double> cbFontSize;
+    private TextField txtFontSize;
     @FXML
     private ComboBox<BlurType> cbShadowBlurType, cbDropBlurType, cbInnerBlurType;
     @FXML
@@ -291,7 +296,7 @@ public class DrawOptionsController implements Initializable {
     private void setShapeAttributes(){
         attributes.setArcType(cbArcType.getValue());
         attributes.setPolyClose(checkPolyClosed.isSelected());
-        attributes.setFont(new Font(cbFontFamily.getValue(),cbFontSize.getValue()));
+        attributes.setFont(new Font(cbFontFamily.getValue(),Double.parseDouble(txtFontSize.getText())));
         attributes.setTxtAlignment(cbTxtAlignment.getValue());
         attributes.setContent(txtContent.getText());
     }
@@ -353,6 +358,8 @@ public class DrawOptionsController implements Initializable {
     }
 
     private void initComboBoxes(){
+        NumberFormat format = DecimalFormat.getInstance();
+        StringConverter<Double> converter = new FormatStringConverter<>(format);
         ComboBox[] blurTypes = new ComboBox[]{cbShadowBlurType, cbDropBlurType, cbInnerBlurType};
         Arrays.stream(blurTypes).forEach(b ->{
             b.getItems().addAll(BlurType.values());
@@ -364,8 +371,6 @@ public class DrawOptionsController implements Initializable {
         cbArcType.setValue(ArcType.ROUND);
         cbFontFamily.getItems().addAll(Font.getFamilies());
         cbFontFamily.setValue(Font.getDefault().getFamily());
-        cbFontSize.getItems().addAll(8.0,9.0,10.0,11.0,12.0,14.0,16.0,18.0,20.0,22.0,24.0,26.0,28.0,36.0,48.0,72.0,96.0);
-        cbFontSize.setValue(Font.getDefault().getSize());
         cbTxtAlignment.getItems().addAll(TextAlignment.values());
         cbTxtAlignment.setValue(TextAlignment.LEFT);
         setSliders();
@@ -375,7 +380,7 @@ public class DrawOptionsController implements Initializable {
                 txtArcWidth, txtArcHeight,txtLineWidth , txtBoxBlurWidth, txtBoxBlurHeight, txtMotionBlurRadius,
                 txtReflectionOffset, txtShadowWidth, txtShadowHeight, txtShadowRadius, txtDropWidth,
                 txtDropHeight, txtDropOffsetX, txtDropOffsetY, txtDropRadius, txtInnerWidth, txtInnerHeight,
-                txtInnerOffsetX, txtInnerOffsetY, txtInnerRadius};
+                txtInnerOffsetX, txtInnerOffsetY, txtInnerRadius, txtFontSize};
         Arrays.stream(onlyNums).forEach(t -> t.textProperty().addListener((observableValue, oldValue, newValue) -> {
             if (!newValue.matches("\\d*")) {
                 t.setText(newValue.replaceAll("[^\\d]", ""));

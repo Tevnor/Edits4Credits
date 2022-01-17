@@ -2,11 +2,14 @@ package org.controller.tools.drawingtool.graphiccontrol.objects;
 
 
 import javafx.geometry.Point2D;
+import javafx.geometry.VPos;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.shape.Shape;
 import javafx.scene.transform.Rotate;
 import org.controller.tools.drawingtool.graphiccontrol.Attributes;
 import org.controller.tools.drawingtool.graphiccontrol.FontMetrics;
+
+import static org.controller.tools.drawingtool.graphiccontrol.objects.Shapes.Type.TEXT;
 
 public class Text extends Shapes {
 
@@ -52,6 +55,15 @@ public class Text extends Shapes {
     }
 
     @Override
+    public void drawAfterMove(GraphicsContext gc) {
+        if(attributes.isFill()){
+            drawFill(gc);
+        }else{
+            drawStroke(gc);
+        }
+    }
+
+    @Override
     public void setRotation(double angle) {
         this.r = new Rotate(angle, getMidX(),getMidY());
     }
@@ -66,9 +78,7 @@ public class Text extends Shapes {
 
     @Override
     public Shapes reposition(Point2D point) {
-        Text txt = new Text(minX,minY,attributes);
-        txt.minX = point.getX();
-        txt.minY = point.getY();
+        Text txt = new Text(point.getX(),point.getY(),attributes);
         txt.setOpType(OpType.MOVE);
         return txt;
     }
@@ -77,8 +87,8 @@ public class Text extends Shapes {
     public boolean pointInside(Point2D point) {
         Point2D postRotate = r.inverseTransform(point.getX(),point.getY());
         double realMinY, realMaxY;
-        realMinY = minY - this.fm.getAscent();
-        realMaxY = minY + this.fm.getDescent();
+        realMinY = minY - fm.getAscent();
+        realMaxY = minY + fm.getDescent();
         return postRotate.getX() >= minX && postRotate.getX() <= minX + width
                 && postRotate.getY() >= realMinY && postRotate.getY() <= realMaxY;
     }
@@ -87,8 +97,7 @@ public class Text extends Shapes {
         return minX + fm.computeStringWidth(attributes.getContent())/2;
     }
     private double getMidY(){
-        return minY - fm.getLineHeight()/2;
-
+        return minY + fm.getDescent() - fm.getLineHeight()/2;
     }
     public FontMetrics getFm() {
         return fm;

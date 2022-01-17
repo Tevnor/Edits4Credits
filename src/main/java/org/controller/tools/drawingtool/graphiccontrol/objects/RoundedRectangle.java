@@ -7,6 +7,8 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Shape;
 import org.controller.tools.drawingtool.graphiccontrol.Attributes;
 
+import static org.controller.tools.drawingtool.graphiccontrol.objects.Shapes.Type.ROUNDED_RECT;
+
 public class RoundedRectangle extends Rectangle{
 
     private double arcWidth;
@@ -105,9 +107,7 @@ public class RoundedRectangle extends Rectangle{
 
     @Override
     public Shapes reposition(Point2D point) {
-        RoundedRectangle r = new RoundedRectangle(minX,minY,width,height,attributes);
-        r.minX = point.getX();
-        r.minY = point.getY();
+        RoundedRectangle r = new RoundedRectangle(point.getX(),point.getY(),width,height,attributes);
         r.setOpType(OpType.MOVE);
         return r;
     }

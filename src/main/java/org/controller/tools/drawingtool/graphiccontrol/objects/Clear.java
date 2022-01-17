@@ -6,7 +6,6 @@ import org.controller.tools.drawingtool.graphiccontrol.DrawOp;
 public class Clear extends DrawOp {
 
     public Clear(){
-
     }
 
     @Override
@@ -14,6 +13,11 @@ public class Clear extends DrawOp {
         writeBeforeARGB(gc);
         gc.clearRect(0,0,gc.getCanvas().getWidth(),gc.getCanvas().getHeight());
         writeChangeARGB(gc);
+    }
+
+    @Override
+    public void drawAfterMove(GraphicsContext gc) {
+        gc.clearRect(0,0,gc.getCanvas().getWidth(),gc.getCanvas().getHeight());
     }
 
 }

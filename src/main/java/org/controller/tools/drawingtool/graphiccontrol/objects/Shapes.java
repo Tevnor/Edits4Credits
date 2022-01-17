@@ -12,13 +12,13 @@ import org.controller.tools.drawingtool.graphiccontrol.DrawOp;
 
 
 public abstract class Shapes extends DrawOp {
-    public static final int TYPE_STROKE = 0, TYPE_FILL = 1,
-            ARC = 0, CIRCLE = 1, CLEAR = 2, ELLIPSES = 3, LINE = 4, POLYGON = 5, RECTANGLE = 6,
-            ROUNDED_RECT = 7, TEXT = 8;
+    public enum Type{
+        ARC, CIRCLE, ELLIPSES, LINE, POLYGON, RECTANGLE, ROUNDED_RECT, TEXT
+    }
     protected double minX, minY, width, height;
     protected Paint color;
     protected Rotate r = new Rotate(0,0,0);
-    protected int type;
+    protected Type type;
     protected Attributes attributes;
 
 
@@ -45,14 +45,16 @@ public abstract class Shapes extends DrawOp {
         }
     }
 
-    public double getMinX(){ return this.minX; }
-    public double getMinY(){ return this.minY; }
-    public double getWidth(){ return this.width; }
-    public double getHeight(){ return this.height; }
+    public double getMinX(){ return minX; }
+    public double getMinY(){ return minY; }
+    public double getWidth(){ return width; }
+    public double getHeight(){ return height; }
     public Paint getColor(){
-        return this.attributes.getColor();
+        return attributes.getColor();
     }
-    public int getType(){return this.type;}
-
+    public Type getType(){return type;}
+    public Rotate getR(){
+        return r;
+    }
 
 }

@@ -1,5 +1,6 @@
 package org.controller.tools.drawingtool;
 
+import javafx.geometry.Pos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseEvent;
@@ -17,16 +18,18 @@ public class DrawingTool implements EditingTools {
     private DrawingControl dc;
 
 
-    public DrawingTool(Canvas canvas, StackPane stack){
+    public DrawingTool(StackPane stack){
 
-        this.canvas = canvas;
+        this.canvas = new Canvas(stack.getPrefWidth(),stack.getPrefHeight());
         this.gc = canvas.getGraphicsContext2D();
         this.db = new DrawBoard(gc);
         this.stack = stack;
         this.dc = new DrawingControl();
 
+
         this.dc.initMarkingRect(this.stack);
         this.stack.addEventHandler(MouseEvent.ANY, dc.getMarking());
+        this.stack.getChildren().add(this.canvas);
     }
 
     public DrawBoard getDb(){
@@ -44,6 +47,7 @@ public class DrawingTool implements EditingTools {
     public DrawingControl getDc() {
         return dc;
     }
+
     @Override
     public void apply() {
 
