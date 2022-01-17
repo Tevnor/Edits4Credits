@@ -113,7 +113,7 @@ public class EditorController implements Initializable, ControlScreen {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        this.dt = new DrawingTool(editorCanvas, stack);
+        this.dt = new DrawingTool(stack);
         handlerFactory = new HandlerFactory(dt);
         initDrawOptions();
     }
