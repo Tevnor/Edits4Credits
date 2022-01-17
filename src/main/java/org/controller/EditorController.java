@@ -113,8 +113,6 @@ public class EditorController implements Initializable, ControlScreen {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        this.dt = new DrawingTool(stack);
-        handlerFactory = new HandlerFactory(dt);
         initDrawOptions();
     }
 
@@ -131,6 +129,8 @@ public class EditorController implements Initializable, ControlScreen {
     }
 
     public void setCanvas(Project project) {
+        this.dt = new DrawingTool(stack);
+        handlerFactory = new HandlerFactory(dt);
         this.canvasWidth = project.getProjectWidth();
         this.canvasHeight = project.getProjectHeight();
     }

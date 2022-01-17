@@ -68,6 +68,7 @@ public class SettingsController implements Initializable, ControlScreen {
             double projectHeight = Double.parseDouble(heightInput.getText());
             project = new Project(projectWidth, projectHeight);
 
+            EditorController ec = new EditorController();
             enterProject();
 
         } catch (Exception e) {
@@ -89,9 +90,9 @@ public class SettingsController implements Initializable, ControlScreen {
 
     public void setEditorPresets(){
         EditorController ec = screensController.getLoader().getController();
-        ec.setCanvas(project);
         ec.setWidthHeightAspectRatio(project);
         ec.setStackPane();
+        ec.setCanvas(project);
 
     }
 
