@@ -94,6 +94,8 @@ public class SettingsController implements Initializable, ControlScreen {
         ec.setStackPane();
         ec.setCanvas(project);
 
+
+
     }
 
 

@@ -5,7 +5,6 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -30,7 +29,6 @@ import org.controller.tools.drawingtool.graphiccontrol.Attributes;
 import org.controller.tools.drawingtool.graphiccontrol.handlers.HandlerFactory;
 import org.controller.tools.filtertool.FilterTool;
 
-import java.awt.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -277,9 +275,6 @@ public class EditorController implements Initializable, ControlScreen {
         }
     }
 
-    /*
-        Import images from explorer
-    */
     public void handleImportButton(ActionEvent event) throws IOException {
         importImageFromExplorer();
         }
@@ -293,11 +288,11 @@ public class EditorController implements Initializable, ControlScreen {
         // saves file path from image to file object
         imagePath = f;
 
-        //sets ImageView to chosen picture
+        //creates new image from the selected path
         Image image = new Image(f.getPath());
 
         // Pass image to setter method
-        setEditorCanvas();
+        setEditorImageCanvas();
         setImportedImage(image);
     }
 
@@ -308,10 +303,15 @@ public class EditorController implements Initializable, ControlScreen {
         return toolBar.getPrefWidth();
     }
 
+
+    // method to calculate stackpane size
     public void setStackPane() {
+
+        // define the maximum size for the stackpane based on the monitor size
         double maxStackHeight = screenHeight - getMenuBarHeight();
         double maxStackWidth = screenWidth - getToolBarWidth();
 
+        // when the aspect ratio is greater than 1 calculate based on the width
         if (useWidthOrHeight()){
             double stackHeight = (int) screenHeight - getMenuBarHeight();
             double stackWidth = (int) stackHeight * projectAspectRatio;
@@ -323,6 +323,7 @@ public class EditorController implements Initializable, ControlScreen {
             stack.setPrefHeight(stackHeight);
             stack.setPrefWidth(stackWidth);
         }
+        // when the aspect ratio is smaller than 1 calculate based on height
         else {
             double stackWidth = screenWidth - getToolBarWidth();
             double stackHeight = stackWidth * (1 / projectAspectRatio);
@@ -340,7 +341,9 @@ public class EditorController implements Initializable, ControlScreen {
     public boolean useWidthOrHeight(){
         return !(projectAspectRatio > 1);
     }
-    public void setEditorCanvas(){
+
+    // create empty canvas for images with the size of the stackpane
+    public void setEditorImageCanvas(){
         editorCanvasImage = new Canvas(stack.getPrefWidth(), stack.getPrefHeight());
         stack.getChildren().add(editorCanvasImage);
 
@@ -351,8 +354,10 @@ public class EditorController implements Initializable, ControlScreen {
         editorCanvasImage.toBack();
     }
 
+    // draw selected image to the image canvas
     public void setImportedImage(Image importedImage) {
         GraphicsContext gc = editorCanvasImage.getGraphicsContext2D();
+
         double ratio = getImageAspectRatio(importedImage);
         int editorCanvasImageWidth = (int) editorCanvasImage.getWidth();
         int editorCanvasImageHeight = (int) editorCanvasImage.getHeight();
@@ -360,6 +365,9 @@ public class EditorController implements Initializable, ControlScreen {
         // Instantiate resized image from imported image
         if (ratio >= 1){
             resizedImage = scaleImage(importedImage, editorCanvasImageWidth, getResizedImageHeight(editorCanvasImageHeight, ratio), true, true);
+            if(resizedImage.getHeight() > stack.getPrefHeight()){
+                resizedImage = scaleImage(importedImage, getResizedImageWidth(editorCanvasImageWidth, ratio), editorCanvasImageHeight, true, true);
+            }
         } else {
             resizedImage = scaleImage(importedImage, getResizedImageWidth(editorCanvasImageWidth, ratio), editorCanvasImageHeight, true, true);
         }
@@ -372,7 +380,7 @@ public class EditorController implements Initializable, ControlScreen {
         if (imagePath != null) {
             importButton.setDisable(true);
             importButton.setVisible(false);
-            openFile.setDisable(true);
+            //openFile.setDisable(true);
         }
 
         // Create pixel array from resized image to enhance performance of future references
@@ -391,6 +399,7 @@ public class EditorController implements Initializable, ControlScreen {
 
         return resizedImageView.snapshot(null, null);
     }
+
 
     public double getImageAspectRatio(Image image){
         return image.getWidth() / image.getHeight();
