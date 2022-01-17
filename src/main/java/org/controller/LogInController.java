@@ -81,8 +81,10 @@ public class LogInController implements Initializable, ControlScreen {
         this.window = window;
     }
     public void setCenter() {
-        double xCenter = window.getScreenWidth() / (2 * window.getScaleX());
-        double yCenter = window.getScreenHeight() / (2 * window.getScaleY());
+//        double xCenter = window.getScreenWidth() / (2 * window.getScaleX());
+//        double yCenter = window.getScreenHeight() / (2 * window.getScaleY());
+        double xCenter = window.getScreenWidth() / 2;
+        double yCenter = window.getScreenHeight() / 2;
 
         rootPane.setLayoutX(xCenter - 200);
         rootPane.setLayoutY(yCenter - 300);
@@ -191,7 +193,7 @@ public class LogInController implements Initializable, ControlScreen {
             modeSelector.setRootAnchorPane();
             modeSelector.hideElements();
 
-            PauseTransition delay = new PauseTransition(Duration.seconds(2));
+            PauseTransition delay = new PauseTransition(Duration.seconds(1.3));
             delay.setOnFinished( event -> startTransition(modeSelector));
             delay.play();
 
@@ -263,10 +265,10 @@ public class LogInController implements Initializable, ControlScreen {
         changeButtonText(cancelButton, "Success");
         changeButtonText(logInButton, "Success");
         moveNodeY(loginImageView, 125, new Duration(600));
-        scaleNode(loginImageView, .3);
+        scaleNode(loginImageView, .33);
         startFade(logInButton, 0, 0);
 
-        PauseTransition delay = new PauseTransition(Duration.seconds(1.75));
+        PauseTransition delay = new PauseTransition(Duration.seconds(1.6));
         delay.setOnFinished(event -> changeButtonText(cancelButton, "Loading..."));
         delay.play();
     }
@@ -274,7 +276,7 @@ public class LogInController implements Initializable, ControlScreen {
     public void startTransition(ModeSelectionController modeSelector) {
         appStage.show();
         modeSelector.startAnimations();
-        closeLoginStage(1);
+        closeLoginStage(0.1);
     }
 
     public void startFade(Node node, double time, double value) {

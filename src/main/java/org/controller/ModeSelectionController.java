@@ -24,6 +24,7 @@ public class ModeSelectionController implements Initializable, ControlScreen {
 
     ScreensController screensController;
     Window window;
+    private FXMLLoader loader;
     private double screenWidth;
     private double screenHeight;
 
@@ -67,10 +68,16 @@ public class ModeSelectionController implements Initializable, ControlScreen {
     }
 
     public void hideElements() {
+        screensController.getParent().getChildrenUnmodifiable().get(0).setOpacity(0);
         editorButton.setOpacity(0);
-        marketplaceButton.setOpacity(0);
+        marketplaceButton.setText("Starting App.");
+        startFade(marketplaceButton, 500, 1800, 0);
         usernameLabel.setOpacity(0);
         profilePane.setOpacity(0);
+
+        //
+        editorPane.setOpacity(0.9);
+        marketplacePane.setOpacity(0.9);
     }
 
     @FXML
@@ -85,31 +92,46 @@ public class ModeSelectionController implements Initializable, ControlScreen {
     /*
      * Animations
      */
+
+    // Animation trigger sequence
     public void startAnimations() {
+        // Slide two main mode panes outwards
         startTranslation(editorPane, -300);
         startTranslation(marketplacePane, 300);
-
-//        startFade(backgroundImageView, 1000, 1);
-        startFade(profilePane, 1750, 1);
-        startFade(editorButton, 1750, 0.7);
-        startFade(marketplaceButton, 1750, 0.7);
-        startFade(usernameLabel, 2500, 1);
+        // Fade in background image
+        startFade(screensController.getParent().getChildrenUnmodifiable().get(0), 100,1250, 1);
+        // Fade in profile icon
+        startFade(profilePane, 900, 1750, 1);
+        // Fade in enter buttons
+        startFade(editorButton, 900, 1750, 0.7);
+        startFade(marketplaceButton, 900, 1750, 0.7);
+        // Reset marketplace button text
+        PauseTransition delay = new PauseTransition(Duration.seconds(1.6));
+        delay.setOnFinished(event -> marketplaceButton.setText("Marketplace"));
+        delay.play();
+        // Fade in user greeting
+        startFade(usernameLabel, 1200, 2500, 1);
+        // Reset main mode panes' opacity
+        startFade(editorPane, 200, 0, 0.9);
+        startFade(marketplacePane, 200, 0, 0.9);
     }
 
+    // Slide node in X/Y direction
     public void startTranslation(Node node, double direction) {
         KeyValue keyValue = new KeyValue(node.translateXProperty(), direction);
-        KeyFrame keyFrame = new KeyFrame(Duration.seconds(0.4), keyValue);
+        KeyFrame keyFrame = new KeyFrame(Duration.seconds(1.3), keyValue);
         Timeline timeline = new Timeline(keyFrame);
-        Duration duration = new Duration(300);
+        Duration duration = new Duration(500);
 
         timeline.setDelay(duration);
 
         timeline.play();
     }
 
-    public void startFade(Node node, double time, double value) {
-        Duration fadeDuration = new Duration(750);
-        Duration fadeDelay = new Duration(time);
+    // Fade node in/out
+    public void startFade(Node node, double dur, double del, double value) {
+        Duration fadeDuration = new Duration(dur);
+        Duration fadeDelay = new Duration(del);
 
         FadeTransition fade = new FadeTransition();
         fade.setFromValue(0);

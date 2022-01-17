@@ -68,8 +68,6 @@ public class SettingsController implements Initializable, ControlScreen {
             double projectHeight = Double.parseDouble(heightInput.getText());
             project = new Project(projectWidth, projectHeight);
 
-            EditorController ec = new EditorController();
-            ec.setCanvas(project);
             enterProject();
 
         } catch (Exception e) {
@@ -79,20 +77,6 @@ public class SettingsController implements Initializable, ControlScreen {
     }
 
     public void enterProject(){
-//        try {
-//            FXMLLoader loader = new FXMLLoader();
-//            loader.setLocation(Objects.requireNonNull(getClass().getResource("/fxml/editor.fxml")));
-//            AnchorPane editorPane = loader.load();
-//
-//            EditorController export = loader.getController();
-//            export.setWidthAndHeight(project);
-//
-//            rootAnchorPane.getChildren().setAll(editorPane);
-//        }
-//        catch (Exception e){
-//            e.printStackTrace();
-//            e.getCause();
-//        }
         screensController.setScreen(GuiDriver.editorScreenID);
         setEditorPresets();
     }
@@ -104,8 +88,7 @@ public class SettingsController implements Initializable, ControlScreen {
     }
 
     public void setEditorPresets(){
-        FXMLLoader editorLoader = screensController.getLoader();
-        EditorController ec = editorLoader.getController();
+        EditorController ec = screensController.getLoader().getController();
         ec.setCanvas(project);
         ec.setWidthHeightAspectRatio(project);
         ec.setStackPane();

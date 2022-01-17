@@ -54,14 +54,15 @@
                 </Menu>
                 <Menu mnemonicParsing="false" text="Filter">
                   <items>
-                    <MenuItem fx:id="addNoise" mnemonicParsing="false" onAction="#handleAddNoise" text="Add Noise" />
-                        <MenuItem mnemonicParsing="false" text="Filter 2" />
-                        <MenuItem mnemonicParsing="false" text="Filter 3" />
-                        <MenuItem mnemonicParsing="false" text="Filter 4" />
+                      <MenuItem fx:id="addNoise" mnemonicParsing="false" onAction="#handleAddNoise" text="Add Noise" />
+                      <MenuItem fx:id="checkerboardFilterItem" mnemonicParsing="false" onAction="#handleApplyCheckerboard" text="Apply Checkerboard" />
+                      <MenuItem mnemonicParsing="false" text="Filter 3" />
+                      <MenuItem mnemonicParsing="false" text="Filter 4" />
                   </items>
                 </Menu>
                   <Menu mnemonicParsing="false" text="Gallery">
                     <items>
+
                       <MenuItem mnemonicParsing="false" text="Action 1" />
                     </items>
                   </Menu>

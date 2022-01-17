@@ -14,6 +14,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuBar;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
@@ -27,6 +28,7 @@ import javafx.stage.StageStyle;
 import org.controller.tools.drawingtool.DrawingTool;
 import org.controller.tools.drawingtool.graphiccontrol.Attributes;
 import org.controller.tools.drawingtool.graphiccontrol.handlers.HandlerFactory;
+import org.controller.tools.filtertool.FilterTool;
 
 import java.awt.*;
 import java.io.File;
@@ -44,6 +46,8 @@ public class EditorController implements Initializable, ControlScreen {
     private Canvas editorCanvas;
     @FXML
     private javafx.scene.control.MenuItem addNoise;
+    @FXML
+    private javafx.scene.control.MenuItem checkerboardFilterItem;
     @FXML
     private javafx.scene.control.MenuItem saveFile;
     @FXML
@@ -77,10 +81,9 @@ public class EditorController implements Initializable, ControlScreen {
     @FXML
     private MenuBar menuBar;
     @FXML
-    private AnchorPane rootAnchorpane;
+    private AnchorPane rootAnchorPane;
     @FXML
     private ToolBar toolBar;
-
 
     private File imagePath;
     private EventHandler<MouseEvent> drawer = event -> {}, mover = event -> {};
@@ -97,12 +100,15 @@ public class EditorController implements Initializable, ControlScreen {
     private Stage drawOptStage = new Stage();
     private Attributes attributes = new Attributes();
 
-    private ScreensController screensController;
-    private Window window;
+    ScreensController screensController;
+    Window window;
     private double screenWidth;
     private double screenHeight;
     private double canvasWidth;
     private double canvasHeight;
+
+    private Image resizedImage;
+    private FilterTool filterTool;
 
 
     @Override
@@ -242,6 +248,11 @@ public class EditorController implements Initializable, ControlScreen {
     public void handleAddNoise(ActionEvent event) {
     }
 
+    // Apply the checkerboard filter to the filterTool object that was instantiated at setImportedImage()
+    public void handleApplyCheckerboard(ActionEvent event) {
+        this.filterTool.selectCheckerboard();
+    }
+
     /*
         Import images via drag and drop
     */
@@ -291,12 +302,10 @@ public class EditorController implements Initializable, ControlScreen {
     }
 
     public double getMenuBarHeight(){
-        double menuBarHeight = menuBar.getPrefHeight();
-        return menuBarHeight;
+        return menuBar.getPrefHeight();
     }
     public double getToolBarWidth(){
-        double toolBarHeight = toolBar.getPrefWidth();
-        return toolBarHeight;
+        return toolBar.getPrefWidth();
     }
 
     public void setStackPane() {
@@ -304,9 +313,10 @@ public class EditorController implements Initializable, ControlScreen {
         double maxStackWidth = screenWidth - getToolBarWidth();
 
         if (useWidthOrHeight()){
-            double stackHeight = screenHeight - getMenuBarHeight();
-            double stackWidth = stackHeight * projectAspectRatio;
-            if (stackWidth > maxStackWidth){
+            double stackHeight = (int) screenHeight - getMenuBarHeight();
+            double stackWidth = (int) stackHeight * projectAspectRatio;
+
+            if (stackWidth > maxStackWidth) {
                 stackWidth = maxStackWidth;
                 stackHeight = stackWidth * projectAspectRatio;
             }
@@ -316,40 +326,47 @@ public class EditorController implements Initializable, ControlScreen {
         else {
             double stackWidth = screenWidth - getToolBarWidth();
             double stackHeight = stackWidth * (1 / projectAspectRatio);
-            if (stackHeight > maxStackHeight){
+
+            if (stackHeight > maxStackHeight) {
                 stackHeight = maxStackHeight;
                 stackWidth = stackHeight * projectAspectRatio;
             }
-            stack.setPrefHeight(stackHeight);
             stack.setPrefWidth(stackWidth);
+            stack.setPrefHeight(stackHeight);
         }
-
     }
+
+    // Return false: use width, return true: use height
     public boolean useWidthOrHeight(){
-        boolean useHeight = true;
-        if (projectAspectRatio > 1) {
-            useHeight = false;
-        }
-        return useHeight;
+        return !(projectAspectRatio > 1);
     }
     public void setEditorCanvas(){
         editorCanvasImage = new Canvas(stack.getPrefWidth(), stack.getPrefHeight());
         stack.getChildren().add(editorCanvasImage);
-        stack.setAlignment(editorCanvasImage, Pos.CENTER);
+
+        // TODO
+//        stack.setAlignment(editorCanvasImage, Pos.CENTER);
+
+
         editorCanvasImage.toBack();
     }
 
     public void setImportedImage(Image importedImage) {
         GraphicsContext gc = editorCanvasImage.getGraphicsContext2D();
-        if (getImageAspectRatio(importedImage) > 1){
-            gc.drawImage(importedImage,0, 0, editorCanvasImage.getWidth(), getResizedImageHeight(editorCanvasImage.getWidth(), getImageAspectRatio(importedImage)));
+        double ratio = getImageAspectRatio(importedImage);
+        int editorCanvasImageWidth = (int) editorCanvasImage.getWidth();
+        int editorCanvasImageHeight = (int) editorCanvasImage.getHeight();
 
+        // Instantiate resized image from imported image
+        if (ratio >= 1){
+            resizedImage = scaleImage(importedImage, editorCanvasImageWidth, getResizedImageHeight(editorCanvasImageHeight, ratio), true, true);
+        } else {
+            resizedImage = scaleImage(importedImage, getResizedImageWidth(editorCanvasImageWidth, ratio), editorCanvasImageHeight, true, true);
         }
-        else if (getImageAspectRatio(importedImage) < 1){
-            gc.drawImage(importedImage,0, 0, getResizedImageWidth(editorCanvasImage.getHeight(), getImageAspectRatio(importedImage)), editorCanvasImage.getHeight());
-            System.out.println(stack.getPrefWidth() + " " + stack.getPrefHeight());
-            System.out.println(getResizedImageWidth(editorCanvasImage.getWidth(), getImageAspectRatio(importedImage)) + " " + editorCanvasImage.getHeight());
-        }
+
+        // Draw resized image onto editorCanvasImage
+        gc.drawImage(resizedImage,0, 0, resizedImage.getWidth(), resizedImage.getHeight());
+
 
         //disables import button if image was imported
         if (imagePath != null) {
@@ -357,24 +374,32 @@ public class EditorController implements Initializable, ControlScreen {
             importButton.setVisible(false);
             openFile.setDisable(true);
         }
+
+        // Create pixel array from resized image to enhance performance of future references
+        this.filterTool = new FilterTool(resizedImage, editorCanvasImage, stack);
+        this.filterTool.stepOne();
+    }
+
+    // Scale the imported source image to the maximum canvas size
+    public Image scaleImage(Image sourceImage, double targetWidth, double targetHeight, boolean preserveRatio, boolean smooth) {
+        ImageView resizedImageView = new ImageView(sourceImage);
+        resizedImageView.setPreserveRatio(preserveRatio);
+        resizedImageView.setSmooth(smooth);
+
+        resizedImageView.setFitWidth(targetWidth);
+        resizedImageView.setFitHeight(targetHeight);
+
+        return resizedImageView.snapshot(null, null);
     }
 
     public double getImageAspectRatio(Image image){
-        double height = image.getHeight();
-        double width = image.getWidth();
-        double ratio = width / height;
-        return ratio;
+        return image.getWidth() / image.getHeight();
     }
 
     public double getResizedImageHeight(double height, double ratio){
-        double resizedHeight = height * ratio;
-        return resizedHeight;
+        return height * ratio;
     }
     public double getResizedImageWidth(double width, double ratio){
-        double resizedWidth = width * ratio;
-        return resizedWidth;
+        return width * ratio;
     }
-
-
-
 }

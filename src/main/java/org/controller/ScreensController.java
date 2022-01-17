@@ -50,15 +50,16 @@ public class ScreensController extends StackPane {
     }
 
     public void getMonitorInfo() {
-        GraphicsDevice monitor = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-        double width = monitor.getDisplayMode().getWidth();
-        double height = monitor.getDisplayMode().getHeight();
-
         Screen screen = Screen.getPrimary();
         double scaleX = screen.getOutputScaleX();
         double scaleY = screen.getOutputScaleY();
 
-        this.window = new Window(width, height, scaleX, scaleY);
+        GraphicsDevice monitor = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+        double width = monitor.getDisplayMode().getWidth() / scaleX;
+        double height = monitor.getDisplayMode().getHeight() / scaleY;
+
+
+        this.window = new Window(width, height);
     }
 
     public Window getWindow() {
@@ -99,11 +100,11 @@ public class ScreensController extends StackPane {
 
     public void setCenter(String name) {
         switch (name)  {
-            case "modeSelection":   setLayoutX(window.getScreenWidth() / (2 * window.getScaleX()) - 500);
-                                    setLayoutY(window.getScreenHeight() / (2 * window.getScaleY()) - 300);
+            case "modeSelection":   setLayoutX(window.getScreenWidth() / 2 - 500);
+                                    setLayoutY(window.getScreenHeight() / 2 - 300);
                                     break;
-            case "settings":        setLayoutX(window.getScreenWidth() / (2 * window.getScaleX()) - 300);
-                                    setLayoutY(window.getScreenHeight() / (2 * window.getScaleY()) - 300);
+            case "settings":        setLayoutX(window.getScreenWidth() / 2 - 300);
+                                    setLayoutY(window.getScreenHeight() / 2 - 300);
                                     break;
             default:                setLayoutX(0);
                                     setLayoutY(0);
@@ -140,15 +141,14 @@ public class ScreensController extends StackPane {
             } else {
                 setOpacity(0.0);
                 getChildren().add(screenMap.get(name));
+                setCenter(name);
 
                 Timeline screenFadeIn = new Timeline(
                         new KeyFrame(Duration.ZERO, new KeyValue(opacity, 0.0)),
-                        new KeyFrame(new Duration(500), new KeyValue(opacity, 1.0)));
-                screenFadeIn.play();
-
-                PauseTransition delay = new PauseTransition(Duration.seconds(.5));
-                delay.setOnFinished( event -> setCenter(name));
-                delay.play();
+                        new KeyFrame(new Duration(250), new KeyValue(opacity, 1.0)));
+                PauseTransition delayCenter = new PauseTransition(Duration.seconds(.5));
+                delayCenter.setOnFinished( event -> screenFadeIn.play());
+                delayCenter.play();
             }
             return true;
         // If no such screen exists
