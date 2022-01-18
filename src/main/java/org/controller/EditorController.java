@@ -42,8 +42,6 @@ public class EditorController implements Initializable, ControlScreen {
     @FXML
     private Button importButton;
     @FXML
-    private Canvas editorCanvas;
-    @FXML
     private javafx.scene.control.MenuItem addNoise;
     @FXML
     private javafx.scene.control.MenuItem checkerboardFilterItem;
@@ -136,6 +134,7 @@ public class EditorController implements Initializable, ControlScreen {
         handlerFactory = new HandlerFactory(dt);
         this.canvasWidth = project.getProjectWidth();
         this.canvasHeight = project.getProjectHeight();
+        this.importButton.toFront();
     }
 
     public void setWidthHeightAspectRatio(Project project){
@@ -339,6 +338,7 @@ public class EditorController implements Initializable, ControlScreen {
             }
             stack.setPrefWidth(stackWidth);
             stack.setPrefHeight(stackHeight);
+
         }
     }
 
