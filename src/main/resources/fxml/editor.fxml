@@ -52,6 +52,12 @@
                         <MenuItem fx:id="saveFile" mnemonicParsing="false" onAction="#handleSafeFile" text="Safe File" />
                   </items>
                 </Menu>
+                  <Menu mnemonicParsing="false" text="Image">
+                     <items>
+                        <MenuItem fx:id="moveImage" mnemonicParsing="false" onAction="#handleMoveImage" text="Move Image" />
+                        <MenuItem fx:id="scaleImage" mnemonicParsing="false" onAction="#handleScaleImage" text="Scale Image" />
+                     </items>
+                  </Menu>
                 <Menu mnemonicParsing="false" text="Filter">
                   <items>
                       <MenuItem fx:id="addNoise" mnemonicParsing="false" onAction="#handleAddNoise" text="Add Noise" />

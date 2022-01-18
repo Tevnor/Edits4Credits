@@ -30,6 +30,8 @@ public class DrawingTool implements EditingTools {
         this.dc.initMarkingRect(this.stack);
         this.stack.addEventHandler(MouseEvent.ANY, dc.getMarking());
         this.stack.getChildren().add(this.canvas);
+
+        stack.setAlignment(canvas, Pos.CENTER);
     }
 
     public DrawBoard getDb(){

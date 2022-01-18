@@ -5,6 +5,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -107,6 +108,10 @@ public class EditorController implements Initializable, ControlScreen {
 
     private Image resizedImage;
     private FilterTool filterTool;
+
+    private Parent moveOptRoot;
+    private FXMLLoader moveOptLoader;
+    private PositionOptionsController moveOptions;
 
 
     @Override
@@ -347,11 +352,10 @@ public class EditorController implements Initializable, ControlScreen {
         editorCanvasImage = new Canvas(stack.getPrefWidth(), stack.getPrefHeight());
         stack.getChildren().add(editorCanvasImage);
 
-        // TODO
-//        stack.setAlignment(editorCanvasImage, Pos.CENTER);
 
-
+        stack.setAlignment(editorCanvasImage, Pos.CENTER);
         editorCanvasImage.toBack();
+
     }
 
     // draw selected image to the image canvas
@@ -388,6 +392,7 @@ public class EditorController implements Initializable, ControlScreen {
         this.filterTool.stepOne();
     }
 
+
     // Scale the imported source image to the maximum canvas size
     public Image scaleImage(Image sourceImage, double targetWidth, double targetHeight, boolean preserveRatio, boolean smooth) {
         ImageView resizedImageView = new ImageView(sourceImage);
@@ -410,5 +415,31 @@ public class EditorController implements Initializable, ControlScreen {
     }
     public double getResizedImageWidth(double width, double ratio){
         return width * ratio;
+    }
+
+    public void handleMoveImage(ActionEvent event) {
+        try{
+
+            moveOptLoader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/fxml/moveOptions.fxml")));
+            moveOptRoot = moveOptLoader.load();
+            Stage moveOptStage = new Stage();
+            Scene moveOptScene = new Scene(moveOptRoot);
+            moveOptStage.setScene(moveOptScene);
+            moveOptStage.show();
+            moveOptions = moveOptLoader.getController();
+            moveOptions.setEditorController(this);
+
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
+
+    }
+    public void setChangedPostion(double xPosition, double yPosition){
+        GraphicsContext gc = editorCanvasImage.getGraphicsContext2D();
+        gc.clearRect(0, 0, editorCanvasImage.getWidth(), editorCanvasImage.getHeight());
+        gc.drawImage(resizedImage, xPosition, yPosition, resizedImage.getWidth(),resizedImage.getHeight());
+    }
+
+    public void handleScaleImage(ActionEvent event) {
     }
 }
