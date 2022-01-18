@@ -82,6 +82,7 @@ public class EditorController implements Initializable, ControlScreen {
     @FXML
     private ToolBar toolBar;
 
+    private Image originalImage;
     private File imagePath;
     private EventHandler<MouseEvent> drawer = event -> {}, mover = event -> {};
     private DrawingTool dt;
@@ -110,6 +111,16 @@ public class EditorController implements Initializable, ControlScreen {
     private Parent moveOptRoot;
     private FXMLLoader moveOptLoader;
     private PositionOptionsController moveOptions;
+    private double xPosition = 0;
+    private double yPosition = 0;
+    private double currentImageHeight;
+    private double currentImageWidth;
+
+
+    private Parent scaleOptRoot;
+    private FXMLLoader scaleOptLoader;
+    private ScaleOptionsController scaleOptions;
+
 
 
     @Override
@@ -294,6 +305,7 @@ public class EditorController implements Initializable, ControlScreen {
 
         //creates new image from the selected path
         Image image = new Image(f.getPath());
+        setOriginalImage(image);
 
         // Pass image to setter method
         setEditorImageCanvas();
@@ -376,6 +388,8 @@ public class EditorController implements Initializable, ControlScreen {
             resizedImage = scaleImage(importedImage, getResizedImageWidth(editorCanvasImageWidth, ratio), editorCanvasImageHeight, true, true);
         }
 
+        this.currentImageHeight = resizedImage.getHeight();
+        this.currentImageWidth = resizedImage.getWidth();
         // Draw resized image onto editorCanvasImage
         gc.drawImage(resizedImage,0, 0, resizedImage.getWidth(), resizedImage.getHeight());
 
@@ -434,12 +448,65 @@ public class EditorController implements Initializable, ControlScreen {
         }
 
     }
-    public void setChangedPostion(double xPosition, double yPosition){
+    public void setChangedPostion(double xPosition, double yPosition, double currentImageWidth, double currentImageHeight){
+        this.xPosition = xPosition;
+        this.yPosition = yPosition;
         GraphicsContext gc = editorCanvasImage.getGraphicsContext2D();
         gc.clearRect(0, 0, editorCanvasImage.getWidth(), editorCanvasImage.getHeight());
-        gc.drawImage(resizedImage, xPosition, yPosition, resizedImage.getWidth(),resizedImage.getHeight());
+        gc.drawImage(originalImage, xPosition, yPosition, currentImageWidth,currentImageHeight);
     }
 
-    public void handleScaleImage(ActionEvent event) {
+
+    public void handleScaleImage(ActionEvent event){
+        try {
+            scaleOptLoader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/fxml/scaleOptions.fxml")));
+            scaleOptRoot = scaleOptLoader.load();
+            Stage scaleOptStage = new Stage();
+            Scene scaleOptScene = new Scene(scaleOptRoot);
+            scaleOptStage.setScene(scaleOptScene);
+            scaleOptStage.show();
+            scaleOptions = scaleOptLoader.getController();
+            scaleOptions.setEditorController(this);
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
     }
+    public double getScaledHeight(double scaleFactor) {
+        double scaledHeight = currentImageHeight * scaleFactor /100;
+        return scaledHeight;
+    }
+    public double getScaledWidth(double scaleFactor) {
+        double scaledWidth = currentImageWidth * scaleFactor /100;
+        return scaledWidth;
+    }
+    public void drawScaledImage(Image sourceImage, double xPosition, double yPosition, double scaledWidth, double scaledHeight){
+        GraphicsContext gc = editorCanvasImage.getGraphicsContext2D();
+        gc.clearRect(0, 0, editorCanvasImage.getWidth(), editorCanvasImage.getHeight());
+        gc.drawImage(sourceImage, xPosition, yPosition, scaledWidth, scaledHeight);
+    }
+    public Image getOriginalImage(){
+        return originalImage;
+    }
+    public double getXPosition(){
+        return xPosition;
+    }
+    public double getYPosition(){
+        return yPosition;
+    }
+    public void setCurrentImageHeight(double height){
+        this.currentImageHeight = height;
+    }
+    public void setCurrentImageWidth(double width) {
+        this.currentImageWidth = width;
+    }
+    public void setOriginalImage(Image image){
+        this.originalImage = image;
+    }
+    public double getCurrentImageWidth(){
+        return this.currentImageWidth;
+    }
+    public double getCurrentImageHeight(){
+        return this.currentImageHeight;
+    }
+
 }
