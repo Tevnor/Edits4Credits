@@ -216,7 +216,7 @@ public class EditorController implements Initializable, ControlScreen {
     }
     public void initDrawOptions(){
         try{
-            drawOptLoader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/fxml/options.fxml")));
+            drawOptLoader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/fxml/drawOptions.fxml")));
             drawOptRoot = drawOptLoader.load();
             options = drawOptLoader.getController();
         } catch (IOException exception) {
