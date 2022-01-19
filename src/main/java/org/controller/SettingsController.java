@@ -3,10 +3,7 @@ package org.controller;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import org.apache.logging.log4j.LogManager;
@@ -28,7 +25,7 @@ public class SettingsController implements Initializable, ControlScreen {
     @FXML
     private TextField heightInput;
     @FXML
-    private TextField backgroundColor;
+    private ColorPicker cpBackgroundColor;
     @FXML
     private Button createProject;
     @FXML
@@ -39,6 +36,8 @@ public class SettingsController implements Initializable, ControlScreen {
     private AnchorPane rootAnchorPane;
     @FXML
     private Pane settingsPane;
+    @FXML
+    private RadioButton radioBackground;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -94,5 +93,6 @@ public class SettingsController implements Initializable, ControlScreen {
         ec.setCanvas(project);
         ec.initDrawOptions();
         ec.initAddNoiseOpt();
+        ec.setControls();
     }
 }

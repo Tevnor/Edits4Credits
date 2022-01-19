@@ -5,9 +5,6 @@ import org.controller.tools.drawingtool.graphiccontrol.DrawOp;
 
 public class Clear extends DrawOp {
 
-    public Clear(){
-    }
-
     @Override
     public void draw(GraphicsContext gc) {
         writeBeforeARGB(gc);

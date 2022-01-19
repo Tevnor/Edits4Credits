@@ -2,7 +2,6 @@ package org.controller.tools.drawingtool.graphiccontrol.objects;
 
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.effect.BlendMode;
 import javafx.scene.effect.Effect;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Shape;
@@ -29,7 +28,7 @@ public abstract class Shapes extends DrawOp {
     public abstract Shapes reposition(Point2D point);
     public abstract boolean pointInside(Point2D point);
 
-    protected void applyRotate(GraphicsContext gc, Rotate r){
+    private void applyRotate(GraphicsContext gc, Rotate r){
         gc.setTransform(r.getMxx(),r.getMyx(),r.getMxy(),r.getMyy(),r.getTx(),r.getTy());
     }
 

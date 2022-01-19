@@ -2,7 +2,6 @@ package org.controller.tools.drawingtool.graphiccontrol.objects;
 
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Paint;
 import javafx.scene.shape.ArcType;
 import javafx.scene.shape.Shape;
 import javafx.scene.transform.Rotate;
@@ -12,9 +11,9 @@ import static org.controller.tools.drawingtool.graphiccontrol.objects.Shapes.Typ
 
 public class Arc extends Shapes {
 
-    private double startAngle;
-    private double arcExtent;
-    private ArcType closure;
+    private final double startAngle;
+    private final double arcExtent;
+    private final ArcType closure;
     private Point2D getCenter(){
         return new Point2D(minX+width/2,minY+height/2);
     }

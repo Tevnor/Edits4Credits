@@ -11,9 +11,6 @@ import static org.controller.tools.drawingtool.graphiccontrol.objects.Shapes.Typ
 
 public class Ellipses extends Shapes {
 
-    public Point2D getCenter(){
-        return new Point2D(minX+width/2,minY+height/2);
-    }
 
 
     public Ellipses(double minX, double minY, double width, double height, Attributes attributes) {
@@ -26,13 +23,15 @@ public class Ellipses extends Shapes {
         this.type = ELLIPSES;
     }
 
+    private Point2D getCenter(){
+        return new Point2D(minX+width/2,minY+height/2);
+    }
 
     private void drawStroke(GraphicsContext gc) {
         gc.setStroke(attributes.getColor());
         setAttributes(gc);
         gc.strokeOval(minX, minY, width, height);
     }
-
     private void drawFill(GraphicsContext gc) {
         gc.setFill(attributes.getColor());
         setAttributes(gc);

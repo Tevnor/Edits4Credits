@@ -95,40 +95,40 @@ public class DrawOptionsController implements Initializable {
     public Attributes getAttributes(){
         return attributes;
     }
-    public void setBloom(){
+    private void setBloom(){
         b.setThreshold(sliderBloom.getValue());
     }
-    public void setGlow(){
+    private void setGlow(){
         g.setLevel(sliderGlow.getValue());
     }
-    public void setBoxBlurIterations(){
+    private void setBoxBlurIterations(){
         bB.setIterations((int)sliderBoxBlur.getValue());
     }
-    public void setGaussianBlur(){
+    private void setGaussianBlur(){
         gB.setRadius(sliderGaussianBlur.getValue());
     }
-    public void setMotionBlur(){
+    private void setMotionBlur(){
         mB.setAngle(sliderMotionBlur.getValue());
     }
-    public void setReflectionTop(){
+    private void setReflectionTop(){
         r.setTopOpacity(sliderTopOpacity.getValue());
     }
-    public void setReflectionBottom(){
+    private void setReflectionBottom(){
         r.setBottomOpacity(sliderBottomOpacity.getValue());
     }
-    public void setReflectionFraction(){
+    private void setReflectionFraction(){
         r.setFraction(sliderFraction.getValue());
     }
-    public void setDropSpread(){
+    private void setDropSpread(){
         dS.setSpread(sliderSpreadDrop.getValue());
     }
-    public void setInnerChoke(){
+    private void setInnerChoke(){
         iS.setChoke(sliderChokeInner.getValue());
     }
-    public void setAlpha(){
+    private void setAlpha(){
         attributes.setAlpha(sliderAlpha.getValue());
     }
-    public void setBlendMode(){
+    private void setBlendMode(){
         attributes.setBm(cbBlendMode.getValue());
     }
 

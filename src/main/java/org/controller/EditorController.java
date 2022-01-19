@@ -23,11 +23,9 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.stage.FileChooser;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
+import javafx.stage.*;
 import org.controller.tools.drawingtool.DrawingTool;
+import org.controller.tools.drawingtool.graphiccontrol.Attributes;
 import org.controller.tools.drawingtool.graphiccontrol.handlers.HandlerFactory;
 import org.controller.tools.drawingtool.graphiccontrol.handlers.PolygonDrawer;
 import org.controller.tools.drawingtool.graphiccontrol.objects.Shapes;
@@ -50,6 +48,8 @@ import javax.imageio.ImageIO;
 
 public class EditorController implements Initializable, ControlScreen {
 
+    @FXML
+    private ContextMenu contextPoly, contextRect;
     @FXML
     private Button importButton;
     @FXML
@@ -141,9 +141,7 @@ public class EditorController implements Initializable, ControlScreen {
     private ScaleOptionsController scaleOptions;
 
     @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-//        initDrawOptions();
-    }
+    public void initialize(URL url, ResourceBundle resourceBundle) {}
 
     @Override
     public void setScreenParent(ScreensController screenPage) {
@@ -276,9 +274,12 @@ public class EditorController implements Initializable, ControlScreen {
         drawOptStage.initModality(Modality.APPLICATION_MODAL);
     }
 
+
+
     /**
      * Filter
      * */
+
     public void initEnumToFilterMap() {
         FilterOperation.EnumToFilterMap enumMap = new FilterOperation.EnumToFilterMap();
         enumMap.createEnumMap();
@@ -403,10 +404,10 @@ public class EditorController implements Initializable, ControlScreen {
     }
 
     public double getMenuBarHeight(){
-        return menuBar.getPrefHeight();
+        return (menuBar.getPrefHeight() + 40/getScaleY());
     }
     public double getToolBarWidth(){
-        return toolBar.getPrefWidth();
+        return (toolBar.getPrefWidth() + 40/getScaleX());
     }
 
 
@@ -443,6 +444,8 @@ public class EditorController implements Initializable, ControlScreen {
         }
     }
 
+
+
     // Return false: use width, return true: use height
     public boolean useWidthOrHeight(){
         return !(projectAspectRatio > 1);
@@ -463,6 +466,13 @@ public class EditorController implements Initializable, ControlScreen {
         gc.drawImage(filteredImage,0, 0, filteredImage.getWidth(), filteredImage.getHeight());
 
         initImageTool(filteredImage);
+    }
+    public void setControls(){
+        double viewCenter = (((window.getScreenHeight() - menuBar.getPrefHeight()) / 2d) + menuBar.getPrefHeight());
+        menuBar.setLayoutX(screenWidth/2 - menuBar.getPrefWidth()/2);
+        toolBar.setLayoutY(viewCenter - (toolBar.getPrefHeight() / 2d));
+        stack.setLayoutX((screenWidth - getToolBarWidth())/2 + toolBar.getPrefWidth() + (20/getScaleX()) - stack.getPrefWidth()/2);
+        stack.setLayoutY((screenHeight - getMenuBarHeight())/2 + toolBar.getPrefHeight() + (20/getScaleY()) - stack.getPrefHeight()/2 );
     }
 
     // draw selected image to the image canvas
@@ -533,6 +543,7 @@ public class EditorController implements Initializable, ControlScreen {
 
     public void handleMoveImage(ActionEvent event) {
         try{
+
             moveOptLoader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/fxml/moveOptions.fxml")));
             moveOptRoot = moveOptLoader.load();
             Stage moveOptStage = new Stage();
@@ -632,5 +643,15 @@ public class EditorController implements Initializable, ControlScreen {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private double getScaleX(){
+        Screen screen = Screen.getPrimary();
+        return screen.getOutputScaleX();
+    }
+
+    private double getScaleY(){
+        Screen screen = Screen.getPrimary();
+        return screen.getOutputScaleY();
     }
 }

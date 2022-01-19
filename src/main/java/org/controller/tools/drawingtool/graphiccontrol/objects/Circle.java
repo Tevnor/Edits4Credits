@@ -12,7 +12,7 @@ public class Circle extends Shapes {
     private final double radius, diameter;
 
 
-    public Point2D getCenter(){
+    private Point2D getCenter(){
         return new Point2D(minX+radius,minY+radius);
     }
     public Circle(double minX, double minY, double radius, Attributes attributes) {

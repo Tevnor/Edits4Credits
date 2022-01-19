@@ -1,0 +1,5 @@
+.color-picker-label{
+    -fx-font-family :"Segoe UI Semibold";
+    -fx-font-size: 18;
+    -fx-text-fill: #eeeeee;
+}
