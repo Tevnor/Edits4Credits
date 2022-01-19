@@ -28,17 +28,19 @@ import javafx.stage.StageStyle;
 import org.controller.tools.drawingtool.DrawingTool;
 import org.controller.tools.drawingtool.graphiccontrol.Attributes;
 import org.controller.tools.drawingtool.graphiccontrol.handlers.HandlerFactory;
-import org.controller.tools.drawingtool.graphiccontrol.handlers.PolygonDrawer;
-import org.controller.tools.drawingtool.graphiccontrol.objects.Shapes;
-import org.controller.tools.filtertool.FilterTool;
+
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
-import org.controller.NoiseController;
+import org.controller.tools.imagetool.ImageTool;
+import org.controller.tools.imagetool.filtercontrol.Filter;
+import org.controller.tools.imagetool.filtercontrol.FilterOperation;
 
 public class EditorController implements Initializable, ControlScreen {
 
@@ -110,7 +112,8 @@ public class EditorController implements Initializable, ControlScreen {
     private double canvasHeight;
 
     private Image resizedImage;
-    private FilterTool filterTool;
+    private Image originalImage;
+    private ImageTool imageTool;
 
     private Parent moveOptRoot;
     private FXMLLoader moveOptLoader;
@@ -120,12 +123,10 @@ public class EditorController implements Initializable, ControlScreen {
     private double currentImageHeight;
     private double currentImageWidth;
 
-
+    private GraphicsContext gc;
     private Parent scaleOptRoot;
     private FXMLLoader scaleOptLoader;
     private ScaleOptionsController scaleOptions;
-
-
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -248,7 +249,7 @@ public class EditorController implements Initializable, ControlScreen {
         drawOptStage.initModality(Modality.APPLICATION_MODAL);
     }
 
-    
+
     public void handleOpenFile(ActionEvent event) {
         importImageFromExplorer();
     }
@@ -261,13 +262,29 @@ public class EditorController implements Initializable, ControlScreen {
 
     public void handleSafeFile(ActionEvent event) {
     }
+    /**
+     * Filter
+     * */
+
+    public void initEnumToFilterMap() {
+        FilterOperation.EnumToFilterMap enumMap = new FilterOperation.EnumToFilterMap();
+        enumMap.createEnumMap();
+    }
 
     public void handleAddNoise(ActionEvent event) {
     }
 
     // Apply the checkerboard filter to the filterTool object that was instantiated at setImportedImage()
     public void handleApplyCheckerboard(ActionEvent event) {
-        this.filterTool.selectCheckerboard();
+
+
+        List<Filter.FilterTypeEnum> filterTypeEnumList = new ArrayList<>();
+//        filterTypeEnumList.add(FilterNew.FilterTypeEnum.ORIGINAL);
+        filterTypeEnumList.add(Filter.FilterTypeEnum.GLITCH);
+//        filterTypeEnumList.add(FilterNew.FilterTypeEnum.INVERTED);
+//        filterTypeEnumList.add(FilterNew.FilterTypeEnum.GRAYSCALE);
+
+        imageTool.startProcess(filterTypeEnumList);
     }
 
     /*
@@ -296,7 +313,7 @@ public class EditorController implements Initializable, ControlScreen {
 
     public void handleImportButton(ActionEvent event) throws IOException {
         importImageFromExplorer();
-        }
+    }
 
     public void importImageFromExplorer(){
 
@@ -373,7 +390,7 @@ public class EditorController implements Initializable, ControlScreen {
 
     // draw selected image to the image canvas
     public void setImportedImage(Image importedImage) {
-        GraphicsContext gc = editorCanvasImage.getGraphicsContext2D();
+        gc = editorCanvasImage.getGraphicsContext2D();
 
         double ratio = getImageAspectRatio(importedImage);
         int editorCanvasImageWidth = (int) editorCanvasImage.getWidth();
@@ -402,9 +419,15 @@ public class EditorController implements Initializable, ControlScreen {
             //openFile.setDisable(true);
         }
 
+        // Instantiate ImageTool Object
+        initImageTool();
+        initEnumToFilterMap();
+    }
+
+    public void initImageTool() {
         // Create pixel array from resized image to enhance performance of future references
-        this.filterTool = new FilterTool(resizedImage, editorCanvasImage, stack);
-        this.filterTool.stepOne();
+        this.imageTool = new ImageTool(resizedImage, editorCanvasImage, gc);
+        this.imageTool.createPixelArray();
     }
 
     // Scale the imported source image to the maximum canvas size
