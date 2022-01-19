@@ -1,6 +1,7 @@
 package org.controller.tools.imagetool.filtercontrol;
 
 import javafx.scene.image.*;
+import org.controller.tools.imagetool.filtercontrol.filter.FilterType;
 
 import java.nio.IntBuffer;
 import java.util.List;
@@ -50,8 +51,8 @@ public class ImageGrid {
     /**
      * Sequence for actual filter application
      * */
-    public Image processImage(List<Filter.FilterTypeEnum> filterTypeEnumList) {
-        fon = new FilterOperation(this, filterTypeEnumList);
+    public Image processImage(List<FilterType> filterTypeList) {
+        fon = new FilterOperation(this, filterTypeList);
         this.pixelArrayNew = fon.startFilter();
         writeNewPixelArray();
         return writableImage;

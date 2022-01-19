@@ -166,11 +166,11 @@ public class LogInController implements Initializable, ControlScreen {
     });
 
     public void initAppStages(){
-        screensController.loadScreen(GuiDriver.modeScreenID, GuiDriver.modeScreenFile);
+        screensController.loadScreen(ScreenName.MODE_SELECTION);
         loader = screensController.getLoader();
-        screensController.loadScreen(GuiDriver.settingsScreenID, GuiDriver.settingsScreenFile);
-        screensController.loadScreen(GuiDriver.editorScreenID, GuiDriver.editorScreenFile);
-        screensController.setScreen(GuiDriver.modeScreenID);
+        screensController.loadScreen(ScreenName.PROJECT_SETTINGS);
+        screensController.loadScreen(ScreenName.EDITOR);
+        screensController.setScreen(ScreenName.MODE_SELECTION);
 
         ImageView iv = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/e4c-bg.png")), window.getScreenWidth(), window.getScreenHeight(), false, true));
         Group root = new Group();
@@ -208,7 +208,6 @@ public class LogInController implements Initializable, ControlScreen {
         closeLoginStage(0.75);
     }
 
-
     public void closeLoginStage(double seconds){
         Stage stage = (Stage) logInButton.getScene().getWindow();
         PauseTransition delay = new PauseTransition(Duration.seconds(seconds));
@@ -233,7 +232,6 @@ public class LogInController implements Initializable, ControlScreen {
         startFade(logInButton, 0.3, 0.7);
         startFade(cancelButton, 0.3, 0.7);
     }
-
 
     public void startOpeningAnimation() {
         PauseTransition delay1 = new PauseTransition(Duration.seconds(1));
@@ -268,7 +266,7 @@ public class LogInController implements Initializable, ControlScreen {
         scaleNode(loginImageView, .33);
         startFade(logInButton, 0, 0);
 
-        PauseTransition delay = new PauseTransition(Duration.seconds(1.6));
+        PauseTransition delay = new PauseTransition(Duration.seconds(1.5));
         delay.setOnFinished(event -> changeButtonText(cancelButton, "Loading..."));
         delay.play();
     }

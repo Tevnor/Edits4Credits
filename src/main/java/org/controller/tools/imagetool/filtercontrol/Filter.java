@@ -4,13 +4,6 @@ import javafx.scene.paint.Color;
 
 public interface Filter {
 
-    enum FilterTypeEnum {
-        ORIGINAL,
-        GLITCH,
-        GRAYSCALE,
-        INVERTED
-    }
-
     int applyFilter(int argb, double factor);
 
     default int convertColorToARGB(Color color) {

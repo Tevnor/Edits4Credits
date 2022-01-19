@@ -1,12 +1,8 @@
 package org.controller.tools.imagetool.filtercontrol;
 
-import org.controller.tools.imagetool.filtercontrol.filter.GlitchFilter;
-import org.controller.tools.imagetool.filtercontrol.filter.GrayscaleFilter;
-import org.controller.tools.imagetool.filtercontrol.filter.InvertedFilter;
-import org.controller.tools.imagetool.filtercontrol.filter.Original;
+import org.controller.tools.imagetool.filtercontrol.filter.*;
 
 import java.util.ArrayList;
-import java.util.EnumMap;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -18,12 +14,12 @@ public class FilterOperation {
     private final int runs;
     private final int[] pixelArray;
     private final int[] pixelArrayNew;
-    private final List<Filter.FilterTypeEnum> filterTypesList;
+    private final List<FilterType> filterTypesList;
 
     /**
      * FILTER OPERATION
      * */
-    public FilterOperation(ImageGrid imageGrid, List<Filter.FilterTypeEnum> filterTypesList) {
+    public FilterOperation(ImageGrid imageGrid, List<FilterType> filterTypesList) {
         this.imageGrid = imageGrid;
         this.runs = imageGrid.getRuns();
         this.pixelArray = imageGrid.getPixelArray();
@@ -86,9 +82,9 @@ public class FilterOperation {
             ArrayList<Runnable> panelRunnableList = new ArrayList<>();
 
             int listIndex = 0;
-            for (Filter.FilterTypeEnum filterType: filterTypesList) {
+            for (FilterType filterType: filterTypesList) {
                 int panelIndex = getPanelStartingIndex(index, listIndex);
-                Filter filter = getFilterType(filterType);
+                Filter filter = FilterType.TYPE_TO_FILTER_ENUM_MAP.get(filterType);
                 Runnable panelRunnable = new PanelOperation(panelIndex, filter, panelFinish);
                 panelRunnableList.add(panelRunnable);
                 listIndex++;
@@ -124,11 +120,6 @@ public class FilterOperation {
             }
             return index;
         }
-
-        public Filter getFilterType(Filter.FilterTypeEnum filterType) {
-            EnumToFilterMap enumToFilterMap = new EnumToFilterMap();
-            return enumToFilterMap.getFilterFromEnum(filterType);
-        }
     }
 
     /**
@@ -163,32 +154,5 @@ public class FilterOperation {
                 pixelIndex = rowIndex;
             }
         }
-    }
-
-    /**
-     * ENUM TO FILTER MAP
-     * */
-    public static class EnumToFilterMap {
-
-        private static EnumMap<Filter.FilterTypeEnum, Filter> enumToFilterMap;
-
-        public void createEnumMap() {
-            if (null == enumToFilterMap || enumToFilterMap.isEmpty()) {
-                enumToFilterMap = new EnumMap<>(Filter.FilterTypeEnum.class);
-                enumToFilterMap.put(Filter.FilterTypeEnum.ORIGINAL, new Original());
-                enumToFilterMap.put(Filter.FilterTypeEnum.GLITCH, new GlitchFilter());
-                enumToFilterMap.put(Filter.FilterTypeEnum.GRAYSCALE, new GrayscaleFilter());
-                enumToFilterMap.put(Filter.FilterTypeEnum.INVERTED, new InvertedFilter());
-            }
-        }
-        public Filter getFilterFromEnum(Filter.FilterTypeEnum ft) {
-            if (null == enumToFilterMap) {
-                createEnumMap();
-            }
-            return enumToFilterMap.get(ft);
-        }
-//        public EnumMap<FilterNew.FilterTypeEnum, FilterNew> getEnumToFilterMap() {
-//            return enumToFilterMap;
-//        }
     }
 }

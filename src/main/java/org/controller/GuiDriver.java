@@ -18,16 +18,7 @@ public class GuiDriver  extends Application {
   private double screenWidth;
   private double screenHeight;
 
-  public static String modeScreenID = "modeSelection";
-  public static String modeScreenFile = "/fxml/modeSelection.fxml";
-
-  public static String settingsScreenID = "settings";
-  public static String settingsScreenFile = "/fxml/settings.fxml";
-
-  public static String editorScreenID = "editor";
-  public static String editorScreenFile = "/fxml/editor.fxml";
-
- @Override
+  @Override
   public void start(Stage primaryStage) {
     sc = new ScreensController();
     sc.getMonitorInfo();
@@ -48,13 +39,13 @@ public class GuiDriver  extends Application {
       logInController.setScreenParent(sc);
       logInController.setWindow(window);
       logInController.setCenter();
+      logInController.hideElements();
+      logInController.startOpeningAnimation();
 
       Stage loginStage = new Stage();
-
       loginStage.initStyle(StageStyle.DECORATED);
       loginStage.initStyle(StageStyle.UNDECORATED);
       loginStage.initStyle(StageStyle.TRANSPARENT);
-
 
       Scene loginScene = new Scene(loginRoot, screenWidth, screenHeight, Color.TRANSPARENT);
       loginStage.setMaximized(true);
