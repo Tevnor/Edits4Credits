@@ -1,10 +1,11 @@
 package org.controller.tools.filtertool.filtercontrol;
 
 import javafx.scene.image.*;
-import org.controller.tools.filtertool.filtercontrol.filterapplications.Checkerboard;
+import org.controller.tools.filtertool.filtercontrol.filterapplications.CheckerboardOld;
+
 import java.nio.IntBuffer;
 
-public class ImageGrid {
+public class ImageGridOld {
     private final ImageView imageView;
     private final WritableImage writableImage;
     private final PixelReader pixelReader;
@@ -14,11 +15,20 @@ public class ImageGrid {
     private final int[] pixelArray;
     private int[] pixelArrayNew;
 
-    private Checkerboard checkerboard;
+    private int factor = 5;
+    private final int runs = 1;
+
+    private int blockWidth;
+    private int blockHeight;
+    private int panelWidth;
+    private int panelHeight;
+
+
+    private CheckerboardOld checkerboardOld;
     private boolean silhouette;
     private boolean complement;
 
-    public ImageGrid(Image image) {
+    public ImageGridOld(Image image) {
         this.width = (int) image.getWidth();
         this.height = (int) image.getHeight();
         this.imageView = new ImageView(image);
@@ -27,6 +37,12 @@ public class ImageGrid {
         this.pixelWriter = writableImage.getPixelWriter();
         this.writablePixelFormat = WritablePixelFormat.getIntArgbInstance();
         this.pixelArray = new int[width * height];
+//        this.filterTypesList = filterTypesList;
+        this.pixelArrayNew = new int[pixelArray.length];
+        this.blockWidth = width / runs;
+        this.blockHeight = height / runs;
+        this.panelWidth = width / (runs * 2);
+        this.panelHeight = height / (runs * 2);
     }
 
     /**
@@ -49,8 +65,8 @@ public class ImageGrid {
      * */
 
     public void setPixelArrayNew() {
-        checkerboard = new Checkerboard(this);
-        this.pixelArrayNew = this.checkerboard.applyCheckerBoard();
+        checkerboardOld = new CheckerboardOld(this);
+        this.pixelArrayNew = this.checkerboardOld.applyCheckerBoard();
     }
 
     // Write new values to the writable image and set to image view
@@ -59,30 +75,35 @@ public class ImageGrid {
     }
 
 
-    // Original integer array of argb values
-    public int[] getPixelArray() {
-        return pixelArray;
-    }
-
     public ImageView getImageView() {
         return imageView;
     }
 
     // Overwritten integer array of argb values
+
     public int[] getPixelArrayNew() {
         return this.pixelArrayNew;
     }
 
-
     public WritablePixelFormat<IntBuffer> getWritablePixelFormat() {
         return writablePixelFormat;
     }
+
     public int getWidth() {
         return this.width;
     }
     public int getHeight() {
         return this.height;
     }
+    public int getBlockWidth() { return this.blockWidth; }
+    public int getBlockHeight() { return this.blockHeight; }
+    public int getPanelWidth() { return this.panelWidth; }
+    public int getPanelHeight() { return this.panelHeight; }
+    // Original integer array of argb values
+    public int[] getPixelArray() {
+        return pixelArray;
+    }
+    public int getFactor() { return this.factor; }
     public PixelWriter getPixelWriter() {
         return this.pixelWriter;
     }

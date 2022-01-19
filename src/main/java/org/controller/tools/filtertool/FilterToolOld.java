@@ -6,24 +6,25 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
 import org.controller.tools.EditingTools;
-import org.controller.tools.filtertool.filtercontrol.ImageGrid;
+import org.controller.tools.filtertool.filtercontrol.ImageGridOld;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 
-public class FilterTool implements EditingTools {
+public class FilterToolOld implements EditingTools {
 
-    private ImageGrid imageGrid;
-    private Image image;
+    private ImageGridOld imageGridOld;
+    private final Image image;
     private Canvas canvas;
-    private GraphicsContext graphicsContext;
+    private final GraphicsContext graphicsContext;
     private StackPane stackPane;
 
 
-    public FilterTool(Image image, Canvas canvas, StackPane stackPane) {
+    public FilterToolOld(Image image, Canvas canvas, StackPane stackPane) {
         this.image = image;
         this.canvas = canvas;
         this.graphicsContext = canvas.getGraphicsContext2D();
@@ -32,12 +33,12 @@ public class FilterTool implements EditingTools {
 
 
     // Read and write pixel argb values into array
-    public void stepOne() {
-        imageGrid = new ImageGrid(image);
-        this.imageGrid.setPixelArray();
+    public void createPixelArray() {
+        imageGridOld = new ImageGridOld(image);
+        this.imageGridOld.setPixelArray();
     }
 
-    public Canvas selectCheckerboard() {
+    public Canvas applyFilterSelection() {
         Image img = getResultingImage();
         saveToFile(img);
         graphicsContext.drawImage(img, 0,0);
@@ -46,10 +47,10 @@ public class FilterTool implements EditingTools {
     }
 
     public Image getResultingImage() {
-        this.imageGrid.setPixelArrayNew();
-        this.imageGrid.writeNewPixelArray();
+        this.imageGridOld.setPixelArrayNew();
+        this.imageGridOld.writeNewPixelArray();
 
-        return this.imageGrid.retrieveImage();
+        return this.imageGridOld.retrieveImage();
     }
 
     public static void saveToFile(Image writableImage) {

@@ -1,10 +1,10 @@
 package org.controller.tools.filtertool.filtercontrol.filterapplications;
 
-public class WholeImage {
+public class WholeImageOld {
     private final double variance;
 
 
-    public WholeImage(double sliderValue, int factor) {
+    public WholeImageOld(double sliderValue, int factor) {
         this.variance = sliderValue / factor;
     }
 
