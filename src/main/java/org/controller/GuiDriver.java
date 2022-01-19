@@ -1,9 +1,6 @@
 package org.controller;
 
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
-import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.paint.Color;
 import javafx.stage.StageStyle;
@@ -11,11 +8,8 @@ import javafx.stage.StageStyle;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
-import java.awt.*;
-import java.net.URL;
 import java.util.Objects;
-import java.util.ResourceBundle;
+
 
 public class GuiDriver  extends Application {
 

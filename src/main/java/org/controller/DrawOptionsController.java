@@ -382,7 +382,6 @@ public class DrawOptionsController implements Initializable {
         }
     }
 
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         initOnlyNums();

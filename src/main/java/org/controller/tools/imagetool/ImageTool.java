@@ -1,22 +1,18 @@
 package org.controller.tools.imagetool;
 
-import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import org.controller.tools.EditingTools;
 import org.controller.tools.imagetool.filtercontrol.Filter;
 import org.controller.tools.imagetool.filtercontrol.ImageGrid;
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
 public class ImageTool implements EditingTools {
 
     private ImageGrid imageGrid;
     private final Image image;
+    private Image filteredImage;
     private final Canvas canvas;
     private final GraphicsContext graphicsContext;
 
@@ -32,10 +28,12 @@ public class ImageTool implements EditingTools {
     }
 
     public void startProcess(List<Filter.FilterTypeEnum> filterTypeEnumList) {
-        Image imageNew = this.imageGrid.processImage(maximizeList(filterTypeEnumList));
-        graphicsContext.drawImage(imageNew, 0, 0);
-
-        saveToFile(imageNew);
+        filteredImage = this.imageGrid.processImage(maximizeList(filterTypeEnumList));
+        graphicsContext.drawImage(filteredImage, 0, 0);
+//        saveToFile(imageNew);
+    }
+    public Image getFilteredImage(){
+        return filteredImage;
     }
 
     public List<Filter.FilterTypeEnum> maximizeList(List<Filter.FilterTypeEnum> filterTypeEnumList) {
@@ -60,15 +58,15 @@ public class ImageTool implements EditingTools {
         }
     }
 
-    public void saveToFile(Image writableImage) {
-        try {
-            File outputFile = new File("savedImage.png");
-            BufferedImage bufferedImage = SwingFXUtils.fromFXImage(writableImage, null);
-            ImageIO.write(bufferedImage, "png", outputFile);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
+//    public void saveToFile(Image writableImage) {
+//        try {
+//            File outputFile = new File("savedImage.png");
+//            BufferedImage bufferedImage = SwingFXUtils.fromFXImage(writableImage, null);
+//            ImageIO.write(bufferedImage, "png", outputFile);
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 
     @Override
     public void apply() {

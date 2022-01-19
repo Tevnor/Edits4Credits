@@ -21,6 +21,6 @@
       <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Change Image Position" />
       <TextField promptText="Change X Position" GridPane.rowIndex="1" fx:id="xPositionInput" />
       <TextField fx:id="yPositionInput" promptText="Change Y Position" GridPane.rowIndex="2" />
-      <Button fx:id="applyPositionChange" mnemonicParsing="false" onAction="#handleApplyPostionChange" text="Apply Position Change" GridPane.rowIndex="3" />
+      <Button fx:id="applyPositionChange" mnemonicParsing="false" onAction="#handleApplyPositionChange" text="Apply Position Change" GridPane.rowIndex="3" />
    </children>
 </GridPane>

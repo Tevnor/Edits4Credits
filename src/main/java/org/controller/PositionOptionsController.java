@@ -23,21 +23,21 @@ public class PositionOptionsController implements Initializable {
     private double yPosition;
     private EditorController editorController;
 
-    public void handleApplyPostionChange(ActionEvent event) {
+    public void handleApplyPositionChange(ActionEvent event) {
 
-        if (xPositionInput.getText() == ""){
+        if (xPositionInput.getText().equals("")){
             xPosition = 0;
         }
         else if(xPositionInput.getText() != null){
             xPosition = Double.parseDouble(xPositionInput.getText());
         }
-        if (yPositionInput.getText() == ""){
+        if (yPositionInput.getText().equals("")){
             yPosition = 0;
         }
         else if (yPositionInput.getText() != null){
             yPosition = Double.parseDouble(yPositionInput.getText());
         }
-        editorController.setChangedPostion(xPosition, yPosition, editorController.getCurrentImageWidth(), editorController.getCurrentImageHeight());
+        editorController.setChangedPosition(xPosition, yPosition, editorController.getCurrentImageWidth(), editorController.getCurrentImageHeight());
     }
 
     public void setEditorController(EditorController editorController) {

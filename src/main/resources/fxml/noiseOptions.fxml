@@ -7,6 +7,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Text?>
 
+<?import javafx.scene.layout.HBox?>
 <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="200.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17" fx:controller="org.controller.NoiseController">
   <columnConstraints>
     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -19,7 +20,9 @@
    <children>
       <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Noise Strength" textAlignment="CENTER" />
       <Slider fx:id="noiseSlider" majorTickUnit="10.0" max="10.0" minorTickCount="10" showTickLabels="true" showTickMarks="true" snapToTicks="true" GridPane.rowIndex="1" />
-      <Button fx:id="applyNoiseOnlyOnImage" mnemonicParsing="false" onAction="#handleApplyNoiseOnlyOnImage" text="only image " GridPane.rowIndex="2" />
-      <Button fx:id="applyNoiseOnEverything" alignment="CENTER_RIGHT" mnemonicParsing="false" onAction="#handleApplyNoiseOnEverything" text="everything" GridPane.rowIndex="2" />
+       <HBox>
+           <Button fx:id="applyNoiseOnlyOnImage" mnemonicParsing="false" onAction="#handleApplyNoiseOnlyOnImage" text="only image " GridPane.rowIndex="2" />
+           <Button fx:id="applyNoiseOnEverything" alignment="CENTER_RIGHT" mnemonicParsing="false" onAction="#handleApplyNoiseOnEverything" text="everything" GridPane.rowIndex="2" />
+       </HBox>
    </children>
 </GridPane>

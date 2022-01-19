@@ -1,5 +1,6 @@
 package org.controller;
 
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -15,6 +16,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.MenuBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
@@ -26,10 +28,11 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.controller.tools.drawingtool.DrawingTool;
-import org.controller.tools.drawingtool.graphiccontrol.Attributes;
 import org.controller.tools.drawingtool.graphiccontrol.handlers.HandlerFactory;
+import org.controller.tools.drawingtool.graphiccontrol.handlers.PolygonDrawer;
+import org.controller.tools.drawingtool.graphiccontrol.objects.Shapes;
 
-
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -41,6 +44,9 @@ import java.util.ResourceBundle;
 import org.controller.tools.imagetool.ImageTool;
 import org.controller.tools.imagetool.filtercontrol.Filter;
 import org.controller.tools.imagetool.filtercontrol.FilterOperation;
+import org.controller.NoiseController;
+
+import javax.imageio.ImageIO;
 
 public class EditorController implements Initializable, ControlScreen {
 
@@ -53,7 +59,7 @@ public class EditorController implements Initializable, ControlScreen {
     @FXML
     private javafx.scene.control.MenuItem checkerboardFilterItem;
     @FXML
-    private javafx.scene.control.MenuItem saveFile;
+    private javafx.scene.control.MenuItem saveImage;
     @FXML
     private javafx.scene.control.MenuItem openFileSettings;
     @FXML
@@ -99,10 +105,14 @@ public class EditorController implements Initializable, ControlScreen {
     private double height;
     private double projectAspectRatio;
     private Parent drawOptRoot;
+    private Parent noiseOptRoot;
     private FXMLLoader drawOptLoader;
+    private FXMLLoader noiseOptLoader;
     private DrawOptionsController options;
+    private EditorController editorController;
+    private NoiseController noiseController;
     private Stage drawOptStage = new Stage();
-    private Attributes attributes = new Attributes();
+    private Stage noiseOptStage = new Stage();
 
     ScreensController screensController;
     Window window;
@@ -113,6 +123,8 @@ public class EditorController implements Initializable, ControlScreen {
 
     private Image resizedImage;
     private Image originalImage;
+    private Image filteredImage;
+
     private ImageTool imageTool;
 
     private Parent moveOptRoot;
@@ -130,7 +142,7 @@ public class EditorController implements Initializable, ControlScreen {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        initDrawOptions();
+//        initDrawOptions();
     }
 
     @Override
@@ -162,7 +174,7 @@ public class EditorController implements Initializable, ControlScreen {
     public void handleArc(ActionEvent e){
         stack.removeEventHandler(MouseEvent.ANY, mover);
         stack.removeEventHandler(MouseEvent.ANY, drawer);
-        openDrawOptions();
+        openDrawOptions(Shapes.Type.ARC);
         drawer = handlerFactory.getHandler(HandlerFactory.Handler.ARC, options.getAttributes());
         stack.addEventHandler(MouseEvent.ANY,drawer);
     }
@@ -174,14 +186,14 @@ public class EditorController implements Initializable, ControlScreen {
     public void handleCircle(ActionEvent e){
         stack.removeEventHandler(MouseEvent.ANY, mover);
         stack.removeEventHandler(MouseEvent.ANY, drawer);
-        openDrawOptions();
+        openDrawOptions(Shapes.Type.CIRCLE);
         drawer = handlerFactory.getHandler(HandlerFactory.Handler.CIRCLE, options.getAttributes());
         stack.addEventHandler(MouseEvent.ANY,drawer);
     }
     public void handleEllipses(ActionEvent e){
         stack.removeEventHandler(MouseEvent.ANY, mover);
         stack.removeEventHandler(MouseEvent.ANY, drawer);
-        openDrawOptions();
+        openDrawOptions(Shapes.Type.ELLIPSES);
         drawer = handlerFactory.getHandler(HandlerFactory.Handler.ELLIPSES, options.getAttributes());
         stack.addEventHandler(MouseEvent.ANY,drawer);
 
@@ -189,31 +201,44 @@ public class EditorController implements Initializable, ControlScreen {
     public void handleRectangle(ActionEvent e){
         stack.removeEventHandler(MouseEvent.ANY, mover);
         stack.removeEventHandler(MouseEvent.ANY, drawer);
-        openDrawOptions();
+        openDrawOptions(Shapes.Type.RECTANGLE);
         drawer = handlerFactory.getHandler(HandlerFactory.Handler.RECTANGLE, options.getAttributes());
+        stack.addEventHandler(MouseEvent.ANY,drawer);
+    }
+    public void handleRoundedRectangle(ActionEvent e){
+        stack.removeEventHandler(MouseEvent.ANY, mover);
+        stack.removeEventHandler(MouseEvent.ANY, drawer);
+        openDrawOptions(Shapes.Type.ROUNDED_RECT);
+        drawer = handlerFactory.getHandler(HandlerFactory.Handler.ROUNDED_RECTANGLE, options.getAttributes());
         stack.addEventHandler(MouseEvent.ANY,drawer);
     }
     public void handleLine(ActionEvent e){
         stack.removeEventHandler(MouseEvent.ANY, mover);
         stack.removeEventHandler(MouseEvent.ANY, drawer);
-        openDrawOptions();
+        openDrawOptions(Shapes.Type.LINE);
         drawer = handlerFactory.getHandler(HandlerFactory.Handler.LINE, options.getAttributes());
         stack.addEventHandler(MouseEvent.ANY,drawer);
     }
     public void handleText(ActionEvent e){
         stack.removeEventHandler(MouseEvent.ANY, mover);
         stack.removeEventHandler(MouseEvent.ANY, drawer);
-        openDrawOptions();
+        openDrawOptions(Shapes.Type.TEXT);
         drawer = handlerFactory.getHandler(HandlerFactory.Handler.TEXT, options.getAttributes());
         stack.addEventHandler(MouseEvent.ANY,drawer);
     }
     public void handlePolygon(ActionEvent e){
         stack.removeEventHandler(MouseEvent.ANY, mover);
         stack.removeEventHandler(MouseEvent.ANY, drawer);
-        openDrawOptions();
+        openDrawOptions(Shapes.Type.POLYGON);
         drawer = handlerFactory.getHandler(HandlerFactory.Handler.POLYGON, options.getAttributes());
         stack.addEventHandler(MouseEvent.ANY,drawer);
     }
+    public void handleDrawPolygon(ActionEvent e){
+        if(drawer instanceof PolygonDrawer){
+            ((PolygonDrawer) drawer).drawPolygon();
+        }
+    }
+
     public void handleDrawUndo(ActionEvent e){
         dt.backward();
     }
@@ -224,19 +249,21 @@ public class EditorController implements Initializable, ControlScreen {
         drawOptStage.centerOnScreen();
         drawOptStage.show();
     }
-    public void openDrawOptions(){
+    public void openDrawOptions(Shapes.Type type){
         drawOptStage.centerOnScreen();
-
+        options.setSelShape(type);
         drawOptStage.show();
     }
+
     public void initDrawOptions(){
         try{
-            drawOptLoader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/fxml/drawOptions.fxml")));
+            FXMLLoader drawOptLoader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/fxml/drawOptions.fxml")));
             drawOptRoot = drawOptLoader.load();
             options = drawOptLoader.getController();
         } catch (IOException exception) {
             exception.printStackTrace();
         }
+
         drawOptStage = new Stage();
         Scene drawOptScene = new Scene(drawOptRoot);
         drawOptScene.setFill(Color.TRANSPARENT);
@@ -249,42 +276,57 @@ public class EditorController implements Initializable, ControlScreen {
         drawOptStage.initModality(Modality.APPLICATION_MODAL);
     }
 
-
-    public void handleOpenFile(ActionEvent event) {
-        importImageFromExplorer();
-    }
-
-    public void handleDeleteFile(ActionEvent event) {
-    }
-
-    public void handleFileSettings(ActionEvent event) {
-    }
-
-    public void handleSafeFile(ActionEvent event) {
-    }
     /**
      * Filter
      * */
-
     public void initEnumToFilterMap() {
         FilterOperation.EnumToFilterMap enumMap = new FilterOperation.EnumToFilterMap();
         enumMap.createEnumMap();
     }
 
+    public void initAddNoiseOpt() {
+        try {
+            FXMLLoader noiseOptLoader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/fxml/noiseOptions.fxml")));
+            noiseOptRoot = noiseOptLoader.load();
+            noiseController = noiseOptLoader.getController();
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
+        noiseOptStage = new Stage();
+        Scene noiseOptScene = new Scene(noiseOptRoot);
+        noiseOptStage.setScene(noiseOptScene);
+
+        noiseController.setEditorController(this);
+        //setFilteredImage();
+    }
+
     public void handleAddNoise(ActionEvent event) {
+        noiseOptStage.centerOnScreen();
+        noiseOptStage.show();
+    }
+
+    public WritableImage createImageFromCanvas(Canvas canvas){
+        WritableImage filterImage = editorCanvasImage.snapshot(null, null);
+        return filterImage;
     }
 
     // Apply the checkerboard filter to the filterTool object that was instantiated at setImportedImage()
     public void handleApplyCheckerboard(ActionEvent event) {
 
-
         List<Filter.FilterTypeEnum> filterTypeEnumList = new ArrayList<>();
-//        filterTypeEnumList.add(FilterNew.FilterTypeEnum.ORIGINAL);
+        filterTypeEnumList.add(Filter.FilterTypeEnum.ORIGINAL);
         filterTypeEnumList.add(Filter.FilterTypeEnum.GLITCH);
-//        filterTypeEnumList.add(FilterNew.FilterTypeEnum.INVERTED);
-//        filterTypeEnumList.add(FilterNew.FilterTypeEnum.GRAYSCALE);
-
+        filterTypeEnumList.add(Filter.FilterTypeEnum.INVERTED);
+        filterTypeEnumList.add(Filter.FilterTypeEnum.GRAYSCALE);
         imageTool.startProcess(filterTypeEnumList);
+
+        filteredImage = imageTool.getFilteredImage();
+        setImage();
+    }
+
+    public void setImage() {
+        gc.drawImage(filteredImage,0, 0, filteredImage.getWidth(), filteredImage.getHeight());
+        initImageTool(filteredImage);
     }
 
     /*
@@ -304,7 +346,7 @@ public class EditorController implements Initializable, ControlScreen {
             Image droppedImage = new Image(new FileInputStream(f));
 
             // Pass image to setter method
-            setImportedImage(droppedImage);
+            setImageToCanvas(droppedImage);
         } catch (Exception e) {
             e.printStackTrace();
             e.getCause();
@@ -325,7 +367,11 @@ public class EditorController implements Initializable, ControlScreen {
         imagePath = f;
 
         //creates new image from the selected path
-        Image image = new Image(f.getPath());
+        Image fileChooserImage = new Image(f.getPath());
+        setImageToCanvas(fileChooserImage);
+    }
+
+    public void setImageToCanvas(Image image) {
         setOriginalImage(image);
 
         // Pass image to setter method
@@ -341,10 +387,10 @@ public class EditorController implements Initializable, ControlScreen {
     }
 
 
-    // method to calculate stackpane size
+    // method to calculate stack pane size
     public void setStackPane() {
 
-        // define the maximum size for the stackpane based on the monitor size
+        // define the maximum size for the stack pane based on the monitor size
         double maxStackHeight = screenHeight - getMenuBarHeight();
         double maxStackWidth = screenWidth - getToolBarWidth();
 
@@ -379,13 +425,21 @@ public class EditorController implements Initializable, ControlScreen {
         return !(projectAspectRatio > 1);
     }
 
-    // create empty canvas for images with the size of the stackpane
+    // create empty canvas for images with the size of the stack pane
     public void setEditorImageCanvas(){
         editorCanvasImage = new Canvas(stack.getPrefWidth(), stack.getPrefHeight());
         stack.getChildren().add(editorCanvasImage);
 
         stack.setAlignment(editorCanvasImage, Pos.CENTER);
         editorCanvasImage.toBack();
+    }
+
+    public void setFilteredImage(){
+        filteredImage = noiseController.getFilteredImage();
+//        gc = editorCanvasImage.getGraphicsContext2D();
+        gc.drawImage(filteredImage,0, 0, filteredImage.getWidth(), filteredImage.getHeight());
+
+        initImageTool(filteredImage);
     }
 
     // draw selected image to the image canvas
@@ -420,13 +474,13 @@ public class EditorController implements Initializable, ControlScreen {
         }
 
         // Instantiate ImageTool Object
-        initImageTool();
+        initImageTool(resizedImage);
         initEnumToFilterMap();
     }
 
-    public void initImageTool() {
+    public void initImageTool(Image img) {
         // Create pixel array from resized image to enhance performance of future references
-        this.imageTool = new ImageTool(resizedImage, editorCanvasImage, gc);
+        this.imageTool = new ImageTool(img, editorCanvasImage, gc);
         this.imageTool.createPixelArray();
     }
 
@@ -471,7 +525,7 @@ public class EditorController implements Initializable, ControlScreen {
         }
 
     }
-    public void setChangedPostion(double xPosition, double yPosition, double currentImageWidth, double currentImageHeight){
+    public void setChangedPosition(double xPosition, double yPosition, double currentImageWidth, double currentImageHeight){
         this.xPosition = xPosition;
         this.yPosition = yPosition;
         GraphicsContext gc = editorCanvasImage.getGraphicsContext2D();
@@ -530,6 +584,32 @@ public class EditorController implements Initializable, ControlScreen {
     }
     public double getCurrentImageHeight(){
         return this.currentImageHeight;
+    }
+
+    /**
+     * File
+     * */
+    public void handleOpenFile(ActionEvent event) {
+        importImageFromExplorer();
+    }
+
+    public void handleDeleteFile(ActionEvent event) {
+    }
+
+    public void handleFileSettings(ActionEvent event) {
+    }
+
+    public void handleSaveFile(ActionEvent event) {
+        saveToFile(filteredImage);
+    }
+    public static void saveToFile(Image writableImage) {
+        try {
+            File outputFile = new File("savedImage.png");
+            BufferedImage bufferedImage = SwingFXUtils.fromFXImage(writableImage, null);
+            ImageIO.write(bufferedImage, "png", outputFile);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }
