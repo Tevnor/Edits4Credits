@@ -24,8 +24,9 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.controller.tools.drawingtool.DrawingTool;
-import org.controller.tools.drawingtool.graphiccontrol.Attributes;
 import org.controller.tools.drawingtool.graphiccontrol.handlers.HandlerFactory;
 import org.controller.tools.drawingtool.graphiccontrol.handlers.PolygonDrawer;
 import org.controller.tools.drawingtool.graphiccontrol.objects.Shapes;
@@ -42,12 +43,12 @@ import java.util.ResourceBundle;
 import org.controller.tools.imagetool.ImageTool;
 import org.controller.tools.imagetool.filtercontrol.Filter;
 import org.controller.tools.imagetool.filtercontrol.FilterOperation;
-import org.controller.NoiseController;
 
 import javax.imageio.ImageIO;
 
 public class EditorController implements Initializable, ControlScreen {
 
+    private static Logger LOG = LogManager.getLogger(EditorController.class.getName());
     @FXML
     private ContextMenu contextPoly, contextRect;
     @FXML
@@ -468,11 +469,14 @@ public class EditorController implements Initializable, ControlScreen {
         initImageTool(filteredImage);
     }
     public void setControls(){
-        double viewCenter = (((window.getScreenHeight() - menuBar.getPrefHeight()) / 2d) + menuBar.getPrefHeight());
+        double viewCenterY = (((window.getScreenHeight() - menuBar.getPrefHeight()) / 2d) + menuBar.getPrefHeight());
         menuBar.setLayoutX(screenWidth/2 - menuBar.getPrefWidth()/2);
-        toolBar.setLayoutY(viewCenter - (toolBar.getPrefHeight() / 2d));
+        toolBar.setLayoutY(viewCenterY - (toolBar.getPrefHeight() / 2d));
         stack.setLayoutX((screenWidth - getToolBarWidth())/2 + toolBar.getPrefWidth() + (20/getScaleX()) - stack.getPrefWidth()/2);
-        stack.setLayoutY((screenHeight - getMenuBarHeight())/2 + toolBar.getPrefHeight() + (20/getScaleY()) - stack.getPrefHeight()/2 );
+        stack.setLayoutY((screenHeight - getMenuBarHeight())/2 + menuBar.getPrefHeight() + (20/getScaleY()) - stack.getPrefHeight()/2 );
+        double x = (screenWidth - getToolBarWidth())/2 + toolBar.getPrefWidth() + (20/getScaleX()) - stack.getPrefWidth()/2;
+        double y = (screenHeight - getMenuBarHeight())/2 + toolBar.getPrefHeight() + (20/getScaleY()) - stack.getPrefHeight();
+        LOG.debug("stack layout x: " + x + " |stack layout y " + y);
     }
 
     // draw selected image to the image canvas

@@ -14,6 +14,9 @@
         <Logger name="org.controller.GuiDriver" level="debug">
             <AppenderRef ref="A1"/>
         </Logger>
+        <Logger name="org.controller.EditorController" level="debug">
+            <AppenderRef ref="STDOUT"/>
+        </Logger>
         <Root level="info">
             <AppenderRef ref="STDOUT"/>
         </Root>
