@@ -283,10 +283,6 @@ public class EditorController implements Initializable, ControlScreen {
      * Filter
      * */
 
-    public void initEnumToFilterMap() {
-        FilterOperation.EnumToFilterMap enumMap = new FilterOperation.EnumToFilterMap();
-        enumMap.createEnumMap();
-    }
 
     public void initAddNoiseOpt() {
         try {
@@ -514,7 +510,6 @@ public class EditorController implements Initializable, ControlScreen {
 
         // Instantiate ImageTool Object
         initImageTool(resizedImage);
-        initEnumToFilterMap();
     }
 
     public void initImageTool(Image img) {
