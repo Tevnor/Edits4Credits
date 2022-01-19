@@ -2,6 +2,7 @@
 
 <?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ContextMenu?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
@@ -33,8 +34,24 @@
                   <ToggleButton fx:id="circleBtn" mnemonicParsing="false" onAction="#handleCircle" prefHeight="45.0" prefWidth="45.0" text="Circle" toggleGroup="$shapeGroup" />
                   <ToggleButton fx:id="ellipseBtn" mnemonicParsing="false" onAction="#handleEllipses" prefHeight="45.0" prefWidth="45.0" text="Ellipse" toggleGroup="$shapeGroup" />
                   <ToggleButton fx:id="lineBtn" mnemonicParsing="false" onAction="#handleLine" prefHeight="45.0" prefWidth="45.0" text="Line" toggleGroup="$shapeGroup" />
-                  <ToggleButton fx:id="polygonBtn" mnemonicParsing="false" onAction="#handlePolygon" prefHeight="45.0" prefWidth="45.0" text="Polygon" toggleGroup="$shapeGroup" />
-                  <ToggleButton fx:id="rectangleBtn" mnemonicParsing="false" onAction="#handleRectangle" prefHeight="45.0" prefWidth="45.0" text="Rectangle" toggleGroup="$shapeGroup" />
+                  <ToggleButton fx:id="polygonBtn" mnemonicParsing="false" onAction="#handlePolygon" prefHeight="45.0" prefWidth="45.0" text="Polygon" toggleGroup="$shapeGroup">
+                     <contextMenu>
+                        <ContextMenu>
+                          <items>
+                            <MenuItem mnemonicParsing="false" onAction="#handleDrawPolygon" text="Draw Polygon" />
+                          </items>
+                        </ContextMenu>
+                     </contextMenu>
+                  </ToggleButton>
+                  <ToggleButton fx:id="rectangleBtn" mnemonicParsing="false" onAction="#handleRectangle" prefHeight="45.0" prefWidth="45.0" text="Rectangle" toggleGroup="$shapeGroup">
+                     <contextMenu>
+                        <ContextMenu>
+                          <items>
+                            <MenuItem mnemonicParsing="false" onAction="#handleRoundedRectangle" text="Rounded Rectangle" />
+                          </items>
+                        </ContextMenu>
+                     </contextMenu>
+                  </ToggleButton>
                   <ToggleButton fx:id="textBtn" mnemonicParsing="false" onAction="#handleText" prefHeight="45.0" prefWidth="45.0" text="Text" toggleGroup="$shapeGroup" />
                   <ToggleButton fx:id="moveBtn" mnemonicParsing="false" onAction="#handleMove" prefHeight="45.0" prefWidth="45.0" text="Move" toggleGroup="$shapeGroup" />
                   <ToggleButton fx:id="drawOptionsBtn" mnemonicParsing="false" onAction="#openDrawOptions" prefHeight="45.0" prefWidth="45.0" text="DrawOptions" toggleGroup="$shapeGroup" />

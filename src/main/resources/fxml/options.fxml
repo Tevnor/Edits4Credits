@@ -32,9 +32,9 @@
         <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
     </rowConstraints>
     <children>
-        <TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="431.0" prefWidth="242.0" tabClosingPolicy="UNAVAILABLE" GridPane.rowIndex="1">
+        <TabPane fx:id="tabPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="431.0" prefWidth="242.0" tabClosingPolicy="UNAVAILABLE" GridPane.rowIndex="1">
             <tabs>
-                <Tab closable="false" styleClass="gray" text="General">
+                <Tab fx:id="general" closable="false" styleClass="gray" text="General">
                     <content>
                         <GridPane styleClass="tabGrid">
                             <columnConstraints>
@@ -126,7 +126,7 @@
                         </GridPane>
                     </content>
                 </Tab>
-                <Tab closable="false" styleClass="gray" text="Shape">
+                <Tab fx:id="shapes" closable="false" styleClass="gray" text="Shapes">
                     <content>
                         <GridPane styleClass="tabGrid">
                             <columnConstraints>
@@ -136,9 +136,9 @@
                                 <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
                             </rowConstraints>
                             <children>
-                                <Accordion maxHeight="382.0" style="-fx-box-border: #727272;" GridPane.valignment="TOP">
+                                <Accordion fx:id="shapeAccordion" maxHeight="382.0" style="-fx-box-border: #727272;" GridPane.valignment="TOP">
                                     <panes>
-                                        <TitledPane animated="false" text="Arc">
+                                        <TitledPane fx:id="arc" animated="false" text="Arc">
                                             <content>
                                                 <GridPane styleClass="gray">
                                                     <columnConstraints>
@@ -186,7 +186,7 @@
                                                 <Font name="System Bold" size="12.0" />
                                             </font>
                                         </TitledPane>
-                                        <TitledPane animated="false" text="Polygon">
+                                        <TitledPane fx:id="polygon" animated="false" text="Polygon">
                                             <content>
                                                 <GridPane styleClass="gray">
                                                     <columnConstraints>
@@ -208,7 +208,7 @@
                                                 <Font name="System Bold" size="12.0" />
                                             </font>
                                         </TitledPane>
-                                        <TitledPane animated="false" text="Rounded Rectangle">
+                                        <TitledPane fx:id="rounded_rect" animated="false" text="Rounded Rectangle">
                                             <content>
                                                 <GridPane styleClass="gray">
                                                     <columnConstraints>
@@ -245,7 +245,7 @@
                                                 <Font name="System Bold" size="12.0" />
                                             </font>
                                         </TitledPane>
-                                        <TitledPane animated="false" text="Text">
+                                        <TitledPane fx:id="text" animated="false" text="Text">
                                             <content>
                                                 <GridPane styleClass="gray">
                                                     <columnConstraints>
@@ -290,7 +290,7 @@
                         </GridPane>
                     </content>
                 </Tab>
-                <Tab closable="false" styleClass="gray" text="Effects">
+                <Tab fx:id="effects" closable="false" styleClass="gray" text="Effects">
                     <content>
                         <GridPane styleClass="tabGrid">
                             <columnConstraints>

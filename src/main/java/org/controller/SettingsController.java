@@ -5,10 +5,14 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.net.URL;
 import java.util.Objects;
@@ -17,6 +21,7 @@ import java.io.IOException;
 import java.util.ResourceBundle;
 
 public class SettingsController implements Initializable, ControlScreen {
+    private static Logger logger = LogManager.getLogger(SettingsController.class.getName());
 
     ScreensController screensController;
     Window window;
@@ -72,8 +77,15 @@ public class SettingsController implements Initializable, ControlScreen {
             enterProject();
 
         } catch (Exception e) {
-            e.printStackTrace();
-            e.getCause();
+            logger.warn("tried to create project with no passed width and height");
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Warning!");
+            alert.setHeaderText("Please enter valid values for project width and height");
+            alert.showAndWait().ifPresent(rs -> {
+                if (rs == ButtonType.OK) {
+                    logger.warn("pressed ok");
+                }
+            });
         }
     }
 

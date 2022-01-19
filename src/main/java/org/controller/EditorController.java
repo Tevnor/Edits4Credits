@@ -26,8 +26,9 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.controller.tools.drawingtool.DrawingTool;
-import org.controller.tools.drawingtool.graphiccontrol.Attributes;
 import org.controller.tools.drawingtool.graphiccontrol.handlers.HandlerFactory;
+import org.controller.tools.drawingtool.graphiccontrol.handlers.PolygonDrawer;
+import org.controller.tools.drawingtool.graphiccontrol.objects.Shapes;
 import org.controller.tools.filtertool.FilterTool;
 
 import java.io.File;
@@ -94,10 +95,8 @@ public class EditorController implements Initializable, ControlScreen {
     private double height;
     private double projectAspectRatio;
     private Parent drawOptRoot;
-    private FXMLLoader drawOptLoader;
     private DrawOptionsController options;
     private Stage drawOptStage = new Stage();
-    private Attributes attributes = new Attributes();
 
     ScreensController screensController;
     Window window;
@@ -147,7 +146,7 @@ public class EditorController implements Initializable, ControlScreen {
     public void handleArc(ActionEvent e){
         stack.removeEventHandler(MouseEvent.ANY, mover);
         stack.removeEventHandler(MouseEvent.ANY, drawer);
-        openDrawOptions();
+        openDrawOptions(Shapes.Type.ARC);
         drawer = handlerFactory.getHandler(HandlerFactory.Handler.ARC, options.getAttributes());
         stack.addEventHandler(MouseEvent.ANY,drawer);
     }
@@ -159,14 +158,14 @@ public class EditorController implements Initializable, ControlScreen {
     public void handleCircle(ActionEvent e){
         stack.removeEventHandler(MouseEvent.ANY, mover);
         stack.removeEventHandler(MouseEvent.ANY, drawer);
-        openDrawOptions();
+        openDrawOptions(Shapes.Type.CIRCLE);
         drawer = handlerFactory.getHandler(HandlerFactory.Handler.CIRCLE, options.getAttributes());
         stack.addEventHandler(MouseEvent.ANY,drawer);
     }
     public void handleEllipses(ActionEvent e){
         stack.removeEventHandler(MouseEvent.ANY, mover);
         stack.removeEventHandler(MouseEvent.ANY, drawer);
-        openDrawOptions();
+        openDrawOptions(Shapes.Type.ELLIPSES);
         drawer = handlerFactory.getHandler(HandlerFactory.Handler.ELLIPSES, options.getAttributes());
         stack.addEventHandler(MouseEvent.ANY,drawer);
 
@@ -174,31 +173,44 @@ public class EditorController implements Initializable, ControlScreen {
     public void handleRectangle(ActionEvent e){
         stack.removeEventHandler(MouseEvent.ANY, mover);
         stack.removeEventHandler(MouseEvent.ANY, drawer);
-        openDrawOptions();
+        openDrawOptions(Shapes.Type.RECTANGLE);
         drawer = handlerFactory.getHandler(HandlerFactory.Handler.RECTANGLE, options.getAttributes());
+        stack.addEventHandler(MouseEvent.ANY,drawer);
+    }
+    public void handleRoundedRectangle(ActionEvent e){
+        stack.removeEventHandler(MouseEvent.ANY, mover);
+        stack.removeEventHandler(MouseEvent.ANY, drawer);
+        openDrawOptions(Shapes.Type.ROUNDED_RECT);
+        drawer = handlerFactory.getHandler(HandlerFactory.Handler.ROUNDED_RECTANGLE, options.getAttributes());
         stack.addEventHandler(MouseEvent.ANY,drawer);
     }
     public void handleLine(ActionEvent e){
         stack.removeEventHandler(MouseEvent.ANY, mover);
         stack.removeEventHandler(MouseEvent.ANY, drawer);
-        openDrawOptions();
+        openDrawOptions(Shapes.Type.LINE);
         drawer = handlerFactory.getHandler(HandlerFactory.Handler.LINE, options.getAttributes());
         stack.addEventHandler(MouseEvent.ANY,drawer);
     }
     public void handleText(ActionEvent e){
         stack.removeEventHandler(MouseEvent.ANY, mover);
         stack.removeEventHandler(MouseEvent.ANY, drawer);
-        openDrawOptions();
+        openDrawOptions(Shapes.Type.TEXT);
         drawer = handlerFactory.getHandler(HandlerFactory.Handler.TEXT, options.getAttributes());
         stack.addEventHandler(MouseEvent.ANY,drawer);
     }
     public void handlePolygon(ActionEvent e){
         stack.removeEventHandler(MouseEvent.ANY, mover);
         stack.removeEventHandler(MouseEvent.ANY, drawer);
-        openDrawOptions();
+        openDrawOptions(Shapes.Type.POLYGON);
         drawer = handlerFactory.getHandler(HandlerFactory.Handler.POLYGON, options.getAttributes());
         stack.addEventHandler(MouseEvent.ANY,drawer);
     }
+    public void handleDrawPolygon(ActionEvent e){
+        if(drawer instanceof PolygonDrawer){
+            ((PolygonDrawer) drawer).drawPolygon();
+        }
+    }
+
     public void handleDrawUndo(ActionEvent e){
         dt.backward();
     }
@@ -209,14 +221,14 @@ public class EditorController implements Initializable, ControlScreen {
         drawOptStage.centerOnScreen();
         drawOptStage.show();
     }
-    public void openDrawOptions(){
+    public void openDrawOptions(Shapes.Type type){
         drawOptStage.centerOnScreen();
-
+        options.setSelShape(type);
         drawOptStage.show();
     }
     public void initDrawOptions(){
         try{
-            drawOptLoader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/fxml/options.fxml")));
+            FXMLLoader drawOptLoader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/fxml/options.fxml")));
             drawOptRoot = drawOptLoader.load();
             options = drawOptLoader.getController();
         } catch (IOException exception) {

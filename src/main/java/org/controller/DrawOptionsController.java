@@ -1,7 +1,6 @@
 package org.controller;
 
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Point2D;
@@ -17,7 +16,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
-import javafx.util.converter.DoubleStringConverter;
 import javafx.util.converter.FormatStringConverter;
 import org.controller.tools.drawingtool.graphiccontrol.Attributes;
 
@@ -26,6 +24,8 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.ResourceBundle;
+
+import static org.controller.tools.drawingtool.graphiccontrol.objects.Shapes.*;
 
 public class DrawOptionsController implements Initializable {
     @FXML
@@ -70,7 +70,14 @@ public class DrawOptionsController implements Initializable {
     private ButtonBar buttons;
     @FXML
     private ToggleGroup strokeFill;
-
+    @FXML
+    private TabPane tabPane;
+    @FXML
+    private Tab general, shapes;
+    @FXML
+    private Accordion shapeAccordion;
+    @FXML
+    private TitledPane arc, polygon, rounded_rect, text;
 
     private Stage stage;
     private Point2D delta;
@@ -346,7 +353,35 @@ public class DrawOptionsController implements Initializable {
         setEffects();
         stage = (Stage) closeDrawOptions.getScene().getWindow();
         stage.close();
+        this.attributes = new Attributes();
     }
+    public void setSelShape(Type type){
+        switch (type){
+            case ARC:
+                tabPane.getSelectionModel().select(shapes);
+                shapeAccordion.setExpandedPane(arc);
+                break;
+            case ROUNDED_RECT:
+                tabPane.getSelectionModel().select(shapes);
+                shapeAccordion.setExpandedPane(rounded_rect);
+                break;
+            case POLYGON:
+                tabPane.getSelectionModel().select(shapes);
+                shapeAccordion.setExpandedPane(polygon);
+                break;
+            case TEXT:
+                tabPane.getSelectionModel().select(shapes);
+                shapeAccordion.setExpandedPane(text);
+                break;
+            case CIRCLE:
+            case LINE:
+            case RECTANGLE:
+            case ELLIPSES:
+                tabPane.getSelectionModel().select(general);
+                break;
+        }
+    }
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
