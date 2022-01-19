@@ -82,7 +82,7 @@ public class ModeSelectionController implements Initializable, ControlScreen {
 
     @FXML
     private void enterEditor(ActionEvent event) {
-        screensController.setScreen(GuiDriver.settingsScreenID);
+        screensController.setScreen(ScreenName.PROJECT_SETTINGS);
     }
 
     public void openMarketplace(ActionEvent ae) {

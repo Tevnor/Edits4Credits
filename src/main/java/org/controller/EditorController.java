@@ -43,6 +43,7 @@ import org.controller.tools.imagetool.ImageTool;
 import org.controller.tools.imagetool.filtercontrol.Filter;
 import org.controller.tools.imagetool.filtercontrol.FilterOperation;
 import org.controller.NoiseController;
+import org.controller.tools.imagetool.filtercontrol.filter.FilterType;
 
 import javax.imageio.ImageIO;
 
@@ -125,7 +126,7 @@ public class EditorController implements Initializable, ControlScreen {
     private Image filteredImage;
 
     private ImageTool imageTool;
-    List<Filter.FilterTypeEnum> filterTypeEnumList;
+    List<FilterType> filterTypeEnumList;
 
     private Parent moveOptRoot;
     private FXMLLoader moveOptLoader;
@@ -274,17 +275,9 @@ public class EditorController implements Initializable, ControlScreen {
         drawOptStage.initModality(Modality.APPLICATION_MODAL);
     }
 
-
-
     /**
      * Filter
      * */
-
-    public void initEnumToFilterMap() {
-        FilterOperation.EnumToFilterMap enumMap = new FilterOperation.EnumToFilterMap();
-        enumMap.createEnumMap();
-    }
-
     public void initAddNoiseOpt() {
         try {
             FXMLLoader noiseOptLoader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/fxml/noiseOptions.fxml")));
@@ -313,29 +306,29 @@ public class EditorController implements Initializable, ControlScreen {
     // Apply the checkerboard filter to the filterTool object that was instantiated at setImportedImage()
     public void handleApplyCheckerboard(ActionEvent event) {
         filterTypeEnumList = new ArrayList<>();
-        filterTypeEnumList.add(Filter.FilterTypeEnum.ORIGINAL);
-        filterTypeEnumList.add(Filter.FilterTypeEnum.GLITCH);
-        filterTypeEnumList.add(Filter.FilterTypeEnum.INVERTED);
-        filterTypeEnumList.add(Filter.FilterTypeEnum.GRAYSCALE);
+        filterTypeEnumList.add(FilterType.ORIGINAL);
+        filterTypeEnumList.add(FilterType.GLITCH);
+        filterTypeEnumList.add(FilterType.INVERTED);
+        filterTypeEnumList.add(FilterType.GRAYSCALE);
 
         startImageTool();
     }
 
     public void handleAddGlitch(ActionEvent event) {
         filterTypeEnumList = new ArrayList<>();
-        filterTypeEnumList.add(Filter.FilterTypeEnum.GLITCH);
+        filterTypeEnumList.add(FilterType.GLITCH);
 
         startImageTool();
     }
     public void handleAddInverse(ActionEvent event) {
         filterTypeEnumList = new ArrayList<>();
-        filterTypeEnumList.add(Filter.FilterTypeEnum.INVERTED);
+        filterTypeEnumList.add(FilterType.INVERTED);
 
         startImageTool();
     }
     public void handleAddGrayscale(ActionEvent event) {
         filterTypeEnumList = new ArrayList<>();
-        filterTypeEnumList.add(Filter.FilterTypeEnum.GRAYSCALE);
+        filterTypeEnumList.add(FilterType.GRAYSCALE);
 
         startImageTool();
     }
@@ -444,8 +437,6 @@ public class EditorController implements Initializable, ControlScreen {
         }
     }
 
-
-
     // Return false: use width, return true: use height
     public boolean useWidthOrHeight(){
         return !(projectAspectRatio > 1);
@@ -508,7 +499,6 @@ public class EditorController implements Initializable, ControlScreen {
 
         // Instantiate ImageTool Object
         initImageTool(resizedImage);
-        initEnumToFilterMap();
     }
 
     public void initImageTool(Image img) {
@@ -543,7 +533,6 @@ public class EditorController implements Initializable, ControlScreen {
 
     public void handleMoveImage(ActionEvent event) {
         try{
-
             moveOptLoader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/fxml/moveOptions.fxml")));
             moveOptRoot = moveOptLoader.load();
             Stage moveOptStage = new Stage();

@@ -74,7 +74,7 @@ public class SettingsController implements Initializable, ControlScreen {
     }
 
     public void enterProject(){
-        screensController.setScreen(GuiDriver.editorScreenID);
+        screensController.setScreen(ScreenName.EDITOR);
         setEditorPresets();
     }
 

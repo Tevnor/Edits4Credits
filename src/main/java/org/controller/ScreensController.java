@@ -21,8 +21,7 @@ import java.util.Objects;
 
 public class ScreensController extends StackPane {
 
-    private final HashMap<String, Node> screenMap = new HashMap<>();
-
+    private final HashMap<ScreenName, Node> screenToNodeMap = new HashMap<>();
     private Window window;
     private FXMLLoader loader;
 
@@ -31,13 +30,13 @@ public class ScreensController extends StackPane {
     }
 
     // Add new scene to the HashMap
-    public void addScreen(String name, Node screen) {
-        screenMap.put(name, screen);
+    public void addScreen(ScreenName name, Node screen) {
+        screenToNodeMap.put(name, screen);
     }
 
     // Return the screen node with the corresponding name
-    public Node getScreen(String name) {
-        return screenMap.get(name);
+    public Node getScreen(ScreenName name) {
+        return screenToNodeMap.get(name);
     }
 
     public void getMonitorInfo() {
@@ -57,9 +56,9 @@ public class ScreensController extends StackPane {
     }
 
     // Load FXML file, use addScreen(), get controller from parent tree structure, and inject screen into controller
-    public boolean loadScreen(String name, String resource){
+    public boolean loadScreen(ScreenName name){
         try {
-            loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource(resource)));
+            loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource(ScreenName.SCREEN_NAME_TO_PATH_MAP.get(name))));
             Parent loadScreen = loader.load();
             ControlScreen controlScreen = loader.getController();
             controlScreen.setScreenParent(this);
@@ -82,32 +81,34 @@ public class ScreensController extends StackPane {
         return loader;
     }
 
-    public void setCenter(String name) {
+    public void setCenter(ScreenName name) {
         switch (name)  {
-            case "modeSelection":   setLayoutX(window.getScreenWidth() / 2 - 500);
-                                    setLayoutY(window.getScreenHeight() / 2 - 300);
-                                    break;
-            case "settings":        setLayoutX(window.getScreenWidth() / 2 - 300);
-                                    setLayoutY(window.getScreenHeight() / 2 - 300);
-                                    break;
-            default:                setLayoutX(0);
-                                    setLayoutY(0);
+            case MODE_SELECTION:
+                setLayoutX(window.getScreenWidth() / 2 - 500);
+                setLayoutY(window.getScreenHeight() / 2 - 300);
+                break;
+            case PROJECT_SETTINGS:
+                setLayoutX(window.getScreenWidth() / 2 - 300);
+                setLayoutY(window.getScreenHeight() / 2 - 300);
+                break;
+            default:
+                setLayoutX(0);
+                setLayoutY(0);
         }
     }
 
-    public boolean setScreen(final String name) {
-        if (screenMap.get(name) != null) {
-
+    public boolean setScreen(final ScreenName name) {
+        if (screenToNodeMap.get(name) != null) {
             final DoubleProperty opacity = opacityProperty();
+
             // In case of one more active screens
             if (!getChildren().isEmpty()) {
-
                 Timeline screenFade = new Timeline(
                         new KeyFrame(Duration.ZERO, new KeyValue(opacity, 1.0)),
-                        new KeyFrame(new Duration(500), actionEvent -> {
-                                getChildren().remove(0);
-                                getChildren().add(0, screenMap.get(name));
-    //                        }
+                        new KeyFrame(new Duration(1000), actionEvent -> {
+                            getChildren().remove(0);
+                            getChildren().add(0, screenToNodeMap.get(name));
+
                             Timeline screenFadeIn = new Timeline(
                                     new KeyFrame(Duration.ZERO, new KeyValue(opacity, 0.0)),
                                     new KeyFrame(new Duration(500), new KeyValue(opacity, 1.0)));
@@ -115,19 +116,19 @@ public class ScreensController extends StackPane {
                         }, new KeyValue(opacity, 0.0)));
                 screenFade.play();
 
-                PauseTransition delay = new PauseTransition(Duration.seconds(.5));
+                PauseTransition delay = new PauseTransition(Duration.seconds(1));
                 delay.setOnFinished( event -> setCenter(name));
                 delay.play();
             // In case of no active screens
             } else {
                 setOpacity(0.0);
-                getChildren().add(screenMap.get(name));
+                getChildren().add(screenToNodeMap.get(name));
                 setCenter(name);
 
                 Timeline screenFadeIn = new Timeline(
                         new KeyFrame(Duration.ZERO, new KeyValue(opacity, 0.0)),
-                        new KeyFrame(new Duration(250), new KeyValue(opacity, 1.0)));
-                PauseTransition delayCenter = new PauseTransition(Duration.seconds(.5));
+                        new KeyFrame(new Duration(500), new KeyValue(opacity, 1.0)));
+                PauseTransition delayCenter = new PauseTransition(Duration.seconds(0.75));
                 delayCenter.setOnFinished( event -> screenFadeIn.play());
                 delayCenter.play();
             }
@@ -139,8 +140,8 @@ public class ScreensController extends StackPane {
         }
     }
 
-    public boolean unloadScreen(String name) {
-        if (screenMap.remove(name) != null) {
+    public boolean unloadScreen(ScreenName name) {
+        if (screenToNodeMap.remove(name) != null) {
             return true;
         } else {
             System.err.println("Screen doesn't exist.");

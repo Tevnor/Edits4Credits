@@ -4,8 +4,9 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import org.controller.tools.EditingTools;
-import org.controller.tools.imagetool.filtercontrol.Filter;
 import org.controller.tools.imagetool.filtercontrol.ImageGrid;
+import org.controller.tools.imagetool.filtercontrol.filter.FilterType;
+
 import java.util.List;
 
 public class ImageTool implements EditingTools {
@@ -27,8 +28,8 @@ public class ImageTool implements EditingTools {
         this.imageGrid.setPixelArray();
     }
 
-    public void startProcess(List<Filter.FilterTypeEnum> filterTypeEnumList) {
-        filteredImage = this.imageGrid.processImage(maximizeList(filterTypeEnumList));
+    public void startProcess(List<FilterType> filterTypeList) {
+        filteredImage = this.imageGrid.processImage(maximizeList(filterTypeList));
         graphicsContext.drawImage(filteredImage, 0, 0);
 //        saveToFile(imageNew);
     }
@@ -36,25 +37,25 @@ public class ImageTool implements EditingTools {
         return filteredImage;
     }
 
-    public List<Filter.FilterTypeEnum> maximizeList(List<Filter.FilterTypeEnum> filterTypeEnumList) {
-        Filter.FilterTypeEnum filterTypeEnumOne;
-        Filter.FilterTypeEnum filterTypeEnumTwo;
+    public List<FilterType> maximizeList(List<FilterType> filterTypeList) {
+        FilterType filterTypeEnumOne;
+        FilterType filterTypeEnumTwo;
 
-        switch (filterTypeEnumList.size()) {
+        switch (filterTypeList.size()) {
             case 1:
-                filterTypeEnumOne = filterTypeEnumList.get(0);
-                filterTypeEnumList.add(filterTypeEnumOne);
-                filterTypeEnumList.add(filterTypeEnumOne);
-                filterTypeEnumList.add(filterTypeEnumOne);
-                return filterTypeEnumList;
+                filterTypeEnumOne = filterTypeList.get(0);
+                filterTypeList.add(filterTypeEnumOne);
+                filterTypeList.add(filterTypeEnumOne);
+                filterTypeList.add(filterTypeEnumOne);
+                return filterTypeList;
             case 2:
-                filterTypeEnumOne = filterTypeEnumList.get(0);
-                filterTypeEnumTwo = filterTypeEnumList.get(1);
-                filterTypeEnumList.add(filterTypeEnumTwo);
-                filterTypeEnumList.add(filterTypeEnumOne);
-                return filterTypeEnumList;
+                filterTypeEnumOne = filterTypeList.get(0);
+                filterTypeEnumTwo = filterTypeList.get(1);
+                filterTypeList.add(filterTypeEnumTwo);
+                filterTypeList.add(filterTypeEnumOne);
+                return filterTypeList;
             default:
-                return filterTypeEnumList;
+                return filterTypeList;
         }
     }
 
