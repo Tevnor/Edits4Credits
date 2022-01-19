@@ -26,6 +26,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.controller.tools.drawingtool.DrawingTool;
+import org.controller.tools.drawingtool.graphiccontrol.Attributes;
 import org.controller.tools.drawingtool.graphiccontrol.handlers.HandlerFactory;
 import org.controller.tools.drawingtool.graphiccontrol.handlers.PolygonDrawer;
 import org.controller.tools.drawingtool.graphiccontrol.objects.Shapes;
@@ -95,8 +96,10 @@ public class EditorController implements Initializable, ControlScreen {
     private double height;
     private double projectAspectRatio;
     private Parent drawOptRoot;
+    private FXMLLoader drawOptLoader;
     private DrawOptionsController options;
     private Stage drawOptStage = new Stage();
+    private Attributes attributes = new Attributes();
 
     ScreensController screensController;
     Window window;
@@ -111,6 +114,16 @@ public class EditorController implements Initializable, ControlScreen {
     private Parent moveOptRoot;
     private FXMLLoader moveOptLoader;
     private PositionOptionsController moveOptions;
+    private double xPosition = 0;
+    private double yPosition = 0;
+    private double currentImageHeight;
+    private double currentImageWidth;
+
+
+    private Parent scaleOptRoot;
+    private FXMLLoader scaleOptLoader;
+    private ScaleOptionsController scaleOptions;
+
 
 
     @Override
@@ -135,6 +148,7 @@ public class EditorController implements Initializable, ControlScreen {
         handlerFactory = new HandlerFactory(dt);
         this.canvasWidth = project.getProjectWidth();
         this.canvasHeight = project.getProjectHeight();
+        this.importButton.toFront();
     }
 
     public void setWidthHeightAspectRatio(Project project){
@@ -146,7 +160,7 @@ public class EditorController implements Initializable, ControlScreen {
     public void handleArc(ActionEvent e){
         stack.removeEventHandler(MouseEvent.ANY, mover);
         stack.removeEventHandler(MouseEvent.ANY, drawer);
-        openDrawOptions(Shapes.Type.ARC);
+        openDrawOptions();
         drawer = handlerFactory.getHandler(HandlerFactory.Handler.ARC, options.getAttributes());
         stack.addEventHandler(MouseEvent.ANY,drawer);
     }
@@ -158,14 +172,14 @@ public class EditorController implements Initializable, ControlScreen {
     public void handleCircle(ActionEvent e){
         stack.removeEventHandler(MouseEvent.ANY, mover);
         stack.removeEventHandler(MouseEvent.ANY, drawer);
-        openDrawOptions(Shapes.Type.CIRCLE);
+        openDrawOptions();
         drawer = handlerFactory.getHandler(HandlerFactory.Handler.CIRCLE, options.getAttributes());
         stack.addEventHandler(MouseEvent.ANY,drawer);
     }
     public void handleEllipses(ActionEvent e){
         stack.removeEventHandler(MouseEvent.ANY, mover);
         stack.removeEventHandler(MouseEvent.ANY, drawer);
-        openDrawOptions(Shapes.Type.ELLIPSES);
+        openDrawOptions();
         drawer = handlerFactory.getHandler(HandlerFactory.Handler.ELLIPSES, options.getAttributes());
         stack.addEventHandler(MouseEvent.ANY,drawer);
 
@@ -173,44 +187,31 @@ public class EditorController implements Initializable, ControlScreen {
     public void handleRectangle(ActionEvent e){
         stack.removeEventHandler(MouseEvent.ANY, mover);
         stack.removeEventHandler(MouseEvent.ANY, drawer);
-        openDrawOptions(Shapes.Type.RECTANGLE);
+        openDrawOptions();
         drawer = handlerFactory.getHandler(HandlerFactory.Handler.RECTANGLE, options.getAttributes());
-        stack.addEventHandler(MouseEvent.ANY,drawer);
-    }
-    public void handleRoundedRectangle(ActionEvent e){
-        stack.removeEventHandler(MouseEvent.ANY, mover);
-        stack.removeEventHandler(MouseEvent.ANY, drawer);
-        openDrawOptions(Shapes.Type.ROUNDED_RECT);
-        drawer = handlerFactory.getHandler(HandlerFactory.Handler.ROUNDED_RECTANGLE, options.getAttributes());
         stack.addEventHandler(MouseEvent.ANY,drawer);
     }
     public void handleLine(ActionEvent e){
         stack.removeEventHandler(MouseEvent.ANY, mover);
         stack.removeEventHandler(MouseEvent.ANY, drawer);
-        openDrawOptions(Shapes.Type.LINE);
+        openDrawOptions();
         drawer = handlerFactory.getHandler(HandlerFactory.Handler.LINE, options.getAttributes());
         stack.addEventHandler(MouseEvent.ANY,drawer);
     }
     public void handleText(ActionEvent e){
         stack.removeEventHandler(MouseEvent.ANY, mover);
         stack.removeEventHandler(MouseEvent.ANY, drawer);
-        openDrawOptions(Shapes.Type.TEXT);
+        openDrawOptions();
         drawer = handlerFactory.getHandler(HandlerFactory.Handler.TEXT, options.getAttributes());
         stack.addEventHandler(MouseEvent.ANY,drawer);
     }
     public void handlePolygon(ActionEvent e){
         stack.removeEventHandler(MouseEvent.ANY, mover);
         stack.removeEventHandler(MouseEvent.ANY, drawer);
-        openDrawOptions(Shapes.Type.POLYGON);
+        openDrawOptions();
         drawer = handlerFactory.getHandler(HandlerFactory.Handler.POLYGON, options.getAttributes());
         stack.addEventHandler(MouseEvent.ANY,drawer);
     }
-    public void handleDrawPolygon(ActionEvent e){
-        if(drawer instanceof PolygonDrawer){
-            ((PolygonDrawer) drawer).drawPolygon();
-        }
-    }
-
     public void handleDrawUndo(ActionEvent e){
         dt.backward();
     }
@@ -221,14 +222,14 @@ public class EditorController implements Initializable, ControlScreen {
         drawOptStage.centerOnScreen();
         drawOptStage.show();
     }
-    public void openDrawOptions(Shapes.Type type){
+    public void openDrawOptions(){
         drawOptStage.centerOnScreen();
-        options.setSelShape(type);
+
         drawOptStage.show();
     }
     public void initDrawOptions(){
         try{
-            FXMLLoader drawOptLoader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/fxml/options.fxml")));
+            drawOptLoader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/fxml/drawOptions.fxml")));
             drawOptRoot = drawOptLoader.load();
             options = drawOptLoader.getController();
         } catch (IOException exception) {
@@ -307,6 +308,7 @@ public class EditorController implements Initializable, ControlScreen {
 
         //creates new image from the selected path
         Image image = new Image(f.getPath());
+        setOriginalImage(image);
 
         // Pass image to setter method
         setEditorImageCanvas();
@@ -351,6 +353,7 @@ public class EditorController implements Initializable, ControlScreen {
             }
             stack.setPrefWidth(stackWidth);
             stack.setPrefHeight(stackHeight);
+
         }
     }
 
@@ -388,6 +391,8 @@ public class EditorController implements Initializable, ControlScreen {
             resizedImage = scaleImage(importedImage, getResizedImageWidth(editorCanvasImageWidth, ratio), editorCanvasImageHeight, true, true);
         }
 
+        this.currentImageHeight = resizedImage.getHeight();
+        this.currentImageWidth = resizedImage.getWidth();
         // Draw resized image onto editorCanvasImage
         gc.drawImage(resizedImage,0, 0, resizedImage.getWidth(), resizedImage.getHeight());
 
@@ -446,12 +451,65 @@ public class EditorController implements Initializable, ControlScreen {
         }
 
     }
-    public void setChangedPostion(double xPosition, double yPosition){
+    public void setChangedPostion(double xPosition, double yPosition, double currentImageWidth, double currentImageHeight){
+        this.xPosition = xPosition;
+        this.yPosition = yPosition;
         GraphicsContext gc = editorCanvasImage.getGraphicsContext2D();
         gc.clearRect(0, 0, editorCanvasImage.getWidth(), editorCanvasImage.getHeight());
-        gc.drawImage(resizedImage, xPosition, yPosition, resizedImage.getWidth(),resizedImage.getHeight());
+        gc.drawImage(originalImage, xPosition, yPosition, currentImageWidth,currentImageHeight);
     }
 
-    public void handleScaleImage(ActionEvent event) {
+
+    public void handleScaleImage(ActionEvent event){
+        try {
+            scaleOptLoader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/fxml/scaleOptions.fxml")));
+            scaleOptRoot = scaleOptLoader.load();
+            Stage scaleOptStage = new Stage();
+            Scene scaleOptScene = new Scene(scaleOptRoot);
+            scaleOptStage.setScene(scaleOptScene);
+            scaleOptStage.show();
+            scaleOptions = scaleOptLoader.getController();
+            scaleOptions.setEditorController(this);
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
     }
+    public double getScaledHeight(double scaleFactor) {
+        double scaledHeight = currentImageHeight * scaleFactor /100;
+        return scaledHeight;
+    }
+    public double getScaledWidth(double scaleFactor) {
+        double scaledWidth = currentImageWidth * scaleFactor /100;
+        return scaledWidth;
+    }
+    public void drawScaledImage(Image sourceImage, double xPosition, double yPosition, double scaledWidth, double scaledHeight){
+        GraphicsContext gc = editorCanvasImage.getGraphicsContext2D();
+        gc.clearRect(0, 0, editorCanvasImage.getWidth(), editorCanvasImage.getHeight());
+        gc.drawImage(sourceImage, xPosition, yPosition, scaledWidth, scaledHeight);
+    }
+    public Image getOriginalImage(){
+        return originalImage;
+    }
+    public double getXPosition(){
+        return xPosition;
+    }
+    public double getYPosition(){
+        return yPosition;
+    }
+    public void setCurrentImageHeight(double height){
+        this.currentImageHeight = height;
+    }
+    public void setCurrentImageWidth(double width) {
+        this.currentImageWidth = width;
+    }
+    public void setOriginalImage(Image image){
+        this.originalImage = image;
+    }
+    public double getCurrentImageWidth(){
+        return this.currentImageWidth;
+    }
+    public double getCurrentImageHeight(){
+        return this.currentImageHeight;
+    }
+
 }
