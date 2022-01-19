@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ContextMenu?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
@@ -33,8 +33,24 @@
                   <ToggleButton fx:id="circleBtn" mnemonicParsing="false" onAction="#handleCircle" prefHeight="45.0" prefWidth="45.0" text="Circle" toggleGroup="$shapeGroup" />
                   <ToggleButton fx:id="ellipseBtn" mnemonicParsing="false" onAction="#handleEllipses" prefHeight="45.0" prefWidth="45.0" text="Ellipse" toggleGroup="$shapeGroup" />
                   <ToggleButton fx:id="lineBtn" mnemonicParsing="false" onAction="#handleLine" prefHeight="45.0" prefWidth="45.0" text="Line" toggleGroup="$shapeGroup" />
-                  <ToggleButton fx:id="polygonBtn" mnemonicParsing="false" onAction="#handlePolygon" prefHeight="45.0" prefWidth="45.0" text="Polygon" toggleGroup="$shapeGroup" />
-                  <ToggleButton fx:id="rectangleBtn" mnemonicParsing="false" onAction="#handleRectangle" prefHeight="45.0" prefWidth="45.0" text="Rectangle" toggleGroup="$shapeGroup" />
+                  <ToggleButton fx:id="polygonBtn" mnemonicParsing="false" onAction="#handlePolygon" prefHeight="45.0" prefWidth="45.0" text="Polygon" toggleGroup="$shapeGroup">
+                     <contextMenu>
+                        <ContextMenu>
+                          <items>
+                            <MenuItem mnemonicParsing="false" onAction="#handleDrawPolygon" text="Draw Polygon" />
+                          </items>
+                        </ContextMenu>
+                     </contextMenu>
+                  </ToggleButton>
+                  <ToggleButton fx:id="rectangleBtn" mnemonicParsing="false" onAction="#handleRectangle" prefHeight="45.0" prefWidth="45.0" text="Rectangle" toggleGroup="$shapeGroup">
+                     <contextMenu>
+                        <ContextMenu>
+                          <items>
+                            <MenuItem mnemonicParsing="false" onAction="#handleRoundedRectangle" text="Rounded Rectangle" />
+                          </items>
+                        </ContextMenu>
+                     </contextMenu>
+                  </ToggleButton>
                   <ToggleButton fx:id="textBtn" mnemonicParsing="false" onAction="#handleText" prefHeight="45.0" prefWidth="45.0" text="Text" toggleGroup="$shapeGroup" />
                   <ToggleButton fx:id="moveBtn" mnemonicParsing="false" onAction="#handleMove" prefHeight="45.0" prefWidth="45.0" text="Move" toggleGroup="$shapeGroup" />
                   <ToggleButton fx:id="drawOptionsBtn" mnemonicParsing="false" onAction="#openDrawOptions" prefHeight="45.0" prefWidth="45.0" text="DrawOptions" toggleGroup="$shapeGroup" />
@@ -52,6 +68,12 @@
                         <MenuItem fx:id="saveFile" mnemonicParsing="false" onAction="#handleSafeFile" text="Safe File" />
                   </items>
                 </Menu>
+                  <Menu mnemonicParsing="false" text="Image">
+                     <items>
+                        <MenuItem fx:id="moveImage" mnemonicParsing="false" onAction="#handleMoveImage" text="Move Image" />
+                        <MenuItem fx:id="scaleImage" mnemonicParsing="false" onAction="#handleScaleImage" text="Scale Image" />
+                     </items>
+                  </Menu>
                 <Menu mnemonicParsing="false" text="Filter">
                   <items>
                       <MenuItem fx:id="addNoise" mnemonicParsing="false" onAction="#handleAddNoise" text="Add Noise" />
@@ -75,7 +97,6 @@
             </MenuBar>
             <StackPane fx:id="stack" alignment="TOP_LEFT" layoutX="67.0" layoutY="33.0">
                <children>
-                  <Canvas fx:id="editorCanvas" height="1024.0" onDragDropped="#handleDragDropped" onDragOver="#handleDragOver" width="1834.0" />
                   <Button fx:id="importButton" mnemonicParsing="false" onAction="#handleImportButton" text="Import Image" textAlignment="CENTER" StackPane.alignment="CENTER" />
                </children>
             </StackPane>

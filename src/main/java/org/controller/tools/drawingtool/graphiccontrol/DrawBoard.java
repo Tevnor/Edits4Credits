@@ -42,8 +42,8 @@ public class DrawBoard {
             int ref = op.getMoveReference();                            //gets reference for moving operation
 
             if(ref != historyIndex && ref != -1){                       //checks if ref is not last drawn shape
-                writeUndo(pw,operations.get(ref));
-                operations.get(ref).setVisible(false);
+                writeUndo(pw,operations.get(ref));                      //then writes before snapshot of reference
+                operations.get(ref).setVisible(false);                  //sets ref invisible
                 for(int i = ref+1; i < operations.size();i++){
                     if(operations.get(i).isVisible()){
                         operations.get(i).drawAfterMove(gc);
