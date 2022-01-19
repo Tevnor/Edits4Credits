@@ -4,9 +4,9 @@ import javafx.scene.paint.Color;
 
 public class Project {
 //    private String projectName;
-    private double projectWidth;
-    private double projectHeight;
-    private double projectAspectRatio;
+    private final double projectWidth;
+    private final double projectHeight;
+    private final double projectAspectRatio;
     private Color backgroundColor;
     //private String backgroundColor;
 

@@ -16,13 +16,13 @@ import org.controller.tools.drawingtool.graphiccontrol.DrawingControl;
 
 
 public class DrawingTool implements EditingTools {
-    private static Logger DT_LOGGER = LogManager.getLogger(DrawingTool.class.getName());
+    private static final Logger DT_LOGGER = LogManager.getLogger(DrawingTool.class.getName());
 
-    private Canvas canvas;
-    private GraphicsContext gc;
-    private DrawBoard db;
-    private StackPane stack;
-    private DrawingControl dc;
+    private final Canvas canvas;
+    private final GraphicsContext gc;
+    private final DrawBoard db;
+    private final StackPane stack;
+    private final DrawingControl dc;
 
 
     public DrawingTool(StackPane stack){
@@ -51,7 +51,7 @@ public class DrawingTool implements EditingTools {
                (int) Math.round(canvas.getHeight() * scale)
        );
        sp.setTransform(Transform.scale(scale,scale));
-       DT_LOGGER.debug("Succesfully created scaled snapshot");
+       DT_LOGGER.debug("Succesfully created scaled snapshot scaled by " + scale);
        return canvas.snapshot(sp, wi);
     }
 

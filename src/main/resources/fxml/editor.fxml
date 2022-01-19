@@ -23,7 +23,7 @@
       </ImageView>
       <Pane fx:id="editorElementsPane" stylesheets="@../styles/editor_style.css">
          <children>
-            <ToolBar fx:id="toolBar" maxHeight="516.0" maxWidth="56.0" minHeight="516.0" minWidth="56.0" orientation="VERTICAL" prefHeight="516.0" prefWidth="56.0" stylesheets="@../styles/editor_style.css">
+            <ToolBar fx:id="toolBar" maxHeight="516.0" maxWidth="56.0" minHeight="516.0" minWidth="56.0" orientation="VERTICAL" prefHeight="516.0" prefWidth="56.0">
               <items>
                   <ToggleButton fx:id="arcBtn" mnemonicParsing="false" onAction="#handleArc" prefHeight="45.0" prefWidth="45.0" text="Arc">
                      <toggleGroup>
@@ -35,18 +35,18 @@
                   <ToggleButton fx:id="lineBtn" mnemonicParsing="false" onAction="#handleLine" prefHeight="45.0" prefWidth="45.0" text="Line" toggleGroup="$shapeGroup" />
                   <ToggleButton fx:id="polygonBtn" mnemonicParsing="false" onAction="#handlePolygon" prefHeight="45.0" prefWidth="45.0" text="Polygon" toggleGroup="$shapeGroup">
                      <contextMenu>
-                        <ContextMenu>
+                        <ContextMenu style="-fx-background-color: #727272;">
                           <items>
-                            <MenuItem mnemonicParsing="false" onAction="#handleDrawPolygon" text="Draw Polygon" />
+                            <MenuItem mnemonicParsing="false" onAction="#handleDrawPolygon" styleClass="label-context" text="draw Polygon" />
                           </items>
                         </ContextMenu>
                      </contextMenu>
                   </ToggleButton>
                   <ToggleButton fx:id="rectangleBtn" mnemonicParsing="false" onAction="#handleRectangle" prefHeight="45.0" prefWidth="45.0" text="Rectangle" toggleGroup="$shapeGroup">
                      <contextMenu>
-                        <ContextMenu>
+                        <ContextMenu onAction="#handleRoundedRectangle" style="-fx-background-color: #727272;">
                           <items>
-                            <MenuItem mnemonicParsing="false" onAction="#handleRoundedRectangle" text="Rounded Rectangle" />
+                            <MenuItem mnemonicParsing="false" text="Rounded Rectangle" />
                           </items>
                         </ContextMenu>
                      </contextMenu>

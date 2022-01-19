@@ -6,17 +6,20 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.ResourceBundle;
 
 public class SettingsController implements Initializable, ControlScreen {
     private static final Logger logger = LogManager.getLogger(SettingsController.class.getName());
 
-    ScreensController screensController;
-    Window window;
+    private ScreensController screensController;
+    private Window window;
     private Project project;
+    private Color background;
 
     @FXML
     private TextField projectName;
@@ -41,6 +44,11 @@ public class SettingsController implements Initializable, ControlScreen {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        Arrays.stream(new TextField[]{widthInput,heightInput}).forEach(t -> t.textProperty().addListener((observableValue, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*")) {
+                t.setText(newValue.replaceAll("[^\\d]", ""));
+            }
+        }));
     }
 
     @Override
@@ -57,8 +65,14 @@ public class SettingsController implements Initializable, ControlScreen {
         try {
             double projectWidth = Double.parseDouble(widthInput.getText());
             double projectHeight = Double.parseDouble(heightInput.getText());
-            project = new Project(projectWidth, projectHeight);
-        } catch (Exception e) {
+            handleBackgroundColor();
+            if(background != null){
+                project = new Project(projectWidth, projectHeight, background);
+            }else{
+                project = new Project(projectWidth, projectHeight);
+            }
+            enterProject();
+        } catch (NumberFormatException e) {
             e.printStackTrace();
             logger.warn("tried to create project with no passed width and height");
             Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -69,13 +83,20 @@ public class SettingsController implements Initializable, ControlScreen {
                     logger.warn("pressed ok");
                 }
             });
+        } catch (Exception e){
+            logger.error(e.getCause());
         }
-        enterProject();
+
     }
 
     public void enterProject(){
         screensController.setScreen(ScreenName.EDITOR);
         setEditorPresets();
+    }
+    public void handleBackgroundColor(){
+        if(radioBackground.isSelected()){
+            background = cpBackgroundColor.getValue();
+        }
     }
 
     public void handleOpenGallery(ActionEvent event) {

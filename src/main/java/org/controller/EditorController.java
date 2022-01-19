@@ -41,18 +41,18 @@ import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
 import org.controller.tools.imagetool.ImageTool;
-import org.controller.tools.imagetool.filtercontrol.Filter;
 import org.controller.tools.imagetool.filtercontrol.FilterOperation;
-import org.controller.NoiseController;
 import org.controller.tools.imagetool.filtercontrol.filter.FilterType;
 
 import javax.imageio.ImageIO;
 
 public class EditorController implements Initializable, ControlScreen {
 
-    private static Logger LOG = LogManager.getLogger(EditorController.class.getName());
+    private static final Logger EC_LOGGER = LogManager.getLogger(EditorController.class.getName());
     @FXML
     private ContextMenu contextPoly, contextRect;
+    @FXML
+    private MenuItem menuItemPoly, menuItemRect;
     @FXML
     private Button importButton;
     @FXML
@@ -156,6 +156,10 @@ public class EditorController implements Initializable, ControlScreen {
         this.window = window;
         this.screenWidth = window.getScreenWidth();
         this.screenHeight = window.getScreenHeight();
+    }
+
+    private void initStyle(){
+        menuItemPoly.setStyle("");
     }
 
     public void setCanvas(Project project) {
@@ -473,8 +477,8 @@ public class EditorController implements Initializable, ControlScreen {
         stack.setLayoutX((screenWidth - getToolBarWidth())/2 + toolBar.getPrefWidth() + (20/getScaleX()) - stack.getPrefWidth()/2);
         stack.setLayoutY((screenHeight - getMenuBarHeight())/2 + menuBar.getPrefHeight() + (20/getScaleY()) - stack.getPrefHeight()/2 );
         double x = (screenWidth - getToolBarWidth())/2 + toolBar.getPrefWidth() + (20/getScaleX()) - stack.getPrefWidth()/2;
-        double y = (screenHeight - getMenuBarHeight())/2 + toolBar.getPrefHeight() + (20/getScaleY()) - stack.getPrefHeight();
-        LOG.debug("stack layout x: " + x + " |stack layout y " + y);
+        double y = (screenHeight - getMenuBarHeight())/2 + toolBar.getPrefHeight() + (20/getScaleY()) - stack.getPrefHeight()/2;
+        EC_LOGGER.debug("succesfully created stack (x layout: " + x + ", y layout: " + y);
     }
 
     // draw selected image to the image canvas

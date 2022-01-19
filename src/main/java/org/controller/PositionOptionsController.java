@@ -47,14 +47,14 @@ public class PositionOptionsController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         xPositionInput.textProperty().addListener((observableValue, oldValue, newValue) -> {
-            if (!newValue.matches("\\d*")) {
-                xPositionInput.setText(newValue.replaceAll("[^\\d]", ""));
+            if (!newValue.matches("\\d*") && !newValue.matches("[-]")) {
+                xPositionInput.setText(newValue.replaceAll("[^\\d-]", ""));
             }
 
         });
         yPositionInput.textProperty().addListener((observableValue, oldValue, newValue) -> {
-                    if (!newValue.matches("\\d*")) {
-                        yPositionInput.setText(newValue.replaceAll("[^\\d]", ""));
+                    if (!newValue.matches("\\d*") && !newValue.matches("[-]")) {
+                        yPositionInput.setText(newValue.replaceAll("[^\\d-]", ""));
                     }
                 }
         );
