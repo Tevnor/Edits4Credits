@@ -53,7 +53,7 @@
                   </ToggleButton>
                   <ToggleButton fx:id="textBtn" mnemonicParsing="false" onAction="#handleText" prefHeight="45.0" prefWidth="45.0" text="Text" toggleGroup="$shapeGroup" />
                   <ToggleButton fx:id="moveBtn" mnemonicParsing="false" onAction="#handleMove" prefHeight="45.0" prefWidth="45.0" text="Move" toggleGroup="$shapeGroup" />
-                  <ToggleButton fx:id="drawOptionsBtn" mnemonicParsing="false" onAction="#openDrawOptions" prefHeight="45.0" prefWidth="45.0" text="DrawOptions" toggleGroup="$shapeGroup" />
+                  <ToggleButton fx:id="pathBtn" mnemonicParsing="false" onAction="#handlePath" prefHeight="45.0" prefWidth="45.0" text="Path" toggleGroup="$shapeGroup" />
                   <Button fx:id="btnDrawUndo" mnemonicParsing="false" onAction="#handleDrawUndo" prefHeight="25.0" prefWidth="45.0" text="Undo" />
                   <Button fx:id="btnDrawRedo" mnemonicParsing="false" onAction="#handleDrawRedo" prefHeight="25.0" prefWidth="45.0" text="Redo" />
               </items>

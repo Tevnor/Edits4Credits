@@ -31,16 +31,14 @@ public class DrawingTool implements EditingTools {
         this.gc = canvas.getGraphicsContext2D();
         this.db = new DrawBoard(gc);
         this.stack = stack;
+        this.stack.getChildren().add(this.canvas);
+        StackPane.setAlignment(canvas, Pos.CENTER);
+
         this.dc = new DrawingControl();
-
-
         this.dc.initMarkingRect(this.stack);
         this.stack.addEventHandler(MouseEvent.ANY, dc.getMarking());
 
-        this.stack.getChildren().add(this.canvas);
-        stack.setAlignment(canvas, Pos.CENTER);
-
-        DT_LOGGER.debug("Succesfully created DrawingTool");
+        DT_LOGGER.debug("Successfully created drawing tool");
     }
 
 
@@ -51,7 +49,7 @@ public class DrawingTool implements EditingTools {
                (int) Math.round(canvas.getHeight() * scale)
        );
        sp.setTransform(Transform.scale(scale,scale));
-       DT_LOGGER.debug("Succesfully created scaled snapshot scaled by " + scale);
+       DT_LOGGER.debug("Successfully created scaled snapshot scaled by " + scale);
        return canvas.snapshot(sp, wi);
     }
 

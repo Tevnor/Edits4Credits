@@ -158,10 +158,6 @@ public class EditorController implements Initializable, ControlScreen {
         this.screenHeight = window.getScreenHeight();
     }
 
-    private void initStyle(){
-        menuItemPoly.setStyle("");
-    }
-
     public void setCanvas(Project project) {
         this.dt = new DrawingTool(stack);
         handlerFactory = new HandlerFactory(dt);
@@ -185,6 +181,7 @@ public class EditorController implements Initializable, ControlScreen {
     }
     public void handleMove(ActionEvent e){
         stack.removeEventHandler(MouseEvent.ANY, drawer);
+        stack.removeEventHandler(MouseEvent.ANY, dt.getDc().getMarking());
         mover = handlerFactory.getHandler(HandlerFactory.Handler.MOVE, options.getAttributes());
         stack.addEventHandler(MouseEvent.ANY,mover);
     }
@@ -238,6 +235,14 @@ public class EditorController implements Initializable, ControlScreen {
         drawer = handlerFactory.getHandler(HandlerFactory.Handler.POLYGON, options.getAttributes());
         stack.addEventHandler(MouseEvent.ANY,drawer);
     }
+    public void handlePath(ActionEvent e){
+        stack.removeEventHandler(MouseEvent.ANY, mover);
+        stack.removeEventHandler(MouseEvent.ANY, drawer);
+        stack.removeEventHandler(MouseEvent.ANY, dt.getDc().getMarking());
+        openDrawOptions();
+        drawer = handlerFactory.getHandler(HandlerFactory.Handler.PATH, options.getAttributes());
+        stack.addEventHandler(MouseEvent.ANY,drawer);
+    }
     public void handleDrawPolygon(ActionEvent e){
         if(drawer instanceof PolygonDrawer){
             ((PolygonDrawer) drawer).drawPolygon();
@@ -250,7 +255,7 @@ public class EditorController implements Initializable, ControlScreen {
     public void handleDrawRedo(ActionEvent e){
         dt.forward();
     }
-    public void openDrawOptions(ActionEvent e){
+    public void openDrawOptions(){
         drawOptStage.centerOnScreen();
         drawOptStage.show();
     }
@@ -418,29 +423,29 @@ public class EditorController implements Initializable, ControlScreen {
     public void setStackPane() {
 
         // define the maximum size for the stack pane based on the monitor size
-        double maxStackHeight = screenHeight - getMenuBarHeight();
-        double maxStackWidth = screenWidth - getToolBarWidth();
+        int maxStackHeight = (int)(screenHeight - getMenuBarHeight());
+        int maxStackWidth = (int)(screenWidth - getToolBarWidth());
 
         // when the aspect ratio is greater than 1 calculate based on the width
         if (useWidthOrHeight()){
-            double stackHeight = (int) screenHeight - getMenuBarHeight();
-            double stackWidth = (int) stackHeight * projectAspectRatio;
+            double stackHeight = Math.round(screenHeight - getMenuBarHeight());
+            double stackWidth = Math.round(stackHeight * projectAspectRatio);
 
             if (stackWidth > maxStackWidth) {
                 stackWidth = maxStackWidth;
-                stackHeight = stackWidth * projectAspectRatio;
+                stackHeight = Math.round(stackWidth * projectAspectRatio);
             }
             stack.setPrefHeight(stackHeight);
             stack.setPrefWidth(stackWidth);
         }
         // when the aspect ratio is smaller than 1 calculate based on height
         else {
-            double stackWidth = screenWidth - getToolBarWidth();
-            double stackHeight = stackWidth * (1 / projectAspectRatio);
+            double stackWidth = Math.round(screenWidth - getToolBarWidth());
+            double stackHeight = Math.round(stackWidth * (1 / projectAspectRatio));
 
             if (stackHeight > maxStackHeight) {
                 stackHeight = maxStackHeight;
-                stackWidth = stackHeight * projectAspectRatio;
+                stackWidth = Math.round(stackHeight * projectAspectRatio);
             }
             stack.setPrefWidth(stackWidth);
             stack.setPrefHeight(stackHeight);
@@ -478,7 +483,7 @@ public class EditorController implements Initializable, ControlScreen {
         stack.setLayoutY((screenHeight - getMenuBarHeight())/2 + menuBar.getPrefHeight() + (20/getScaleY()) - stack.getPrefHeight()/2 );
         double x = (screenWidth - getToolBarWidth())/2 + toolBar.getPrefWidth() + (20/getScaleX()) - stack.getPrefWidth()/2;
         double y = (screenHeight - getMenuBarHeight())/2 + toolBar.getPrefHeight() + (20/getScaleY()) - stack.getPrefHeight()/2;
-        EC_LOGGER.debug("succesfully created stack (x layout: " + x + ", y layout: " + y);
+        EC_LOGGER.debug("succesfully created stack (x layout: " + x + ", y layout: " + y + ")");
     }
 
     // draw selected image to the image canvas

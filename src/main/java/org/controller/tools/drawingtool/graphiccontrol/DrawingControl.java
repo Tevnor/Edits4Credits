@@ -39,6 +39,7 @@ public class DrawingControl {
         markingRect = new Group();
         markingRect.getChildren().addAll(markingRectOut,markingRectIn);
         stack.getChildren().addAll(markingRect);
+        markingRect.toFront();
     }
     public void translateMarkingRect(Point2D first, Point2D current){
 

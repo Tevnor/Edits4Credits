@@ -18,7 +18,8 @@ public class HandlerFactory {
         POLYGON,
         RECTANGLE,
         ROUNDED_RECTANGLE,
-        TEXT
+        TEXT,
+        PATH
     }
 
     public HandlerFactory(DrawingTool dt){
@@ -42,6 +43,9 @@ public class HandlerFactory {
                 break;
             case MOVE:
                 drawer = new MoveHandler(dt);
+                break;
+            case PATH:
+                drawer = new PathDrawer(dt,attributes);
                 break;
             case POLYGON:
                 drawer = new PolygonDrawer(dt,attributes);

@@ -12,8 +12,8 @@ import org.controller.tools.drawingtool.graphiccontrol.objects.Circle;
 public class CircleDrawer implements EventHandler<MouseEvent> {
 
     private Point2D point1;
-    private DrawingTool dt;
-    private Attributes attributes;
+    private final DrawingTool dt;
+    private final Attributes attributes;
 
     public CircleDrawer(DrawingTool dt, Attributes attributes){
         this.dt = dt;

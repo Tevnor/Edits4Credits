@@ -37,8 +37,8 @@ public abstract class DrawOp {
         WritableImage wi = c.snapshot(sp,snapshot);
         pr = wi.getPixelReader();
 
-        int canWidth = (int) gc.getCanvas().getWidth();
-        int canHeight = (int) gc.getCanvas().getHeight();
+        int canWidth = (int) Math.round(gc.getCanvas().getWidth());
+        int canHeight = (int) Math.round(gc.getCanvas().getHeight());
 
         before = new int[canWidth*canHeight];
 
