@@ -68,7 +68,7 @@ public abstract class DrawOp {
         return changeValues;
     }
     public OpType getOpType(){
-        return this.opType;
+        return opType;
     }
     public void setOpType(OpType opType) {
         this.opType = opType;

@@ -53,9 +53,6 @@ public class PolygonDrawer implements EventHandler<MouseEvent> {
             circles.add(c);
             dt.getStack().getChildren().addAll(c);
         }
-        if(MouseEvent.MOUSE_CLICKED.equals(mouseEvent.getEventType()) &&
-                mouseEvent.getButton().equals(MouseButton.SECONDARY)){
-        }
     }
     public void resetPoints(){
         points.clear();

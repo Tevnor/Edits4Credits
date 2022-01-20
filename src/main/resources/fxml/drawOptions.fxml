@@ -800,6 +800,71 @@
                         </GridPane>
                     </content>
                 </Tab>
+            <Tab fx:id="eraser" styleClass="gray" text="Eraser">
+              <content>
+                  <GridPane prefHeight="369.0" prefWidth="242.0" styleClass="tabGrid">
+                     <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                     </columnConstraints>
+                     <rowConstraints>
+                        <RowConstraints maxHeight="217.66668701171875" minHeight="10.0" prefHeight="199.66668701171875" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="200.33331298828128" minHeight="10.0" prefHeight="198.33331298828128" vgrow="SOMETIMES" />
+                     </rowConstraints>
+                     <children>
+                        <Slider fx:id="sliderEraserSize" blockIncrement="5.0" majorTickUnit="50.0" max="500.0" min="5.0" minorTickCount="4" showTickMarks="true" snapToTicks="true" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
+                           <GridPane.margin>
+                              <Insets bottom="40.0" left="20.0" right="20.0" />
+                           </GridPane.margin>
+                        </Slider>
+                        <Label text="Size" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
+                           <GridPane.margin>
+                              <Insets top="40.0" />
+                           </GridPane.margin>
+                           <font>
+                              <Font name="System Bold" size="26.0" />
+                           </font>
+                           <opaqueInsets>
+                              <Insets />
+                           </opaqueInsets>
+                        </Label>
+                        <Label text="Circle" GridPane.rowIndex="1">
+                           <GridPane.margin>
+                              <Insets bottom="40.0" left="20.0" />
+                           </GridPane.margin>
+                           <graphic>
+                              <RadioButton fx:id="eraserCircle" mnemonicParsing="false" scaleX="0.7" scaleY="0.7">
+                                 <toggleGroup>
+                                    <ToggleGroup fx:id="eraserShape" />
+                                 </toggleGroup>
+                              </RadioButton>
+                           </graphic>
+                           <font>
+                              <Font name="System Bold" size="21.0" />
+                           </font>
+                        </Label>
+                        <Label text="Square" GridPane.halignment="RIGHT" GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
+                           <graphic>
+                              <RadioButton fx:id="eraserSquare" mnemonicParsing="false" scaleX="0.7" scaleY="0.7" selected="true" toggleGroup="$eraserShape" />
+                           </graphic>
+                           <GridPane.margin>
+                              <Insets bottom="40.0" right="20.0" />
+                           </GridPane.margin>
+                           <font>
+                              <Font name="System Bold" size="21.0" />
+                           </font>
+                        </Label>
+                        <Label text="Shape" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
+                           <font>
+                              <Font name="System Bold" size="22.0" />
+                           </font>
+                           <GridPane.margin>
+                              <Insets top="40.0" />
+                           </GridPane.margin>
+                        </Label>
+                     </children>
+                  </GridPane>
+              </content>
+            </Tab>
             </tabs>
             <styleClass>
                 <String fx:value="darkGray" />

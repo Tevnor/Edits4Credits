@@ -21,11 +21,12 @@ public class Attributes {
     private Font font;
     private TextAlignment txtAlignment = TextAlignment.LEFT;
     private double alpha = 1.0;
-    private boolean fill = true;
+    private boolean fill = true, eraserSquare = true;
     private ArcType arcType = ArcType.ROUND;
     private boolean polyClose = true;
     private double startAngle = 0, arcExtent = 180 , arcHeight = 0, arcWidth = 0;
     private String content = "";
+    private double eraserSize = 5;
 
     public double getRotation() {
         return rotation;
@@ -74,6 +75,12 @@ public class Attributes {
     }
     public String getContent() {
         return content;
+    }
+    public double getEraserSize() {
+        return eraserSize;
+    }
+    public boolean isEraserSquare() {
+        return eraserSquare;
     }
 
 
@@ -124,6 +131,12 @@ public class Attributes {
     }
     public void setPolyClose(boolean polyClose) {
         this.polyClose = polyClose;
+    }
+    public void setEraserSize(double size){
+        this.eraserSize = size;
+    }
+    public void setEraserSquare(boolean eraserSquare) {
+        this.eraserSquare = eraserSquare;
     }
 
 }

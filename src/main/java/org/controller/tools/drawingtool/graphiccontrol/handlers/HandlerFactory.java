@@ -19,7 +19,8 @@ public class HandlerFactory {
         RECTANGLE,
         ROUNDED_RECTANGLE,
         TEXT,
-        PATH
+        PATH,
+        ERASER
     }
 
     public HandlerFactory(DrawingTool dt){
@@ -37,6 +38,9 @@ public class HandlerFactory {
                 break;
             case ELLIPSES:
                 drawer = new EllipsesDrawer(dt,attributes);
+                break;
+            case ERASER:
+                drawer = new EraserDrawer(dt, attributes);
                 break;
             case LINE:
                 drawer = new LineDrawer(dt,attributes);

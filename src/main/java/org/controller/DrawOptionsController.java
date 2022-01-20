@@ -25,13 +25,13 @@ import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.ResourceBundle;
 
-import static org.controller.tools.drawingtool.graphiccontrol.objects.Shapes.*;
+import static org.controller.tools.drawingtool.graphiccontrol.handlers.HandlerFactory.*;
 
 public class DrawOptionsController implements Initializable {
     @FXML
     private Slider sliderAlpha, sliderBloom, sliderGlow, sliderBoxBlur, sliderGaussianBlur, sliderMotionBlur;
     @FXML
-    private Slider sliderTopOpacity, sliderFraction, sliderBottomOpacity, sliderSpreadDrop, sliderChokeInner;
+    private Slider sliderTopOpacity, sliderFraction, sliderBottomOpacity, sliderSpreadDrop, sliderChokeInner, sliderEraserSize;
     @FXML
     private ChoiceBox<BlendMode> cbBlendMode;
     @FXML
@@ -53,7 +53,7 @@ public class DrawOptionsController implements Initializable {
     @FXML
     private ColorPicker cpStrokeFill, cpShadow, cpDrop, cpInner;
     @FXML
-    private RadioButton radioStroke, radioFill;
+    private RadioButton radioStroke, radioFill, eraserCircle, eraserSquare;
     @FXML
     private CheckBox checkPolyClosed, applyBloom, applyGlow, applyBoxBlur, applyGaussianBlur, applyMotionBlur;
     @FXML
@@ -69,11 +69,11 @@ public class DrawOptionsController implements Initializable {
     @FXML
     private ButtonBar buttons;
     @FXML
-    private ToggleGroup strokeFill;
+    private ToggleGroup strokeFill, eraserShape;
     @FXML
     private TabPane tabPane;
     @FXML
-    private Tab general, shapes;
+    private Tab general, shapes, eraser;
     @FXML
     private Accordion shapeAccordion;
     @FXML
@@ -130,6 +130,9 @@ public class DrawOptionsController implements Initializable {
     }
     private void setBlendMode(){
         attributes.setBm(cbBlendMode.getValue());
+    }
+    private void setEraserSize() {
+        attributes.setEraserSize(sliderEraserSize.getValue());
     }
 
     public void handleTxtRotation(ActionEvent e){
@@ -300,6 +303,14 @@ public class DrawOptionsController implements Initializable {
         setBlendMode();
         setStrokeFill();
     }
+    private void setEraser(){
+        if(eraserShape.getSelectedToggle() == eraserSquare){
+            attributes.setEraserSquare(true);
+        }else{
+            attributes.setEraserSquare(false);
+        }
+        setEraserSize();
+    }
     private void setShapeAttributes(){
         attributes.setArcType(cbArcType.getValue());
         attributes.setPolyClose(checkPolyClosed.isSelected());
@@ -351,17 +362,18 @@ public class DrawOptionsController implements Initializable {
         setGeneral();
         setShapeAttributes();
         setEffects();
+        setEraser();
         stage = (Stage) closeDrawOptions.getScene().getWindow();
         stage.close();
         this.attributes = new Attributes();
     }
-    public void setSelShape(Type type){
-        switch (type){
+    public void setSelShape(Handler handler){
+        switch (handler){
             case ARC:
                 tabPane.getSelectionModel().select(shapes);
                 shapeAccordion.setExpandedPane(arc);
                 break;
-            case ROUNDED_RECT:
+            case ROUNDED_RECTANGLE:
                 tabPane.getSelectionModel().select(shapes);
                 shapeAccordion.setExpandedPane(rounded_rect);
                 break;
@@ -378,6 +390,13 @@ public class DrawOptionsController implements Initializable {
             case RECTANGLE:
             case ELLIPSES:
                 tabPane.getSelectionModel().select(general);
+                break;
+            case PATH:
+                tabPane.getSelectionModel().select(general);
+                strokeFill.selectToggle(radioStroke);
+                break;
+            case ERASER:
+                tabPane.getSelectionModel().select(eraser);
                 break;
         }
     }
