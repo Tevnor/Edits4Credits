@@ -1,7 +1,6 @@
 package org.controller.tools.drawingtool.graphiccontrol.handlers;
 
 import javafx.event.EventHandler;
-import javafx.geometry.Point2D;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;

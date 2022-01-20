@@ -175,6 +175,7 @@ public class EditorController implements Initializable, ControlScreen {
     }
 
     public void handleArc(ActionEvent e){
+        importButton.setVisible(false);
         stack.removeEventHandler(MouseEvent.ANY, mover);
         stack.removeEventHandler(MouseEvent.ANY, drawer);
         openDrawOptions(Handler.ARC);
@@ -182,12 +183,14 @@ public class EditorController implements Initializable, ControlScreen {
         stack.addEventHandler(MouseEvent.ANY,drawer);
     }
     public void handleMove(ActionEvent e){
+        importButton.setVisible(false);
         stack.removeEventHandler(MouseEvent.ANY, drawer);
         stack.removeEventHandler(MouseEvent.ANY, dt.getDc().getMarking());
         mover = handlerFactory.getHandler(Handler.MOVE, options.getAttributes());
         stack.addEventHandler(MouseEvent.ANY,mover);
     }
     public void handleCircle(ActionEvent e){
+        importButton.setVisible(false);
         stack.removeEventHandler(MouseEvent.ANY, mover);
         stack.removeEventHandler(MouseEvent.ANY, drawer);
         openDrawOptions(Handler.CIRCLE);
@@ -195,6 +198,7 @@ public class EditorController implements Initializable, ControlScreen {
         stack.addEventHandler(MouseEvent.ANY,drawer);
     }
     public void handleEllipses(ActionEvent e){
+        importButton.setVisible(false);
         stack.removeEventHandler(MouseEvent.ANY, mover);
         stack.removeEventHandler(MouseEvent.ANY, drawer);
         openDrawOptions(Handler.ELLIPSES);
@@ -203,6 +207,7 @@ public class EditorController implements Initializable, ControlScreen {
 
     }
     public void handleEraser(ActionEvent e){
+        importButton.setVisible(false);
         stack.removeEventHandler(MouseEvent.ANY, mover);
         stack.removeEventHandler(MouseEvent.ANY, drawer);
         stack.removeEventHandler(MouseEvent.ANY, dt.getDc().getMarking());
@@ -211,6 +216,7 @@ public class EditorController implements Initializable, ControlScreen {
         stack.addEventHandler(MouseEvent.ANY,drawer);
     }
     public void handleRectangle(ActionEvent e){
+        importButton.setVisible(false);
         stack.removeEventHandler(MouseEvent.ANY, mover);
         stack.removeEventHandler(MouseEvent.ANY, drawer);
         openDrawOptions(Handler.RECTANGLE);
@@ -218,6 +224,7 @@ public class EditorController implements Initializable, ControlScreen {
         stack.addEventHandler(MouseEvent.ANY,drawer);
     }
     public void handleRoundedRectangle(ActionEvent e){
+        importButton.setVisible(false);
         stack.removeEventHandler(MouseEvent.ANY, mover);
         stack.removeEventHandler(MouseEvent.ANY, drawer);
         openDrawOptions(Handler.ROUNDED_RECTANGLE);
@@ -225,6 +232,7 @@ public class EditorController implements Initializable, ControlScreen {
         stack.addEventHandler(MouseEvent.ANY,drawer);
     }
     public void handleLine(ActionEvent e){
+        importButton.setVisible(false);
         stack.removeEventHandler(MouseEvent.ANY, mover);
         stack.removeEventHandler(MouseEvent.ANY, drawer);
         openDrawOptions(Handler.LINE);
@@ -232,6 +240,7 @@ public class EditorController implements Initializable, ControlScreen {
         stack.addEventHandler(MouseEvent.ANY,drawer);
     }
     public void handleText(ActionEvent e){
+        importButton.setVisible(false);
         stack.removeEventHandler(MouseEvent.ANY, mover);
         stack.removeEventHandler(MouseEvent.ANY, drawer);
         openDrawOptions(Handler.TEXT);
@@ -239,6 +248,7 @@ public class EditorController implements Initializable, ControlScreen {
         stack.addEventHandler(MouseEvent.ANY,drawer);
     }
     public void handlePolygon(ActionEvent e){
+        importButton.setVisible(false);
         stack.removeEventHandler(MouseEvent.ANY, mover);
         stack.removeEventHandler(MouseEvent.ANY, drawer);
         openDrawOptions(Handler.POLYGON);
@@ -246,6 +256,7 @@ public class EditorController implements Initializable, ControlScreen {
         stack.addEventHandler(MouseEvent.ANY,drawer);
     }
     public void handlePath(ActionEvent e){
+        importButton.setVisible(false);
         stack.removeEventHandler(MouseEvent.ANY, mover);
         stack.removeEventHandler(MouseEvent.ANY, drawer);
         stack.removeEventHandler(MouseEvent.ANY, dt.getDc().getMarking());
@@ -264,10 +275,6 @@ public class EditorController implements Initializable, ControlScreen {
     }
     public void handleDrawRedo(ActionEvent e){
         dt.forward();
-    }
-    public void openDrawOptions(){
-        drawOptStage.centerOnScreen();
-        drawOptStage.show();
     }
     public void openDrawOptions(Handler handler){
         drawOptStage.centerOnScreen();
