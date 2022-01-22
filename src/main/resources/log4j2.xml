@@ -26,6 +26,9 @@
         <Logger name="org.controller.tools.drawingtool.graphiccontrol.DrawBoard" level="debug">
             <AppenderRef ref="DrawLog"/>
         </Logger>
+        <Logger name="org.controller.tools.drawingtool.graphiccontrol.ShapePixelMap" level="debug">
+            <AppenderRef ref="STDOUT"/>
+        </Logger>
         <Root level="info">
             <AppenderRef ref="STDOUT"/>
         </Root>

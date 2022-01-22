@@ -1,14 +1,12 @@
 package org.controller.tools.drawingtool.graphiccontrol;
 
 import javafx.geometry.Point2D;
-import javafx.geometry.VPos;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Shape;
 import javafx.scene.transform.Rotate;
 import org.controller.tools.drawingtool.graphiccontrol.objects.*;
-import org.controller.tools.drawingtool.graphiccontrol.objects.Shapes.Type;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class MovingControl {
 
@@ -26,7 +24,7 @@ public class MovingControl {
 
     public boolean overShape(Point2D point, DrawBoard db){
         boolean overShape = false;
-        ArrayList<DrawOp> op = db.getOperations();
+        List<DrawOp> op = db.getOperations();
         double minX, maxX, minY, maxY;
         int i = op.size()-1;
 

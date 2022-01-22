@@ -16,9 +16,9 @@ public class PathDrawer implements EventHandler<MouseEvent> {
     }
 
     private void setPathAttributes(){
-        dt.getGc().setFill(attributes.getColor());
-        dt.getGc().setStroke(attributes.getColor());
-        dt.getGc().setLineWidth(attributes.getLineWidth());
+        dt.getGcBrush().setFill(attributes.getColor());
+        dt.getGcBrush().setStroke(attributes.getColor());
+        dt.getGcBrush().setLineWidth(attributes.getLineWidth());
     }
 
 
@@ -26,19 +26,19 @@ public class PathDrawer implements EventHandler<MouseEvent> {
     public void handle(MouseEvent mouseEvent) {
         if(MouseEvent.MOUSE_PRESSED.equals(mouseEvent.getEventType())){
             setPathAttributes();
-            dt.getGc().beginPath();
-            dt.getGc().moveTo(mouseEvent.getX(), mouseEvent.getY());
+            dt.getGcBrush().beginPath();
+            dt.getGcBrush().moveTo(mouseEvent.getX(), mouseEvent.getY());
             if(attributes.isFill()){
-                dt.getGc().fill();
+                dt.getGcBrush().fill();
             }else {
-                dt.getGc().stroke();
+                dt.getGcBrush().stroke();
             }
         }else if(MouseEvent.MOUSE_DRAGGED.equals(mouseEvent.getEventType())){
-            dt.getGc().lineTo(mouseEvent.getX(), mouseEvent.getY());
+            dt.getGcBrush().lineTo(mouseEvent.getX(), mouseEvent.getY());
             if(attributes.isFill()){
-                dt.getGc().fill();
+                dt.getGcBrush().fill();
             }else {
-                dt.getGc().stroke();
+                dt.getGcBrush().stroke();
             }
         }
     }

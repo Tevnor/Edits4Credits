@@ -9,7 +9,6 @@ import javafx.scene.image.WritablePixelFormat;
 import javafx.scene.paint.Color;
 
 import java.nio.IntBuffer;
-import java.util.HashMap;
 
 public abstract class DrawOp {
     public enum OpType{
@@ -23,7 +22,7 @@ public abstract class DrawOp {
     private int[] before;
     private PixelReader pr;
     private final WritablePixelFormat<IntBuffer> format = WritablePixelFormat.getIntArgbInstance();
-    private HashMap<Integer,Integer> changeValues;
+    private ShapePixelMap pixelsBelow;
     private boolean visible = true;
     private int moveReference = -1;
 
@@ -48,7 +47,7 @@ public abstract class DrawOp {
         Canvas c = gc.getCanvas();
         WritableImage wi = c.snapshot(sp,snapshot);
         pr = wi.getPixelReader();
-        changeValues = new HashMap<>();
+        pixelsBelow = new ShapePixelMap();
 
         int canWidth = (int) Math.round(gc.getCanvas().getWidth());
         int canHeight = (int) Math.round(gc.getCanvas().getHeight());
@@ -58,32 +57,34 @@ public abstract class DrawOp {
 
         for(int i = 0; i < after.length; i++){
             if(after[i]-before[i]!= 0) {
-                changeValues.put(i, before[i]);
+                pixelsBelow.put(i, before[i]);
             }
         }
         this.before = null;
 
     }
-    public HashMap<Integer, Integer> getChangeValues() {
-        return changeValues;
+
+    public ShapePixelMap getPixelsBelow() {
+        return new ShapePixelMap(pixelsBelow);
     }
     public OpType getOpType(){
         return opType;
     }
+    public int getMoveReference(){
+        return this.moveReference;
+    }
+    public boolean isVisible() {
+        return visible;
+    }
+
     public void setOpType(OpType opType) {
         this.opType = opType;
     }
     protected void setVisible(boolean vis){
         this.visible = vis;
     }
-    public boolean isVisible() {
-        return visible;
-    }
     public void setReference(int i){
         this.moveReference = i;
-    }
-    public int getMoveReference(){
-        return this.moveReference;
     }
 
 }

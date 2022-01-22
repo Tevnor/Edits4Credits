@@ -1,6 +1,7 @@
 package org.controller.tools.drawingtool;
 
 import javafx.geometry.Pos;
+import javafx.scene.Group;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -18,8 +19,11 @@ import org.controller.tools.drawingtool.graphiccontrol.DrawingControl;
 public class DrawingTool implements EditingTools {
     private static final Logger DT_LOGGER = LogManager.getLogger(DrawingTool.class.getName());
 
-    private final Canvas canvas;
-    private final GraphicsContext gc;
+    private final Canvas canvasShapes;
+    private final Canvas canvasBrush;
+    private final GraphicsContext gcShapes;
+    private final GraphicsContext gcBrush;
+    private final Group blend;
     private final DrawBoard db;
     private final StackPane stack;
     private final DrawingControl dc;
@@ -27,16 +31,23 @@ public class DrawingTool implements EditingTools {
 
     public DrawingTool(StackPane stack){
 
-        this.canvas = new Canvas(stack.getPrefWidth(),stack.getPrefHeight());
-        this.gc = canvas.getGraphicsContext2D();
-        this.db = new DrawBoard(gc);
+        canvasShapes = new Canvas(stack.getPrefWidth(),stack.getPrefHeight());
+        canvasBrush = new Canvas(stack.getPrefWidth(),stack.getPrefHeight());
+        gcShapes = canvasShapes.getGraphicsContext2D();
+        gcBrush = canvasBrush.getGraphicsContext2D();
+        blend = new Group(canvasShapes, canvasBrush);
+        db = new DrawBoard(gcShapes);
         this.stack = stack;
-        this.stack.getChildren().add(this.canvas);
-        StackPane.setAlignment(canvas, Pos.CENTER);
 
-        this.dc = new DrawingControl();
-        this.dc.initMarkingRect(this.stack);
-        this.stack.addEventHandler(MouseEvent.ANY, dc.getMarking());
+        stack.getChildren().add(canvasShapes);
+        stack.getChildren().add(canvasBrush);
+
+        StackPane.setAlignment(canvasShapes, Pos.CENTER);
+        StackPane.setAlignment(canvasBrush, Pos.CENTER);
+
+        dc = new DrawingControl();
+        dc.initMarkingRect(stack);
+        stack.addEventHandler(MouseEvent.ANY, dc.getMarking());
 
         DT_LOGGER.debug("Successfully created drawing tool");
     }
@@ -45,22 +56,26 @@ public class DrawingTool implements EditingTools {
     public WritableImage getScaledDrawingSnap(SnapshotParameters sp){
        int scale = 2;
        WritableImage wi = new WritableImage(
-               (int) Math.round(canvas.getWidth() * scale),
-               (int) Math.round(canvas.getHeight() * scale)
+               (int) Math.round(canvasShapes.getWidth() * scale),
+               (int) Math.round(canvasShapes.getHeight() * scale)
        );
+
        sp.setTransform(Transform.scale(scale,scale));
        DT_LOGGER.debug("Successfully created scaled snapshot scaled by " + scale);
-       return canvas.snapshot(sp, wi);
+       return blend.snapshot(sp, wi);
     }
 
     public DrawBoard getDb(){
-        return this.db;
+        return db;
     }
-    public GraphicsContext getGc(){
-        return this.gc;
+    public GraphicsContext getGcShapes(){
+        return gcShapes;
+    }
+    public GraphicsContext getGcBrush(){
+        return gcBrush;
     }
     public Canvas getCanvas() {
-        return canvas;
+        return canvasShapes;
     }
     public StackPane getStack() {
         return stack;

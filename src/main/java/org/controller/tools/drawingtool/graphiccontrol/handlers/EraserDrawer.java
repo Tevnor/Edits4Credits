@@ -17,7 +17,7 @@ public class EraserDrawer implements EventHandler<MouseEvent> {
     public EraserDrawer(DrawingTool dt, Attributes attributes){
         this.dt = dt;
         this.attributes = attributes;
-        this.pw = dt.getGc().getPixelWriter();
+        this.pw = dt.getGcBrush().getPixelWriter();
     }
 
     @Override
@@ -25,7 +25,7 @@ public class EraserDrawer implements EventHandler<MouseEvent> {
         if(MouseEvent.MOUSE_PRESSED.equals(mouseEvent.getEventType()) || MouseEvent.MOUSE_DRAGGED.equals(mouseEvent.getEventType())) {
             double width = attributes.getEraserSize();
             if (attributes.isEraserSquare()) {
-                dt.getGc().clearRect(mouseEvent.getX() - width / 2, mouseEvent.getY() - width / 2, width, width);
+                deleteRectangle(mouseEvent.getX(), mouseEvent.getY(), width);
             } else {
                 deleteCircle(mouseEvent.getX(), mouseEvent.getY(), width / 2);
             }
@@ -43,5 +43,17 @@ public class EraserDrawer implements EventHandler<MouseEvent> {
                 }
             }
         }
+    }
+
+    private void deleteRectangle(double pX, double pY, double width){
+        int minX = (int)Math.round(pX-width/2);
+        int minY = (int)Math.round(pY-width/2);
+
+        for(int y = 0; y < width; y++){
+            for(int x = 0; x < width; x++){
+                    pw.setColor(x + minX,y + minY,Color.TRANSPARENT);
+            }
+        }
+
     }
 }

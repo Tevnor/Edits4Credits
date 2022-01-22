@@ -29,7 +29,6 @@ import org.apache.logging.log4j.Logger;
 import org.controller.tools.drawingtool.DrawingTool;
 import org.controller.tools.drawingtool.graphiccontrol.handlers.HandlerFactory;
 import org.controller.tools.drawingtool.graphiccontrol.handlers.PolygonDrawer;
-import org.controller.tools.drawingtool.graphiccontrol.objects.Shapes;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -41,7 +40,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
 import org.controller.tools.imagetool.ImageTool;
-import org.controller.tools.imagetool.filtercontrol.FilterOperation;
 import org.controller.tools.imagetool.filtercontrol.filter.FilterType;
 
 import javax.imageio.ImageIO;
