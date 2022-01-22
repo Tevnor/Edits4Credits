@@ -526,6 +526,7 @@ public class EditorController implements Initializable, ControlScreen {
     public void drawFilteredImage(){
         gc = editorCanvasImage.getGraphicsContext2D();
         gc.drawImage(filteredImage,xPosition, yPosition, currentImageWidth, currentImageHeight);
+        System.out.println("drawFilteredImage: " + currentImageWidth + " " + currentImageHeight);
         //initImageTool(filteredImage);
     }
 
@@ -768,18 +769,21 @@ public class EditorController implements Initializable, ControlScreen {
         double scaledHeight = currentOriginalImageHeight * scaleFactor /100;
         return scaledHeight;
     }
-    public void setCurrentOriginalImageWidth(double currentOriginalImageWidth){
-        this.currentOriginalImageHeight = currentOriginalImageWidth;
+    public void setCurrentOriginalImageWidth(double newWidth){
+        this.currentOriginalImageWidth = newWidth;
     }
-    public void setCurrentOriginalImageHeight(double currentOriginalImageHeight){
-        this.currentOriginalImageHeight = currentOriginalImageHeight;
+    public void setCurrentOriginalImageHeight(double newHeight){
+        this.currentOriginalImageHeight = newHeight;
     }
     public boolean getIsFiltered(){
         return this.isFiltered;
     }
+    public void setIsFiltered(){
+        this.isFiltered= true;
+    }
     public void drawScaledOriginalImage(Image sourceImage, double xPosition, double yPosition, double scaledWidth, double scaledHeight){
         GraphicsContext gc = originalCanvas.getGraphicsContext2D();
-        gc.clearRect(0, 0, originalCanvas.getWidth(), editorCanvasImage.getHeight());
+        gc.clearRect(0, 0, originalCanvas.getWidth(), originalCanvas.getHeight());
         gc.drawImage(sourceImage, xPosition, yPosition, scaledWidth, scaledHeight);
     }
     public double getXOriginalPosition(){
@@ -805,7 +809,8 @@ public class EditorController implements Initializable, ControlScreen {
     }
     public void drawFilteredOriginalImage(){
         gc = originalCanvas.getGraphicsContext2D();
-        gc.drawImage(filteredOriginalImage,xOriginalPosition, yOriginalPosition, getCurrentOriginalImageWidth(), getCurrentOriginalImageWidth());
+        gc.drawImage(filteredOriginalImage,xOriginalPosition, yOriginalPosition, currentOriginalImageWidth, currentOriginalImageHeight);
+        System.out.println("drawFilteredOriginalImage: " + currentOriginalImageWidth + " " + currentOriginalImageHeight);
         //initImageTool(filteredOriginalImage);
     }
 
