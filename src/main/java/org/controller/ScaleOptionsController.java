@@ -21,12 +21,25 @@ public class ScaleOptionsController implements Initializable {
 
     public void handleApplyScale(ActionEvent event) {
         scaleFactor = Double.parseDouble(scaleFactorInput.getText());
+
         double newWidth = editorController.getScaledWidth(scaleFactor);
         double newHeight = editorController.getScaledHeight(scaleFactor);
+        double newOriginalWidth = editorController.getScaledOriginalWidth(scaleFactor);
+        double newOriginalHeight = editorController.getScaledOriginalHeight(scaleFactor);
+
         editorController.setCurrentImageHeight(newHeight);
         editorController.setCurrentImageWidth(newWidth);
-        editorController.drawScaledImage(editorController.getOriginalImage(), editorController.getXPosition(), editorController.getYPosition(), newWidth, newHeight);
+        editorController.setCurrentOriginalImageHeight(newOriginalHeight);
+        editorController.setCurrentOriginalImageWidth(newOriginalWidth);
 
+        if(editorController.getIsFiltered()== false){
+            editorController.drawScaledImage(editorController.getOriginalImage(), editorController.getXPosition(), editorController.getYPosition(), newWidth, newHeight);
+            editorController.drawScaledOriginalImage(editorController.getOriginalImage(), editorController.getXOriginalPosition(), editorController.getYOriginalPosition(), newOriginalWidth, newOriginalHeight);
+        }
+        else if(editorController.getIsFiltered()){
+            editorController.drawScaledImage(editorController.getOriginalFilteredImage(), editorController.getXPosition(), editorController.getYPosition(), newWidth, newHeight);
+            editorController.drawScaledOriginalImage(editorController.getOriginalFilteredImage(), editorController.getXOriginalPosition(), editorController.getYOriginalPosition(), newOriginalWidth, newOriginalHeight);
+        }
     }
 
 

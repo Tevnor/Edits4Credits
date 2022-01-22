@@ -759,6 +759,37 @@ public class EditorController implements Initializable, ControlScreen {
     public double getCurrentOriginalImageHeight(){
         return currentOriginalImageHeight;
     }
+    public double getScaledOriginalWidth(double scaleFactor) {
+        double scaledWidth = currentOriginalImageWidth * scaleFactor /100;
+        return scaledWidth;
+    }
+    public double getScaledOriginalHeight(double scaleFactor) {
+        double scaledHeight = currentOriginalImageHeight * scaleFactor /100;
+        return scaledHeight;
+    }
+    public void setCurrentOriginalImageWidth(double currentOriginalImageWidth){
+        this.currentOriginalImageHeight = currentOriginalImageWidth;
+    }
+    public void setCurrentOriginalImageHeight(double currentOriginalImageHeight){
+        this.currentOriginalImageHeight = currentOriginalImageHeight;
+    }
+    public boolean getIsFiltered(){
+        return this.isFiltered;
+    }
+    public void drawScaledOriginalImage(Image sourceImage, double xPosition, double yPosition, double scaledWidth, double scaledHeight){
+        GraphicsContext gc = originalCanvas.getGraphicsContext2D();
+        gc.clearRect(0, 0, originalCanvas.getWidth(), editorCanvasImage.getHeight());
+        gc.drawImage(sourceImage, xPosition, yPosition, scaledWidth, scaledHeight);
+    }
+    public double getXOriginalPosition(){
+        return xOriginalPosition;
+    }
+    public double getYOriginalPosition(){
+        return yOriginalPosition;
+    }
+    public Image getOriginalFilteredImage(){
+        return this.filteredOriginalImage;
+    }
 
 }
 
