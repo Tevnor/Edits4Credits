@@ -24,6 +24,7 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -107,11 +108,8 @@ public class EditorController implements Initializable, ControlScreen {
     private DrawHandler drawer;
     private DrawingTool dt;
     private HandlerFactory handlerFactory;
-    Canvas editorCanvasImage;
-    Project project;
-    private double width;
-    private double height;
-    private double projectAspectRatio;
+    private Canvas editorCanvasImage;
+    private Project project;
     private Parent drawOptRoot;
     private Parent noiseOptRoot;
     private DrawOptionsController options;
@@ -119,12 +117,9 @@ public class EditorController implements Initializable, ControlScreen {
     private Stage drawOptStage = new Stage();
     private Stage noiseOptStage = new Stage();
 
-    ScreensController screensController;
-    Window window;
-    private double screenWidth;
-    private double screenHeight;
-    private double canvasWidth;
-    private double canvasHeight;
+    private ScreensController screensController;
+    private Window window;
+
 
     private Image resizedImage;
     private Image originalImage;
@@ -168,23 +163,138 @@ public class EditorController implements Initializable, ControlScreen {
     @Override
     public void setWindow(Window window) {
         this.window = window;
-        this.screenWidth = window.getScreenWidth();
-        this.screenHeight = window.getScreenHeight();
     }
 
-    public void setCanvas(Project project) {
+
+    /**
+     *  Initializer
+     **/
+
+    public void setProject(Project project){
+        this.project = project;
+    }
+    public void initEC(){
+        initStackPane();
+        initDrawTool();
+        initDrawOptions();
+        initAddNoiseOpt();
+        initControls();
+        initBackground();
+    }
+    // method to calculate stack pane size
+    private void initStackPane() {
+
+        // define the maximum size for the stack pane based on the monitor size
+        int maxStackHeight = (int)(window.getScreenHeight() - getMenuBarHeight());
+        int maxStackWidth = (int)(window.getScreenWidth() - getToolBarWidth());
+
+        // when the aspect ratio is greater than 1 calculate based on the width
+        if (useWidthOrHeight()){
+            double stackHeight = Math.round(window.getScreenHeight() - getMenuBarHeight());
+            double stackWidth = Math.round(stackHeight * project.getProjectAspectRatio());
+
+            if (stackWidth > maxStackWidth) {
+                stackWidth = maxStackWidth;
+                stackHeight = Math.round(stackWidth * project.getProjectAspectRatio());
+            }
+            stack.setPrefHeight(stackHeight);
+            stack.setPrefWidth(stackWidth);
+        }
+        // when the aspect ratio is smaller than 1 calculate based on height
+        else {
+            double stackWidth = Math.round(window.getScreenWidth() - getToolBarWidth());
+            double stackHeight = Math.round(stackWidth * (1 / project.getProjectAspectRatio()));
+
+            if (stackHeight > maxStackHeight) {
+                stackHeight = maxStackHeight;
+                stackWidth = Math.round(stackHeight * project.getProjectAspectRatio());
+            }
+            stack.setPrefWidth(stackWidth);
+            stack.setPrefHeight(stackHeight);
+        }
+    }
+    private void initDrawTool() {
         this.dt = new DrawingTool(stack);
         handlerFactory = new HandlerFactory(dt);
-        this.canvasWidth = project.getProjectWidth();
-        this.canvasHeight = project.getProjectHeight();
         this.importButton.toFront();
     }
-
-    public void setWidthHeightAspectRatio(Project project){
-        this.width = project.getProjectWidth();
-        this.height = project.getProjectHeight();
-        this.projectAspectRatio = project.getProjectAspectRatio();
+    //initializes controls and fits them to the screen
+    private void initControls(){
+        double viewCenterY = (((window.getScreenHeight() - menuBar.getPrefHeight()) / 2d) + menuBar.getPrefHeight());
+        menuBar.setLayoutX(window.getScreenWidth()/2 - menuBar.getPrefWidth()/2);
+        toolBar.setLayoutY(viewCenterY - (toolBar.getPrefHeight() / 2d));
+        double x = (window.getScreenWidth() - getToolBarWidth())/2 + toolBar.getPrefWidth() + (20/getScaleX()) - stack.getPrefWidth()/2;
+        double y = (window.getScreenHeight() - getMenuBarHeight())/2 + menuBar.getPrefHeight() + (20/getScaleY()) - stack.getPrefHeight()/2;
+        stack.setLayoutX(x);
+        stack.setLayoutY(y);
+        EC_LOGGER.debug("succesfully created stack (x layout: " + x + ", y layout: " + y + ")");
     }
+    private void initAddNoiseOpt() {
+        try {
+            FXMLLoader noiseOptLoader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/fxml/noiseOptions.fxml")));
+            noiseOptRoot = noiseOptLoader.load();
+            noiseController = noiseOptLoader.getController();
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
+        noiseOptStage = new Stage();
+        Scene noiseOptScene = new Scene(noiseOptRoot);
+        noiseOptStage.setScene(noiseOptScene);
+
+        noiseController.setEditorController(this);
+    }
+    // Return false: use width, return true: use height
+    public boolean useWidthOrHeight(){
+        return !(project.getProjectAspectRatio() > 1);
+    }
+    public double getMenuBarHeight(){
+        return (menuBar.getPrefHeight() + 40/getScaleY());
+    }
+    public double getToolBarWidth(){
+        return (toolBar.getPrefWidth() + 40/getScaleX());
+    }
+    private void initBackground(){
+        if(project.getBackground() instanceof ImageView){
+            ImageView bgTransparent = (ImageView) project.getBackground();
+            bgTransparent.setFitHeight(stack.getPrefHeight());
+            bgTransparent.setFitWidth(stack.getPrefWidth());
+            stack.getChildren().add(bgTransparent);
+            bgTransparent.toBack();
+        }else if(project.getBackground() instanceof Rectangle){
+            Rectangle bgColor = (Rectangle) project.getBackground();
+            bgColor.setWidth(stack.getPrefWidth());
+            bgColor.setHeight(stack.getPrefHeight());
+            stack.getChildren().add(bgColor);
+            bgColor.toBack();
+        }
+
+    }
+    private void initDrawOptions(){
+        loadDrawOptions();
+        drawOptStage = new Stage();
+        Scene drawOptScene = new Scene(drawOptRoot);
+        drawOptScene.setFill(Color.TRANSPARENT);
+        drawOptStage.setScene(drawOptScene);
+        drawOptStage.centerOnScreen();
+        drawOptStage.initStyle(StageStyle.UNDECORATED);
+        drawOptStage.initStyle(StageStyle.TRANSPARENT);
+        drawOptStage.setResizable(false);
+        drawOptStage.initModality(Modality.APPLICATION_MODAL);
+        drawOptStage.setOnHiding( w -> {
+            if(options.getTmpHandler() != Handler.MOVE){
+                drawer = handlerFactory.getHandler(options.getTmpHandler());
+                stack.addEventHandler(MouseEvent.ANY,drawer);
+                drawer.setAttributes(options.getAttributes());
+            }
+            options.resetLayout();
+
+        });
+    }
+
+
+    /**
+     *  Drawing
+     **/
 
     public void handleArc(ActionEvent e){
         initShapeHandler();
@@ -239,38 +349,19 @@ public class EditorController implements Initializable, ControlScreen {
         }
     }
 
+    public void handleClear(ActionEvent e){
+        dt.clear();
+    }
     public void handleDrawUndo(ActionEvent e){
         dt.backward();
     }
     public void handleDrawRedo(ActionEvent e){
         dt.forward();
     }
-    public void openDrawOptions(Handler handler){
+    private void openDrawOptions(Handler handler){
         drawOptStage.centerOnScreen();
         options.setSelShape(handler);
         drawOptStage.show();
-    }
-
-    public void initDrawOptions(){
-        loadDrawOptions();
-        drawOptStage = new Stage();
-        Scene drawOptScene = new Scene(drawOptRoot);
-        drawOptScene.setFill(Color.TRANSPARENT);
-        drawOptStage.setScene(drawOptScene);
-        drawOptStage.centerOnScreen();
-        drawOptStage.initStyle(StageStyle.UNDECORATED);
-        drawOptStage.initStyle(StageStyle.TRANSPARENT);
-        drawOptStage.setResizable(false);
-        drawOptStage.initModality(Modality.APPLICATION_MODAL);
-        drawOptStage.setOnHiding( w -> {
-            if(options.getTmpHandler() != Handler.MOVE){
-                drawer = handlerFactory.getHandler(options.getTmpHandler());
-                stack.addEventHandler(MouseEvent.ANY,drawer);
-                drawer.setAttributes(options.getAttributes());
-            }
-            options.resetLayout();
-
-        });
     }
 
     private void loadDrawOptions(){
@@ -283,6 +374,7 @@ public class EditorController implements Initializable, ControlScreen {
         }
     }
     private void initShapeHandler(){
+        importButton.setVisible(false);
         if(mover != null){
             stack.removeEventHandler(MouseEvent.ANY, mover);
         }
@@ -293,6 +385,7 @@ public class EditorController implements Initializable, ControlScreen {
     }
     private void initMoveHandler(){
         initShapeHandler();
+
         stack.removeEventHandler(MouseEvent.ANY, dt.getDc().getMarking());
         stack.setCursor(Cursor.OPEN_HAND);
     }
@@ -300,22 +393,6 @@ public class EditorController implements Initializable, ControlScreen {
     /**
      * Filter
      * */
-
-
-    public void initAddNoiseOpt() {
-        try {
-            FXMLLoader noiseOptLoader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/fxml/noiseOptions.fxml")));
-            noiseOptRoot = noiseOptLoader.load();
-            noiseController = noiseOptLoader.getController();
-        } catch (IOException exception) {
-            exception.printStackTrace();
-        }
-        noiseOptStage = new Stage();
-        Scene noiseOptScene = new Scene(noiseOptRoot);
-        noiseOptStage.setScene(noiseOptScene);
-
-        noiseController.setEditorController(this);
-    }
 
     public void handleAddNoise(ActionEvent event) {
         noiseOptStage.centerOnScreen();
@@ -397,7 +474,6 @@ public class EditorController implements Initializable, ControlScreen {
     public void handleImportButton(ActionEvent event) throws IOException {
         importImageFromExplorer();
     }
-
     public void importImageFromExplorer(){
 
         // opens file explore to choose image to edit
@@ -412,7 +488,6 @@ public class EditorController implements Initializable, ControlScreen {
         setImageToCanvas(fileChooserImage);
         setImportOriginalImage(fileChooserImage);
     }
-
     public void setImageToCanvas(Image image) {
         setOriginalImage(image);
 
@@ -422,79 +497,20 @@ public class EditorController implements Initializable, ControlScreen {
         setImportedImage(image);
     }
 
-    public double getMenuBarHeight(){
-        return (menuBar.getPrefHeight() + 40/getScaleY());
-    }
-    public double getToolBarWidth(){
-        return (toolBar.getPrefWidth() + 40/getScaleX());
-    }
-
-
-    // method to calculate stack pane size
-    public void setStackPane() {
-
-        // define the maximum size for the stack pane based on the monitor size
-        int maxStackHeight = (int)(screenHeight - getMenuBarHeight());
-        int maxStackWidth = (int)(screenWidth - getToolBarWidth());
-
-        // when the aspect ratio is greater than 1 calculate based on the width
-        if (useWidthOrHeight()){
-            double stackHeight = Math.round(screenHeight - getMenuBarHeight());
-            double stackWidth = Math.round(stackHeight * projectAspectRatio);
-
-            if (stackWidth > maxStackWidth) {
-                stackWidth = maxStackWidth;
-                stackHeight = Math.round(stackWidth * projectAspectRatio);
-            }
-            stack.setPrefHeight(stackHeight);
-            stack.setPrefWidth(stackWidth);
-        }
-        // when the aspect ratio is smaller than 1 calculate based on height
-        else {
-            double stackWidth = Math.round(screenWidth - getToolBarWidth());
-            double stackHeight = Math.round(stackWidth * (1 / projectAspectRatio));
-
-            if (stackHeight > maxStackHeight) {
-                stackHeight = maxStackHeight;
-                stackWidth = Math.round(stackHeight * projectAspectRatio);
-            }
-            stack.setPrefWidth(stackWidth);
-            stack.setPrefHeight(stackHeight);
-        }
-    }
-
-
-
-    // Return false: use width, return true: use height
-    public boolean useWidthOrHeight(){
-        return !(projectAspectRatio > 1);
-    }
-
     // create empty canvas for images with the size of the stack pane
     public void setEditorImageCanvas(){
         editorCanvasImage = new Canvas(stack.getPrefWidth(), stack.getPrefHeight());
         stack.getChildren().add(editorCanvasImage);
 
-        stack.setAlignment(editorCanvasImage, Pos.CENTER);
+        StackPane.setAlignment(editorCanvasImage, Pos.CENTER);
         editorCanvasImage.toBack();
     }
-
     public void setFilteredImage(){
         filteredImage = noiseController.getFilteredImage();
 //        gc = editorCanvasImage.getGraphicsContext2D();
         gc.drawImage(filteredImage,0, 0, filteredImage.getWidth(), filteredImage.getHeight());
 
         initImageTool(filteredImage);
-    }
-    public void setControls(){
-        double viewCenterY = (((window.getScreenHeight() - menuBar.getPrefHeight()) / 2d) + menuBar.getPrefHeight());
-        menuBar.setLayoutX(screenWidth/2 - menuBar.getPrefWidth()/2);
-        toolBar.setLayoutY(viewCenterY - (toolBar.getPrefHeight() / 2d));
-        stack.setLayoutX((screenWidth - getToolBarWidth())/2 + toolBar.getPrefWidth() + (20/getScaleX()) - stack.getPrefWidth()/2);
-        stack.setLayoutY((screenHeight - getMenuBarHeight())/2 + menuBar.getPrefHeight() + (20/getScaleY()) - stack.getPrefHeight()/2 );
-        double x = (screenWidth - getToolBarWidth())/2 + toolBar.getPrefWidth() + (20/getScaleX()) - stack.getPrefWidth()/2;
-        double y = (screenHeight - getMenuBarHeight())/2 + toolBar.getPrefHeight() + (20/getScaleY()) - stack.getPrefHeight()/2;
-        EC_LOGGER.debug("succesfully created stack (x layout: " + x + ", y layout: " + y + ")");
     }
 
     // draw selected image to the image canvas

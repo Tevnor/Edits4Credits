@@ -23,7 +23,7 @@
       </ImageView>
       <Pane fx:id="editorElementsPane" stylesheets="@../styles/editor_style.css">
          <children>
-            <ToolBar fx:id="toolBar" maxHeight="516.0" maxWidth="56.0" minHeight="516.0" minWidth="56.0" orientation="VERTICAL" prefHeight="516.0" prefWidth="56.0">
+            <ToolBar fx:id="toolBar" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefHeight="542.0" prefWidth="56.0">
               <items>
                   <ToggleButton fx:id="arcBtn" mnemonicParsing="false" onAction="#handleArc" prefHeight="45.0" prefWidth="45.0" text="Arc">
                      <toggleGroup>
@@ -53,7 +53,7 @@
                   </ToggleButton>
                   <ToggleButton fx:id="textBtn" mnemonicParsing="false" onAction="#handleText" prefHeight="45.0" prefWidth="45.0" text="Text" toggleGroup="$shapeGroup" />
                   <ToggleButton fx:id="moveBtn" mnemonicParsing="false" onAction="#handleMove" prefHeight="45.0" prefWidth="45.0" text="Move" toggleGroup="$shapeGroup" />
-                  <ToggleButton fx:id="pathBtn" mnemonicParsing="false" onAction="#handlePath" prefHeight="45.0" prefWidth="45.0" text="Path" toggleGroup="$shapeGroup">
+                  <ToggleButton fx:id="pathBtn" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handlePath" prefHeight="45.0" prefWidth="45.0" text="Path" toggleGroup="$shapeGroup">
                      <contextMenu>
                         <ContextMenu style="-fx-background-color: #727272;">
                           <items>
@@ -61,8 +61,9 @@
                           </items>
                         </ContextMenu>
                      </contextMenu></ToggleButton>
-                  <Button fx:id="btnDrawUndo" mnemonicParsing="false" onAction="#handleDrawUndo" prefHeight="25.0" prefWidth="45.0" text="Undo" />
-                  <Button fx:id="btnDrawRedo" mnemonicParsing="false" onAction="#handleDrawRedo" prefHeight="25.0" prefWidth="45.0" text="Redo" />
+                  <Button fx:id="btnDrawUndo" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleDrawUndo" prefHeight="25.0" prefWidth="45.0" text="Undo" />
+                  <Button fx:id="btnDrawRedo" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleDrawRedo" prefHeight="25.0" prefWidth="45.0" text="Redo" />
+                  <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleClear" prefHeight="25.0" prefWidth="45.0" text="Clear" />
               </items>
             </ToolBar>
             <MenuBar fx:id="menuBar" maxHeight="29.0" maxWidth="270.0" minHeight="29.0" minWidth="270.0" prefHeight="29.0" prefWidth="270.0">
@@ -103,7 +104,7 @@
                 </Menu>
               </menus>
             </MenuBar>
-            <StackPane fx:id="stack" alignment="TOP_LEFT">
+            <StackPane fx:id="stack" alignment="TOP_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity">
                <children>
                   <Button fx:id="importButton" mnemonicParsing="false" onAction="#handleImportButton" text="Import Image" textAlignment="CENTER" StackPane.alignment="CENTER" />
                </children>

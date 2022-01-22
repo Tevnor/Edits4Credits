@@ -68,9 +68,6 @@ public class DrawingTool implements EditingTools {
     public DrawBoard getDb(){
         return db;
     }
-    public GraphicsContext getGcShapes(){
-        return gcShapes;
-    }
     public GraphicsContext getGcBrush(){
         return gcBrush;
     }
@@ -84,11 +81,15 @@ public class DrawingTool implements EditingTools {
         return dc;
     }
 
-    @Override
-    public void apply() {
-
+    public void clear(){
+        db.clearBoard();
+        DT_LOGGER.debug("cleared succesfully");
     }
 
+    @Override
+    public void apply() {
+        DT_LOGGER.info("applied succesfully");
+    }
     @Override
     public void backward() {
         db.undo();

@@ -17,7 +17,6 @@ public class DrawBoard {
     private final GraphicsContext gc;
     private int historyIndex = -1;
     private final PixelWriter pw;
-    private ArrayList<Shapes> tmp = new ArrayList<>();
     private ShapePixelMap tmp2;
     public DrawBoard(GraphicsContext gc) {
         this.gc = gc;
@@ -27,7 +26,6 @@ public class DrawBoard {
 
     public List<DrawOp> getOperations(){
         return Collections.unmodifiableList(operations);
-
     }
 
     public void addDrawOperation(DrawOp op) {
@@ -83,19 +81,18 @@ public class DrawBoard {
 
                 if(checkIfOverMovedShapes(operations.get(ref), ref)){         //checks if op is over moved shape
                     writeSnapshot(pw, tmp2);
-                    tmp2 = null;
                     DB_LOGGER.debug("written cutout | over moved");
                 }else{
                     writeUndo(pw,operations.get(ref));                  //writes before snapshot of reference
                     DB_LOGGER.debug("written cutout | ");
                 }
-
                 operations.get(ref).setVisible(false);                  //sets ref invisible
                 getShapesOver(ref).forEach(s-> s.drawAfterMove(gc));
             }else{
                 writeUndo(pw,operations.get(historyIndex));
                 operations.get(historyIndex).setVisible(false);
             }
+            tmp2 = null;
             historyIndex++;
             operations.add(op);
             op.draw(gc);
@@ -143,9 +140,9 @@ public class DrawBoard {
             Rectangle2D enclosedRect = new Rectangle2D(shape.getMinX(), shape.getMinY(),
                     shape.getMinX() + shape.getWidth(), shape.getMinY() + shape.getHeight());
             for(int i = ref+1; i < operations.size(); i++){
-                Shapes under = (Shapes) operations.get(i);
-                if(enclosedRect.intersects(new Rectangle2D(under.getMinX(), under.getMinY(),
-                        under.getMinX() + under.getWidth(), under.getMinY() + under.getHeight()))){
+                Shapes shapeOver = (Shapes) operations.get(i);
+                if(shapeOver.isVisible() && enclosedRect.intersects(new Rectangle2D(shapeOver.getMinX(), shapeOver.getMinY(),
+                        shapeOver.getMinX() + shapeOver.getWidth(), shapeOver.getMinY() + shapeOver.getHeight()))){
                     over.add((Shapes) operations.get(i));
                 }
             }
