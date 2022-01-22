@@ -15,7 +15,6 @@ public class Project {
     private final double projectHeight;
     private final double projectAspectRatio;
     private final boolean transparent;
-    private final Group projectGroup = new Group();
     private ImageView bgTransparent;
     private Rectangle bgColor;
     private Color backgroundColor;
@@ -29,7 +28,6 @@ public class Project {
         this.transparent = true;
         this.bgTransparent = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/transparent_bg.png"))));
         bgTransparent.setPreserveRatio(false);
-        addGroupMember(bgTransparent);
     }
     public Project(double projectWidth, double projectHeight, Color backgroundColor) {
         this.projectWidth = projectWidth;
@@ -38,7 +36,6 @@ public class Project {
         this.transparent = false;
         this.backgroundColor = backgroundColor;
         this.bgColor = new Rectangle(projectWidth,projectHeight,backgroundColor);
-        addGroupMember(bgColor);
     }
 
 
@@ -55,11 +52,11 @@ public class Project {
         return projectHeight;
     }
     public double getProjectAspectRatio() {return projectAspectRatio;}
-    public void addGroupMember(Node s){
-        projectGroup.getChildren().add(s);
-    }
     public Node getBackground(){
-        return projectGroup.getChildren().get(0);
+        if(transparent){
+            return bgTransparent;
+        }
+        return bgColor;
     }
 
 }

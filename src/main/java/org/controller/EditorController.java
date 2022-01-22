@@ -1,5 +1,7 @@
 package org.controller;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -8,6 +10,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -673,6 +676,7 @@ public class EditorController implements Initializable, ControlScreen {
      * */
     public void handleOpenFile(ActionEvent event) {
         importImageFromExplorer();
+        orderStack();
     }
 
     public void handleDeleteFile(ActionEvent event) {
