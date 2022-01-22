@@ -5,46 +5,38 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.shape.ArcType;
 import javafx.scene.shape.Shape;
 import javafx.scene.transform.Rotate;
-import org.controller.tools.drawingtool.graphiccontrol.Attributes;
+import org.controller.tools.drawingtool.graphiccontrol.attributes.ArcAttributes;
 
 import static org.controller.tools.drawingtool.graphiccontrol.objects.Shapes.Type.ARC;
 
 public class Arc extends Shapes {
 
-    private final double startAngle;
-    private final double arcExtent;
-    private final ArcType closure;
+    private final ArcAttributes attributes;
     private Point2D getCenter(){
-        return new Point2D(minX+width/2,minY+height/2);
+        return new Point2D(getMinX()+getWidth()/2,getMinY()+getHeight()/2);
     }
 
-    public Arc(double minX, double minY, double width, double height, Attributes attributes){
-        this.minX = minX;
-        this.minY = minY;
-        this.width = width;
-        this.height = height;
+    public Arc(double minX, double minY, double width, double height, ArcAttributes attributes){
+        super(minX,minY,width,height);
         this.attributes = attributes;
-        this.startAngle = attributes.getStartAngle();
-        this.arcExtent = attributes.getArcExtent();
-        this.closure = attributes.getArcType();
         setRotation(attributes.getRotation());
         this.type = ARC;
     }
 
     private void drawFill(GraphicsContext gc) {
         gc.setFill(attributes.getColor());
-        setAttributes(gc);
-        gc.fillArc(minX, minY, width, height, startAngle, arcExtent, closure);
+        setAttributesOfGc(gc);
+        gc.fillArc(getMinX(), getMinY(), getWidth(), getHeight(),
+                attributes.getStartAngle(), attributes.getArcExtent(), attributes.getArcType());
 
     }
     private void drawStroke(GraphicsContext gc) {
         gc.setStroke(attributes.getColor());
-        setAttributes(gc);
-        gc.strokeArc(minX, minY, width, height, startAngle, arcExtent, closure);
+        setAttributesOfGc(gc);
+        gc.strokeArc(getMinX(), getMinY(), getWidth(), getHeight(),
+                attributes.getStartAngle(), attributes.getArcExtent(), attributes.getArcType());
 
     }
-
-
     @Override
     public void draw(GraphicsContext gc) {
         writeBeforeARGB(gc);
@@ -55,7 +47,6 @@ public class Arc extends Shapes {
         }
         writeChangeARGB(gc);
     }
-
     @Override
     public void drawAfterMove(GraphicsContext gc) {
         if(attributes.isFill()){
@@ -67,33 +58,37 @@ public class Arc extends Shapes {
 
     @Override
     protected void setRotation(double angle) {
-        this.r = new Rotate(angle,minX+(width/2), minY+(height/2));
+        this.r = new Rotate(angle,getMinX()+(getWidth()/2), getMinY()+(getHeight()/2));
     }
     @Override
     public Shape getShapeRepresentation() {
-        javafx.scene.shape.Arc arc = new javafx.scene.shape.Arc(getCenter().getX(), getCenter().getY(), width/2, height/2, startAngle, arcExtent);
-        arc.setType(this.closure);
+        javafx.scene.shape.Arc arc = new javafx.scene.shape.Arc(getCenter().getX(), getCenter().getY(), getWidth()/2, getHeight()/2,
+                attributes.getStartAngle(), attributes.getArcExtent());
+        arc.setType(attributes.getArcType());
         arc.setRotate(this.r.getAngle());
         return arc;
     }
     @Override
     public Shapes reposition(Point2D point) {
-        Arc a = new Arc(point.getX(),point.getY(),width,height,attributes);
+        Arc a = new Arc(point.getX(),point.getY(),getWidth(),getHeight(),
+                new ArcAttributes(attributes,attributes.getArcType(),attributes.getStartAngle(),attributes.getArcExtent()));
         a.setOpType(OpType.MOVE);
         return a;
     }
-
     @Override
     public boolean pointInside(Point2D point) {
         Point2D postRotate = r.inverseTransform(point.getX(),point.getY());
         javafx.scene.shape.Arc arc = (javafx.scene.shape.Arc) getShapeRepresentation();
-
-        if(this.closure == ArcType.OPEN){
+        if(attributes.getArcType() == ArcType.OPEN){
             arc.setType(ArcType.ROUND);
         }else{
-            arc.setType(this.closure);
+            arc.setType(attributes.getArcType());
         }
 
         return arc.contains(postRotate);
+    }
+    @Override
+    public ArcAttributes getAttributes(){
+        return new ArcAttributes(attributes,attributes.getArcType(),attributes.getStartAngle(),attributes.getArcExtent());
     }
 }

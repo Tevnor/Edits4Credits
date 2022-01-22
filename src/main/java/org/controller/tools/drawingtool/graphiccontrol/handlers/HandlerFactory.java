@@ -4,7 +4,6 @@ package org.controller.tools.drawingtool.graphiccontrol.handlers;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 import org.controller.tools.drawingtool.DrawingTool;
-import org.controller.tools.drawingtool.graphiccontrol.Attributes;
 
 public class HandlerFactory {
     private final DrawingTool dt;
@@ -26,46 +25,35 @@ public class HandlerFactory {
     public HandlerFactory(DrawingTool dt){
         this.dt = dt;
     }
-    public EventHandler<MouseEvent> getHandler(Handler handler, Attributes attributes){
-        EventHandler<MouseEvent> drawer= null;
+    public DrawHandler getHandler(Handler handler){
         switch(handler){
 
             case ARC:
-                drawer = new ArcDrawer(dt,attributes);
-                break;
+                return new ArcDrawer(dt);
             case CIRCLE:
-                drawer = new CircleDrawer(dt,attributes);
-                break;
+                return new CircleDrawer(dt);
             case ELLIPSES:
-                drawer = new EllipsesDrawer(dt,attributes);
-                break;
+                return new EllipsesDrawer(dt);
             case ERASER:
-                drawer = new EraserDrawer(dt, attributes);
-                break;
+                return new EraserDrawer(dt);
             case LINE:
-                drawer = new LineDrawer(dt,attributes);
-                break;
-            case MOVE:
-                drawer = new MoveHandler(dt);
-                break;
+                return new LineDrawer(dt);
             case PATH:
-                drawer = new PathDrawer(dt,attributes);
-                break;
+                return new PathDrawer(dt);
             case POLYGON:
-                drawer = new PolygonDrawer(dt,attributes);
-                break;
+                return new PolygonDrawer(dt);
             case RECTANGLE:
-                drawer = new RectangleDrawer(dt,attributes);
-                break;
+                return new RectangleDrawer(dt);
             case ROUNDED_RECTANGLE:
-                drawer = new RoundedRectDrawer(dt,attributes);
-                break;
+                return new RoundedRectDrawer(dt);
             case TEXT:
-                drawer = new TextDrawer(dt,attributes);
-                break;
+                return new TextDrawer(dt);
+            default:
+                return null;
         }
-
-        return drawer;
+    }
+    public EventHandler<MouseEvent> getMove(){
+        return new MoveHandler(dt);
     }
 
 

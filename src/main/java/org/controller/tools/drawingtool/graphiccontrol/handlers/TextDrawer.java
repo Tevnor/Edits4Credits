@@ -1,18 +1,18 @@
 package org.controller.tools.drawingtool.graphiccontrol.handlers;
 
-import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 import org.controller.tools.drawingtool.DrawingTool;
-import org.controller.tools.drawingtool.graphiccontrol.Attributes;
+import org.controller.tools.drawingtool.graphiccontrol.attributes.AbstractGeneral;
+import org.controller.tools.drawingtool.graphiccontrol.attributes.TextAttributes;
 import org.controller.tools.drawingtool.graphiccontrol.objects.Text;
 
-public class TextDrawer implements EventHandler<MouseEvent> {
+public class TextDrawer implements DrawHandler {
 
     private final DrawingTool dt;
-    private final Attributes attributes;
-    protected TextDrawer(DrawingTool dt, Attributes attributes){
+    private TextAttributes attributes;
+    protected TextDrawer(DrawingTool dt){
         this.dt = dt;
-        this.attributes = attributes;
+
     }
 
     @Override
@@ -22,5 +22,10 @@ public class TextDrawer implements EventHandler<MouseEvent> {
                     attributes));
         }
 
+    }
+
+    @Override
+    public void setAttributes(AbstractGeneral attributes) {
+        this.attributes = (TextAttributes) attributes;
     }
 }

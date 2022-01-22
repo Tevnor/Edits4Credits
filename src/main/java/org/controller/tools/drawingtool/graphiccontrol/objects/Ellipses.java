@@ -2,88 +2,78 @@ package org.controller.tools.drawingtool.graphiccontrol.objects;
 
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Paint;
 import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Shape;
 import javafx.scene.transform.Rotate;
-import org.controller.tools.drawingtool.graphiccontrol.Attributes;
+
+import org.controller.tools.drawingtool.graphiccontrol.attributes.AbstractGeneral;
+
 import static org.controller.tools.drawingtool.graphiccontrol.objects.Shapes.Type.ELLIPSES;
 
 public class Ellipses extends Shapes {
 
-
-
-    public Ellipses(double minX, double minY, double width, double height, Attributes attributes) {
-        this.minX = minX;
-        this.minY = minY;
-        this.width = width;
-        this.height = height;
-        this.attributes = attributes;
+    public Ellipses(double minX, double minY, double width, double height, AbstractGeneral attributes) {
+        super(minX,minY,width,height,attributes);
         setRotation(attributes.getRotation());
         this.type = ELLIPSES;
     }
 
     private Point2D getCenter(){
-        return new Point2D(minX+width/2,minY+height/2);
+        return new Point2D(getMinX()+getWidth()/2,getMinY()+getHeight()/2);
     }
 
     private void drawStroke(GraphicsContext gc) {
-        gc.setStroke(attributes.getColor());
-        setAttributes(gc);
-        gc.strokeOval(minX, minY, width, height);
+        gc.setStroke(getDirectAttributes().getColor());
+        setAttributesOfGc(gc);
+        gc.strokeOval(getMinX(), getMinY(), getWidth(), getHeight());
     }
     private void drawFill(GraphicsContext gc) {
-        gc.setFill(attributes.getColor());
-        setAttributes(gc);
-        gc.fillOval(minX, minY, width, height);
+        gc.setFill(getDirectAttributes().getColor());
+        setAttributesOfGc(gc);
+        gc.fillOval(getMinX(), getMinY(), getWidth(), getHeight());
     }
 
     @Override
     public void draw(GraphicsContext gc) {
         writeBeforeARGB(gc);
-        if(attributes.isFill()){
+        if(getDirectAttributes().isFill()){
             drawFill(gc);
         }else{
             drawStroke(gc);
         }
         writeChangeARGB(gc);
     }
-
     @Override
     public void drawAfterMove(GraphicsContext gc) {
-        if(attributes.isFill()){
+        if(getDirectAttributes().isFill()){
             drawFill(gc);
         }else{
             drawStroke(gc);
         }
     }
-
     @Override
     public void setRotation(double angle) {
-        this.r = new Rotate(angle, minX+(width/2), minY+(height/2));
+        this.r = new Rotate(angle, getMinX()+(getWidth()/2), getMinY()+(getHeight()/2));
     }
-
     @Override
     public Shape getShapeRepresentation() {
-        Ellipse ell = new Ellipse(width/2,height/2);
+        Ellipse ell = new Ellipse(getWidth()/2,getHeight()/2);
         ell.setRotate(r.getAngle());
         return ell;
     }
-
     @Override
     public Shapes reposition(Point2D point) {
-        Ellipses e = new Ellipses(point.getX(),point.getY(),width,height,attributes);
+        Ellipses e = new Ellipses(point.getX(),point.getY(),getWidth(),getHeight(),getAttributes());
         e.setOpType(OpType.MOVE);
         return e;
     }
-
     @Override
     public boolean pointInside(Point2D point) {
         Point2D postRotate = r.inverseTransform(point.getX(),point.getY());
         double a = postRotate.getX() - getCenter().getX();
         double b = postRotate.getY() - getCenter().getY();
-        double radX = width/2;
-        double radY = height/2;
+        double radX = getWidth()/2;
+        double radY = getHeight()/2;
         return 1 >= (a*a)/(radX*radX) + (b*b)/(radY*radY);
     }
 

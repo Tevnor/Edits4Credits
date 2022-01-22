@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -27,6 +28,7 @@ import javafx.stage.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.controller.tools.drawingtool.DrawingTool;
+import org.controller.tools.drawingtool.graphiccontrol.handlers.DrawHandler;
 import org.controller.tools.drawingtool.graphiccontrol.handlers.HandlerFactory;
 import org.controller.tools.drawingtool.graphiccontrol.handlers.PolygonDrawer;
 
@@ -101,7 +103,8 @@ public class EditorController implements Initializable, ControlScreen {
     private ToolBar toolBar;
 
     private File imagePath;
-    private EventHandler<MouseEvent> drawer = event -> {}, mover = event -> {};
+    private EventHandler<MouseEvent> mover;
+    private DrawHandler drawer;
     private DrawingTool dt;
     private HandlerFactory handlerFactory;
     Canvas editorCanvasImage;
@@ -173,94 +176,51 @@ public class EditorController implements Initializable, ControlScreen {
     }
 
     public void handleArc(ActionEvent e){
-        importButton.setVisible(false);
-        stack.removeEventHandler(MouseEvent.ANY, mover);
-        stack.removeEventHandler(MouseEvent.ANY, drawer);
+        initShapeHandler();
         openDrawOptions(Handler.ARC);
-        drawer = handlerFactory.getHandler(Handler.ARC, options.getAttributes());
-        stack.addEventHandler(MouseEvent.ANY,drawer);
     }
     public void handleMove(ActionEvent e){
-        importButton.setVisible(false);
-        stack.removeEventHandler(MouseEvent.ANY, drawer);
-        stack.removeEventHandler(MouseEvent.ANY, dt.getDc().getMarking());
-        mover = handlerFactory.getHandler(Handler.MOVE, options.getAttributes());
+        initMoveHandler();
+        mover = handlerFactory.getMove();
         stack.addEventHandler(MouseEvent.ANY,mover);
     }
     public void handleCircle(ActionEvent e){
-        importButton.setVisible(false);
-        stack.removeEventHandler(MouseEvent.ANY, mover);
-        stack.removeEventHandler(MouseEvent.ANY, drawer);
+        initShapeHandler();
         openDrawOptions(Handler.CIRCLE);
-        drawer = handlerFactory.getHandler(Handler.CIRCLE, options.getAttributes());
-        stack.addEventHandler(MouseEvent.ANY,drawer);
     }
     public void handleEllipses(ActionEvent e){
-        importButton.setVisible(false);
-        stack.removeEventHandler(MouseEvent.ANY, mover);
-        stack.removeEventHandler(MouseEvent.ANY, drawer);
+        initShapeHandler();
         openDrawOptions(Handler.ELLIPSES);
-        drawer = handlerFactory.getHandler(Handler.ELLIPSES, options.getAttributes());
-        stack.addEventHandler(MouseEvent.ANY,drawer);
-
     }
     public void handleEraser(ActionEvent e){
-        importButton.setVisible(false);
-        stack.removeEventHandler(MouseEvent.ANY, mover);
-        stack.removeEventHandler(MouseEvent.ANY, drawer);
+        initShapeHandler();
         stack.removeEventHandler(MouseEvent.ANY, dt.getDc().getMarking());
         openDrawOptions(Handler.ERASER);
-        drawer = handlerFactory.getHandler(Handler.ERASER, options.getAttributes());
-        stack.addEventHandler(MouseEvent.ANY,drawer);
     }
     public void handleRectangle(ActionEvent e){
-        importButton.setVisible(false);
-        stack.removeEventHandler(MouseEvent.ANY, mover);
-        stack.removeEventHandler(MouseEvent.ANY, drawer);
+        initShapeHandler();
         openDrawOptions(Handler.RECTANGLE);
-        drawer = handlerFactory.getHandler(Handler.RECTANGLE, options.getAttributes());
-        stack.addEventHandler(MouseEvent.ANY,drawer);
     }
     public void handleRoundedRectangle(ActionEvent e){
-        importButton.setVisible(false);
-        stack.removeEventHandler(MouseEvent.ANY, mover);
-        stack.removeEventHandler(MouseEvent.ANY, drawer);
+        initShapeHandler();
         openDrawOptions(Handler.ROUNDED_RECTANGLE);
-        drawer = handlerFactory.getHandler(Handler.ROUNDED_RECTANGLE, options.getAttributes());
-        stack.addEventHandler(MouseEvent.ANY,drawer);
     }
     public void handleLine(ActionEvent e){
-        importButton.setVisible(false);
-        stack.removeEventHandler(MouseEvent.ANY, mover);
-        stack.removeEventHandler(MouseEvent.ANY, drawer);
+        initShapeHandler();
         openDrawOptions(Handler.LINE);
-        drawer = handlerFactory.getHandler(Handler.LINE, options.getAttributes());
-        stack.addEventHandler(MouseEvent.ANY,drawer);
     }
     public void handleText(ActionEvent e){
-        importButton.setVisible(false);
-        stack.removeEventHandler(MouseEvent.ANY, mover);
-        stack.removeEventHandler(MouseEvent.ANY, drawer);
+        initShapeHandler();
         openDrawOptions(Handler.TEXT);
-        drawer = handlerFactory.getHandler(Handler.TEXT, options.getAttributes());
-        stack.addEventHandler(MouseEvent.ANY,drawer);
     }
     public void handlePolygon(ActionEvent e){
-        importButton.setVisible(false);
-        stack.removeEventHandler(MouseEvent.ANY, mover);
-        stack.removeEventHandler(MouseEvent.ANY, drawer);
+        initShapeHandler();
         openDrawOptions(Handler.POLYGON);
-        drawer = handlerFactory.getHandler(Handler.POLYGON, options.getAttributes());
-        stack.addEventHandler(MouseEvent.ANY,drawer);
     }
     public void handlePath(ActionEvent e){
-        importButton.setVisible(false);
-        stack.removeEventHandler(MouseEvent.ANY, mover);
-        stack.removeEventHandler(MouseEvent.ANY, drawer);
+        initShapeHandler();
         stack.removeEventHandler(MouseEvent.ANY, dt.getDc().getMarking());
         openDrawOptions(Handler.PATH);
-        drawer = handlerFactory.getHandler(Handler.PATH, options.getAttributes());
-        stack.addEventHandler(MouseEvent.ANY,drawer);
     }
     public void handleDrawPolygon(ActionEvent e){
         if(drawer instanceof PolygonDrawer){
@@ -281,14 +241,7 @@ public class EditorController implements Initializable, ControlScreen {
     }
 
     public void initDrawOptions(){
-        try{
-            FXMLLoader drawOptLoader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/fxml/drawOptions.fxml")));
-            drawOptRoot = drawOptLoader.load();
-            options = drawOptLoader.getController();
-        } catch (IOException exception) {
-            exception.printStackTrace();
-        }
-
+        loadDrawOptions();
         drawOptStage = new Stage();
         Scene drawOptScene = new Scene(drawOptRoot);
         drawOptScene.setFill(Color.TRANSPARENT);
@@ -296,12 +249,42 @@ public class EditorController implements Initializable, ControlScreen {
         drawOptStage.centerOnScreen();
         drawOptStage.initStyle(StageStyle.UNDECORATED);
         drawOptStage.initStyle(StageStyle.TRANSPARENT);
-        drawOptStage.setTitle("Draw Options");
         drawOptStage.setResizable(false);
         drawOptStage.initModality(Modality.APPLICATION_MODAL);
+        drawOptStage.setOnHiding( w -> {
+            if(options.getTmpHandler() != Handler.MOVE){
+                drawer = handlerFactory.getHandler(options.getTmpHandler());
+                stack.addEventHandler(MouseEvent.ANY,drawer);
+                drawer.setAttributes(options.getAttributes());
+            }
+            options.resetLayout();
+
+        });
     }
 
-
+    private void loadDrawOptions(){
+        try{
+            FXMLLoader drawOptLoader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/fxml/drawOptions.fxml")));
+            drawOptRoot = drawOptLoader.load();
+            options = drawOptLoader.getController();
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
+    }
+    private void initShapeHandler(){
+        if(mover != null){
+            stack.removeEventHandler(MouseEvent.ANY, mover);
+        }
+        if(drawer != null){
+            stack.removeEventHandler(MouseEvent.ANY, drawer);
+        }
+        stack.setCursor(Cursor.DEFAULT);
+    }
+    private void initMoveHandler(){
+        initShapeHandler();
+        stack.removeEventHandler(MouseEvent.ANY, dt.getDc().getMarking());
+        stack.setCursor(Cursor.OPEN_HAND);
+    }
 
     /**
      * Filter

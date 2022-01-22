@@ -3,25 +3,22 @@ package org.controller.tools.drawingtool.graphiccontrol.objects;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.transform.Rotate;
-import org.controller.tools.drawingtool.graphiccontrol.Attributes;
+import org.controller.tools.drawingtool.graphiccontrol.attributes.AbstractGeneral;
 
 import static org.controller.tools.drawingtool.graphiccontrol.objects.Shapes.Type.LINE;
 
 public class Line extends Shapes {
 
-    private double xOne, yOne, xTwo, yTwo;
+    private final double xOne, yOne, xTwo, yTwo;
 
-    public Line(double xOne, double yOne, double xTwo, double yTwo, Attributes attributes){
-
+    public Line(double xOne, double yOne, double xTwo, double yTwo, AbstractGeneral attributes){
+        super(Math.min(xOne,xTwo), Math.min(yOne,yTwo), Math.abs(xTwo-xOne),Math.abs(yTwo-yOne),attributes);
         this.xOne = xOne;
         this.yOne = yOne;
         this.xTwo = xTwo;
         this.yTwo = yTwo;
-        this.attributes = attributes;
         setRotation(attributes.getRotation());
-        setDims();
         this.type = LINE;
-
     }
 
     @Override
@@ -35,14 +32,13 @@ public class Line extends Shapes {
     @Override
     public Shapes reposition(Point2D point) {
         Point2D oldMin, newMin, connect, newStart, newEnd;
-        oldMin = new Point2D(this.minX, this.minY);
+        oldMin = new Point2D(getMinX(), getMinY());
         newMin = new Point2D(point.getX(), point.getY());
         connect = oldMin.subtract(newMin);
         newStart = getStart().subtract(connect);
         newEnd = getEnd().subtract(connect);
 
-        Line l = new Line(newStart.getX(),newStart.getY(),newEnd.getX(),newEnd.getY(),attributes);
-        l.setDims();
+        Line l = new Line(newStart.getX(),newStart.getY(),newEnd.getX(),newEnd.getY(), getAttributes());
         l.setOpType(OpType.MOVE);
 
         return l;
@@ -70,48 +66,34 @@ public class Line extends Shapes {
         dpe = Math.abs(postRotate.subtract(projectionNormal).distance(getEnd()));     //distance projection to line end
 
         //check if (x,y) is on line with heed to line width
-        return projNormalAbs <= 3 && dps + dpe <= absStartEnd;
+        return projNormalAbs <= 5 && dps + dpe <= absStartEnd;
     }
-
-
     @Override
     public void draw(GraphicsContext gc) {
         writeBeforeARGB(gc);
-        gc.setStroke(attributes.getColor());
-        setAttributes(gc);
-        gc.setLineWidth(attributes.getLineWidth());
+        gc.setStroke(getDirectAttributes().getColor());
+        setAttributesOfGc(gc);
         gc.strokeLine(xOne, yOne, xTwo, yTwo);
         writeChangeARGB(gc);
     }
-
     @Override
     public void drawAfterMove(GraphicsContext gc) {
-        gc.setStroke(attributes.getColor());
-        setAttributes(gc);
-        gc.setLineWidth(attributes.getLineWidth());
+        gc.setStroke(getDirectAttributes().getColor());
+        setAttributesOfGc(gc);
         gc.strokeLine(xOne, yOne, xTwo, yTwo);
     }
-
     @Override
     public void setRotation(double angle) {
 
-        double xMid = minX+width/2;
-        double yMid = minY+height/2;
+        double xMid = getMinX()+getWidth()/2;
+        double yMid = getMinY()+getHeight()/2;
 
         this.r = new Rotate(angle, xMid, yMid);
     }
-
-    private void setDims(){
-        this.width = Math.abs(xTwo-xOne);
-        this.height = Math.abs(yTwo-yOne);
-        this.minX = Math.min(xOne,xTwo);
-        this.minY = Math.min(yOne,yTwo);
-    }
-
-    public Point2D getStart(){
+    private Point2D getStart(){
         return new Point2D(xOne,yOne);
     }
-    public Point2D getEnd(){
+    private Point2D getEnd(){
         return new Point2D(xTwo,yTwo);
     }
 

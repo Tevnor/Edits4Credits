@@ -1,20 +1,19 @@
 package org.controller.tools.drawingtool.graphiccontrol.handlers;
 
-import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.input.MouseEvent;
 import org.controller.tools.drawingtool.DrawingTool;
-import org.controller.tools.drawingtool.graphiccontrol.Attributes;
+import org.controller.tools.drawingtool.graphiccontrol.attributes.AbstractGeneral;
+import org.controller.tools.drawingtool.graphiccontrol.attributes.ArcAttributes;
 import org.controller.tools.drawingtool.graphiccontrol.objects.Arc;
 
-public class ArcDrawer implements EventHandler<MouseEvent> {
+public class ArcDrawer implements DrawHandler {
     private Point2D point1;
     private final DrawingTool dt;
-    private final Attributes attributes;
+    private ArcAttributes attributes;
 
-    public ArcDrawer(DrawingTool dt, Attributes attributes){
+    public ArcDrawer(DrawingTool dt){
         this.dt = dt;
-        this.attributes = attributes;
     }
 
 
@@ -31,7 +30,10 @@ public class ArcDrawer implements EventHandler<MouseEvent> {
 
         }
 
+    }
 
-
+    @Override
+    public void setAttributes(AbstractGeneral attributes) {
+        this.attributes = (ArcAttributes) attributes;
     }
 }

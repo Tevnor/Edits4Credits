@@ -13,15 +13,13 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
-import javafx.util.StringConverter;
-import javafx.util.converter.FormatStringConverter;
-import org.controller.tools.drawingtool.graphiccontrol.Attributes;
+import org.controller.tools.drawingtool.graphiccontrol.attributes.*;
 
 import java.net.URL;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.ResourceBundle;
 
@@ -43,27 +41,27 @@ public class DrawOptionsController implements Initializable {
     @FXML
     private TextField txtBoxBlurWidth, txtBoxBlurHeight, txtMotionBlurRadius, txtReflectionOffset;
     @FXML
-    private TextField txtShadowWidth, txtShadowHeight, txtShadowRadius;
-    @FXML
     private TextField txtDropWidth, txtDropHeight, txtDropOffsetX, txtDropOffsetY, txtDropRadius;
     @FXML
     private TextField txtInnerWidth, txtInnerHeight, txtInnerOffsetX, txtInnerOffsetY, txtInnerRadius;
     @FXML
     private TextArea txtContent;
     @FXML
-    private ColorPicker cpStrokeFill, cpShadow, cpDrop, cpInner;
+    private ColorPicker cpStrokeFill, cpDrop, cpInner;
     @FXML
-    private RadioButton radioStroke, radioFill, eraserCircle, eraserSquare;
+    private RadioButton radioStroke, radioFill, eraserCircle;
     @FXML
     private CheckBox checkPolyClosed, applyBloom, applyGlow, applyBoxBlur, applyGaussianBlur, applyMotionBlur;
     @FXML
-    private CheckBox applyReflection, applyShadow, applyDropShadow, applyInnerShadow;
+    private CheckBox applyReflection, applyDropShadow, applyInnerShadow;
+    @FXML
+    private ChoiceBox<String> cbFontStyle;
     @FXML
     private ComboBox<String> cbFontFamily;
     @FXML
     private TextField txtFontSize;
     @FXML
-    private ComboBox<BlurType> cbShadowBlurType, cbDropBlurType, cbInnerBlurType;
+    private ComboBox<BlurType>  cbDropBlurType, cbInnerBlurType;
     @FXML
     private Button closeDrawOptions;
     @FXML
@@ -81,309 +79,21 @@ public class DrawOptionsController implements Initializable {
 
     private Stage stage;
     private Point2D delta;
-    private Attributes attributes;
-    private final Bloom b = new Bloom();
-    private final Glow g = new Glow();
-    private final BoxBlur bB = new BoxBlur();
-    private final GaussianBlur gB = new GaussianBlur();
-    private final MotionBlur mB = new MotionBlur();
-    private final Reflection r = new Reflection();
-    private final Shadow s = new Shadow();
-    private final DropShadow dS = new DropShadow();
-    private final InnerShadow iS = new InnerShadow();
+    private Handler tmpHandler;
 
-    public Attributes getAttributes(){
-        return attributes;
-    }
-    private void setBloom(){
-        b.setThreshold(sliderBloom.getValue());
-    }
-    private void setGlow(){
-        g.setLevel(sliderGlow.getValue());
-    }
-    private void setBoxBlurIterations(){
-        bB.setIterations((int)sliderBoxBlur.getValue());
-    }
-    private void setGaussianBlur(){
-        gB.setRadius(sliderGaussianBlur.getValue());
-    }
-    private void setMotionBlur(){
-        mB.setAngle(sliderMotionBlur.getValue());
-    }
-    private void setReflectionTop(){
-        r.setTopOpacity(sliderTopOpacity.getValue());
-    }
-    private void setReflectionBottom(){
-        r.setBottomOpacity(sliderBottomOpacity.getValue());
-    }
-    private void setReflectionFraction(){
-        r.setFraction(sliderFraction.getValue());
-    }
-    private void setDropSpread(){
-        dS.setSpread(sliderSpreadDrop.getValue());
-    }
-    private void setInnerChoke(){
-        iS.setChoke(sliderChokeInner.getValue());
-    }
-    private void setAlpha(){
-        attributes.setAlpha(sliderAlpha.getValue());
-    }
-    private void setBlendMode(){
-        attributes.setBm(cbBlendMode.getValue());
-    }
-    private void setEraserSize() {
-        attributes.setEraserSize(sliderEraserSize.getValue());
-    }
-
-    public void handleTxtRotation(ActionEvent e){
-        if(txtRotation.getText() != null){
-            attributes.setRotation(Double.parseDouble(txtRotation.getText()));
-        }
-    }
-    public void handleTxtArcStart(ActionEvent e){
-        if(txtArcStart.getText() != null) {
-            attributes.setStartAngle(Double.parseDouble(txtArcStart.getText()));
-        }
-    }
-    public void handleTxtArcExtent(ActionEvent e){
-        if(txtArcExtent.getText() != null){
-                attributes.setArcExtent(Double.parseDouble(txtArcExtent.getText()));
-        }
-    }
-    public void handleTxtArcWidth(ActionEvent e){
-        if(txtArcWidth.getText() != null){
-                attributes.setArcWidth(Double.parseDouble(txtArcWidth.getText()));
-        }
-    }
-    public void handleTxtLineWidth(ActionEvent e){
-        if(txtLineWidth.getText() != null){
-            attributes.setLineWidth(Double.parseDouble(txtLineWidth.getText()));
-        }
-    }
-    public void handleTxtArcHeight(ActionEvent e){
-        if(txtArcHeight.getText() != null){
-            attributes.setArcHeight(Double.parseDouble(txtArcHeight.getText()));
-        }
-    }
-    public void handleTxtBoxBlurWidth(ActionEvent e){
-        if(txtBoxBlurWidth.getText() != null){
-            bB.setWidth(Double.parseDouble(txtBoxBlurWidth.getText()));
-        }
-
-    }
-    public void handleTxtBoxBlurHeight(ActionEvent e){
-        if(txtBoxBlurHeight.getText() != null){
-            bB.setHeight(Double.parseDouble(txtBoxBlurHeight.getText()));
-        }
-
-    }
-    public void handleTxtMotionBlurRadius(ActionEvent e){
-        if(txtMotionBlurRadius.getText() != null){
-            mB.setRadius(Double.parseDouble(txtMotionBlurRadius.getText()));
-        }
-    }
-    public void handleTxtReflectionOffset(ActionEvent e){
-        if(txtReflectionOffset.getText() != null){
-            r.setTopOffset(Double.parseDouble(txtReflectionOffset.getText()));
-        }
-    }
-    public void handleTxtShadowWidth(ActionEvent e){
-        if(txtShadowWidth.getText() != null){
-            s.setWidth(Double.parseDouble(txtShadowWidth.getText()));
-        }
-
-    }
-    public void handleTxtShadowHeight(ActionEvent e){
-        if(txtShadowHeight.getText() != null){
-            s.setHeight(Double.parseDouble(txtShadowHeight.getText()));
-        }
-    }
-    public void handleTxtShadowRadius(ActionEvent e){
-        if(txtShadowRadius.getText() != null){
-            s.setRadius(Double.parseDouble(txtShadowRadius.getText()));
-        }
-    }
-    public void handleTxtDropWidth(ActionEvent e){
-        if(txtDropWidth.getText() != null){
-            dS.setWidth(Double.parseDouble(txtDropWidth.getText()));
-        }
-
-    }
-    public void handleTxtDropHeight(ActionEvent e){
-        if(txtDropHeight.getText() != null){
-            dS.setHeight(Double.parseDouble(txtDropHeight.getText()));
-        }
-    }
-    public void handleTxtDropRadius(ActionEvent e){
-        if(txtDropRadius.getText() != null){
-            dS.setRadius(Double.parseDouble(txtDropRadius.getText()));
-        }
-    }
-    public void handleTxtDropOffsetX(ActionEvent e){
-        if(txtDropOffsetX.getText() != null){
-            dS.setOffsetX(Double.parseDouble(txtDropOffsetX.getText()));
-        }
-    }
-    public void handleTxtDropOffsetY(ActionEvent e){
-        if(txtDropOffsetY.getText() != null){
-            dS.setOffsetY(Double.parseDouble(txtDropOffsetY.getText()));
-        }
-    }
-    public void handleTxtInnerWidth(ActionEvent e){
-        if(txtInnerWidth.getText() != null){
-            iS.setWidth(Double.parseDouble(txtInnerWidth.getText()));
-        }
-    }
-    public void handleTxtInnerHeight(ActionEvent e){
-        if(txtInnerHeight.getText() != null){
-            iS.setHeight(Double.parseDouble(txtInnerHeight.getText()));
-        }
-    }
-    public void handleTxtInnerRadius(ActionEvent e){
-        if(txtInnerRadius.getText() != null){
-            iS.setRadius(Double.parseDouble(txtInnerRadius.getText()));
-        }
-    }
-    public void handleTxtInnerOffsetX(ActionEvent e){
-        if(txtInnerOffsetX.getText() != null){
-            iS.setOffsetX(Double.parseDouble(txtInnerOffsetX.getText()));
-        }
-    }
-    public void handleTxtInnerOffsetY(ActionEvent e){
-        if(txtInnerOffsetY.getText() != null){
-            iS.setOffsetY(Double.parseDouble(txtInnerOffsetY.getText()));
-        }
-    }
-
-    public void setColorStrokeFill(ActionEvent e){
-        attributes.setColor(cpStrokeFill.getValue());
-    }
-    public void setColorShadow(ActionEvent e){
-        s.setColor(cpShadow.getValue());
-    }
-    public void setColorDrop(ActionEvent e){
-        dS.setColor(cpDrop.getValue());
-    }
-    public void setColorInner(ActionEvent e){
-        iS.setColor(cpInner.getValue());
-    }
-    private void setStrokeFill(){
-        RadioButton sel = (RadioButton)strokeFill.getSelectedToggle();
-        if(sel.equals(radioFill)){
-            attributes.setFill(true);
-        }else if(sel.equals(radioStroke)){
-            attributes.setFill(false);
-        }
-        attributes.setColor(cpStrokeFill.getValue());
-    }
-    private void setSliders(){
-        setBloom();
-        setGlow();
-        setBoxBlurIterations();
-        setGaussianBlur();
-        setMotionBlur();
-        setReflectionBottom();
-        setReflectionTop();
-        setReflectionFraction();
-        setDropSpread();
-        setInnerChoke();
-    }
-    private void setColorShadows(){
-        s.setColor(cpShadow.getValue());
-        dS.setColor(cpDrop.getValue());
-        iS.setColor(cpInner.getValue());
-    }
-    private void setBlurTypes(){
-        s.setBlurType(cbShadowBlurType.getValue());
-        dS.setBlurType(cbDropBlurType.getValue());
-        iS.setBlurType(cbInnerBlurType.getValue());
-    }
-    private void setGeneral(){
-        setAlpha();
-        setBlendMode();
-        setStrokeFill();
-    }
-    private void setEraser(){
-        if(eraserShape.getSelectedToggle() == eraserSquare){
-            attributes.setEraserSquare(true);
-        }else{
-            attributes.setEraserSquare(false);
-        }
-        setEraserSize();
-    }
-    private void setShapeAttributes(){
-        attributes.setArcType(cbArcType.getValue());
-        attributes.setPolyClose(checkPolyClosed.isSelected());
-        attributes.setFont(new Font(cbFontFamily.getValue(),Double.parseDouble(txtFontSize.getText())));
-        attributes.setTxtAlignment(cbTxtAlignment.getValue());
-        attributes.setContent(txtContent.getText());
-    }
-    private void setEffects(){
-        setSliders();
-        setBlurTypes();
-        setColorShadows();
-        addSelectedEffects();
-    }
-
-    public void addSelectedEffects(){
-        CheckBox[] cBoxes = new CheckBox[]{ applyBloom, applyGlow, applyBoxBlur, applyGaussianBlur, applyMotionBlur,
-                applyReflection, applyShadow, applyDropShadow, applyInnerShadow};
-        Arrays.stream(cBoxes).forEach(c ->{
-            if(c.isSelected()){
-                Effect e = null;
-                TitledPane t = (TitledPane)c.getParent().getParent();
-                switch(t.getText()){
-                    case "Bloom":
-                        e = b; break;
-                    case "Glow":
-                        e = g; break;
-                    case "Box Blur":
-                        e = bB; break;
-                    case "Motion Blur":
-                        e = mB; break;
-                    case "Gaussian Blur":
-                        e = gB; break;
-                    case "Reflection":
-                        e = r; break;
-                    case "Shadow":
-                        e = s; break;
-                    case "Drop Shadow":
-                        e = dS; break;
-                    case "Inner Shadow":
-                        e = iS; break;
-                }
-                attributes.addEffect(e);
-            }
-
-        });
-    }
-
-    public void handleClose(ActionEvent e){
-        setGeneral();
-        setShapeAttributes();
-        setEffects();
-        setEraser();
-        stage = (Stage) closeDrawOptions.getScene().getWindow();
-        stage.close();
-        this.attributes = new Attributes();
-    }
-    public void setSelShape(Handler handler){
+    private void initSelShape(Handler handler){
         switch (handler){
             case ARC:
-                tabPane.getSelectionModel().select(shapes);
-                shapeAccordion.setExpandedPane(arc);
+                selectShapePane(arc);
                 break;
             case ROUNDED_RECTANGLE:
-                tabPane.getSelectionModel().select(shapes);
-                shapeAccordion.setExpandedPane(rounded_rect);
+                selectShapePane(rounded_rect);
                 break;
             case POLYGON:
-                tabPane.getSelectionModel().select(shapes);
-                shapeAccordion.setExpandedPane(polygon);
+                selectShapePane(polygon);
                 break;
             case TEXT:
-                tabPane.getSelectionModel().select(shapes);
-                shapeAccordion.setExpandedPane(text);
+                selectShapePane(text);
                 break;
             case CIRCLE:
             case LINE:
@@ -394,12 +104,205 @@ public class DrawOptionsController implements Initializable {
             case PATH:
                 tabPane.getSelectionModel().select(general);
                 strokeFill.selectToggle(radioStroke);
+                txtRotation.setDisable(true);
                 break;
             case ERASER:
+                eraser.setDisable(false);
                 tabPane.getSelectionModel().select(eraser);
+                general.setDisable(true);
                 break;
         }
     }
+    public void setSelShape(Handler handler){
+        this.tmpHandler = handler;
+        initSelShape(handler);
+    }
+    private void selectShapePane(TitledPane shapeOpt){
+        shapes.setDisable(false);
+        TitledPane[] shapeOpts = new TitledPane[]{arc, polygon, rounded_rect, text};
+        Arrays.stream(shapeOpts).forEach(t -> {
+            t.setVisible(t.equals(shapeOpt));
+        });
+        shapeAccordion.setExpandedPane(shapeOpt);
+        tabPane.getSelectionModel().select(shapes);
+    }
+    private void deselectShapePane(){
+        shapes.setDisable(true);
+        TitledPane[] shapeOpts = new TitledPane[]{arc, polygon, rounded_rect, text};
+        Arrays.stream(shapeOpts).forEach(t ->t.setVisible(false));
+        tabPane.getSelectionModel().select(general);
+    }
+    public void resetLayout(){
+        switch(tmpHandler) {
+            case ARC:
+            case ROUNDED_RECTANGLE:
+            case POLYGON:
+            case TEXT:
+                deselectShapePane();
+                break;
+            case CIRCLE:
+            case LINE:
+            case RECTANGLE:
+            case ELLIPSES:
+                tabPane.getSelectionModel().select(general);
+                break;
+            case PATH:
+                tabPane.getSelectionModel().select(general);
+                strokeFill.selectToggle(radioFill);
+                txtRotation.setDisable(false);
+                break;
+            case ERASER:
+                eraser.setDisable(true);
+                tabPane.getSelectionModel().select(general);
+                general.setDisable(false);
+                break;
+        }
+    }
+
+    private Bloom getBloom(){
+        return new Bloom(sliderBloom.getValue());
+    }
+    private Glow getGlow(){
+        return new Glow(sliderGlow.getValue());
+    }
+    private BoxBlur getBoxBlur(){
+        return new BoxBlur(getTxtNumFields(txtBoxBlurWidth,5),getTxtNumFields(txtBoxBlurHeight,5),
+                (int)sliderBoxBlur.getValue());
+    }
+    private GaussianBlur getGaussianBlur(){
+        return new GaussianBlur(sliderGaussianBlur.getValue());
+    }
+    private MotionBlur getMotionBlur(){
+        return new MotionBlur(sliderMotionBlur.getValue(),getTxtNumFields(txtMotionBlurRadius,10));
+    }
+    private Reflection getReflection(){
+        return new Reflection(getTxtNumFields(txtReflectionOffset,0), sliderFraction.getValue(),
+                sliderTopOpacity.getValue(), sliderBottomOpacity.getValue());
+    }
+    private DropShadow getDropShadow(){
+        DropShadow d = new DropShadow(cbDropBlurType.getValue(), cpDrop.getValue(), getTxtNumFields(txtDropRadius,10),
+                sliderSpreadDrop.getValue(),getTxtNumFields(txtDropOffsetX,0), getTxtNumFields(txtDropOffsetY,0));
+        d.setWidth(getTxtNumFields(txtDropWidth,21));
+        d.setHeight(getTxtNumFields(txtDropHeight,21));
+        return d;
+    }
+    private InnerShadow getInnerShadow(){
+        InnerShadow i = new InnerShadow(cbInnerBlurType.getValue(), cpInner.getValue(), getTxtNumFields(txtInnerRadius,10),
+                sliderChokeInner.getValue(),getTxtNumFields(txtInnerOffsetX,0), getTxtNumFields(txtInnerOffsetY,0));
+        i.setWidth(getTxtNumFields(txtInnerWidth,21));
+        i.setHeight(getTxtNumFields(txtInnerHeight,21));
+        return i;
+    }
+
+    private boolean isFill(){
+        RadioButton sel = (RadioButton)strokeFill.getSelectedToggle();
+        if(sel.equals(radioFill)){
+            return true;
+        }else return !sel.equals(radioStroke);
+    }
+    private General getGeneral(){
+        return new General(getTxtNumFields(txtRotation,0),
+                cbBlendMode.getValue(),
+                getTxtNumFields(txtLineWidth,1),
+                cpStrokeFill.getValue(),
+                sliderAlpha.getValue(),
+                isFill());
+    }
+    private ArcAttributes getArcAttributes(){
+        return new ArcAttributes(getGeneral(),cbArcType.getValue(),
+                getTxtNumFields(txtArcStart,0),getTxtNumFields(txtArcExtent,0));
+    }
+    private PolygonAttributes getPolyAttributes(){
+        return new PolygonAttributes(getGeneral(), checkPolyClosed.isSelected());
+    }
+    private RoundRectAttributes getRoundRectAttributes(){
+        return new RoundRectAttributes(getGeneral(),
+                getTxtNumFields(txtArcWidth, 0), getTxtNumFields(txtArcHeight,0));
+    }
+    private TextAttributes getTextAttributes(){
+        Font font;
+        String fontfamily = cbFontFamily.getValue();
+        switch (cbFontStyle.getValue()){
+            case "Bold":
+                font = Font.font(fontfamily, FontWeight.BOLD,getTxtNumFields(txtFontSize,20));
+                break;
+            case "Italic":
+                font = Font.font(fontfamily, FontPosture.ITALIC,getTxtNumFields(txtFontSize,20));
+                break;
+            case "Bold Italic":
+                font = Font.font(fontfamily, FontWeight.BOLD, FontPosture.ITALIC,getTxtNumFields(txtFontSize,20));
+                break;
+            default:
+                font = Font.font(fontfamily,getTxtNumFields(txtFontSize,20));
+                break;
+        }
+        return new TextAttributes(getGeneral(),txtContent.getText(),font,cbTxtAlignment.getValue());
+    }
+    private EraserAttributes getEraserAttributes(){
+        boolean circle = eraserShape.getSelectedToggle() == eraserCircle;
+        return new EraserAttributes(getGeneral(),sliderEraserSize.getValue(), circle);
+    }
+
+    private AbstractGeneral addSelectedEffects(AbstractGeneral opt){
+        CheckBox[] cBoxes = new CheckBox[]{ applyBloom, applyGlow, applyBoxBlur, applyGaussianBlur, applyMotionBlur,
+                applyReflection, applyDropShadow, applyInnerShadow};
+        Arrays.stream(cBoxes).forEach(c ->{
+            if(c.isSelected()){
+                Effect e = null;
+                TitledPane t = (TitledPane)c.getParent().getParent();
+                switch(t.getText()){
+                    case "Bloom":
+                        e = getBloom(); break;
+                    case "Glow":
+                        e = getGlow(); break;
+                    case "Box Blur":
+                        e = getBoxBlur(); break;
+                    case "Motion Blur":
+                        e = getMotionBlur(); break;
+                    case "Gaussian Blur":
+                        e = getGaussianBlur(); break;
+                    case "Reflection":
+                        e = getReflection(); break;
+                    case "Drop Shadow":
+                        e = getDropShadow(); break;
+                    case "Inner Shadow":
+                        e = getInnerShadow(); break;
+                }
+                opt.addEffect(e);
+            }
+
+        });
+        return opt;
+    }
+    private AbstractGeneral initAttributes(){
+        switch (tmpHandler){
+            case ARC:
+                return getArcAttributes();
+            case ROUNDED_RECTANGLE:
+                return getRoundRectAttributes();
+            case POLYGON:
+                return getPolyAttributes();
+            case TEXT:
+                return getTextAttributes();
+            case ERASER:
+                return getEraserAttributes();
+            default:
+                return getGeneral();
+        }
+    }
+
+    public Handler getTmpHandler(){
+        return tmpHandler;
+    }
+    public AbstractGeneral getAttributes(){
+        return addSelectedEffects(initAttributes());
+    }
+
+    public void handleClose(ActionEvent e){
+        stage = (Stage) closeDrawOptions.getScene().getWindow();
+        stage.close();
+    }
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -407,16 +310,13 @@ public class DrawOptionsController implements Initializable {
         initComboBoxes();
         initButtons();
         initColorPickers();
-        attributes = new Attributes();
     }
 
     private void initComboBoxes(){
-        NumberFormat format = DecimalFormat.getInstance();
-        StringConverter<Double> converter = new FormatStringConverter<>(format);
-        ComboBox[] blurTypes = new ComboBox[]{cbShadowBlurType, cbDropBlurType, cbInnerBlurType};
+        ComboBox[] blurTypes = new ComboBox[]{ cbDropBlurType, cbInnerBlurType};
         Arrays.stream(blurTypes).forEach(b ->{
             b.getItems().addAll(BlurType.values());
-            b.setValue(BlurType.GAUSSIAN);
+            b.setValue(BlurType.THREE_PASS_BOX);
         });
         cbBlendMode.getItems().addAll(BlendMode.values());
         cbBlendMode.setValue(BlendMode.SRC_OVER);
@@ -426,12 +326,13 @@ public class DrawOptionsController implements Initializable {
         cbFontFamily.setValue(Font.getDefault().getFamily());
         cbTxtAlignment.getItems().addAll(TextAlignment.values());
         cbTxtAlignment.setValue(TextAlignment.LEFT);
-        setSliders();
+        cbFontStyle.getItems().addAll("Regular", "Bold", "Italic", "Bold Italic");
+        cbFontStyle.setValue("Regular");
     }
     private void initOnlyNums(){
         TextField[] onlyNums = new TextField[]{txtRotation, txtArcStart, txtArcExtent,
                 txtArcWidth, txtArcHeight,txtLineWidth , txtBoxBlurWidth, txtBoxBlurHeight, txtMotionBlurRadius,
-                txtReflectionOffset, txtShadowWidth, txtShadowHeight, txtShadowRadius, txtDropWidth,
+                txtReflectionOffset, txtDropWidth,
                 txtDropHeight, txtDropOffsetX, txtDropOffsetY, txtDropRadius, txtInnerWidth, txtInnerHeight,
                 txtInnerOffsetX, txtInnerOffsetY, txtInnerRadius, txtFontSize};
         Arrays.stream(onlyNums).forEach(t -> t.textProperty().addListener((observableValue, oldValue, newValue) -> {
@@ -453,9 +354,14 @@ public class DrawOptionsController implements Initializable {
     }
     private void initColorPickers(){
         cpStrokeFill.setValue(Color.BLACK);
-        cpShadow.setValue(Color.BLACK);
         cpDrop.setValue(Color.BLACK);
         cpInner.setValue(Color.BLACK);
+    }
+    private double getTxtNumFields(TextField txt, double def){
+        if(txt.getText() != null && !txt.getText().equals("")){
+            return Double.parseDouble(txt.getText());
+        }
+        return def;
     }
 
 

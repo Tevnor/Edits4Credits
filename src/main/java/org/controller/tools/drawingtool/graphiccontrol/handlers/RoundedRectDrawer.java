@@ -1,20 +1,19 @@
 package org.controller.tools.drawingtool.graphiccontrol.handlers;
 
-import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.input.MouseEvent;
 import org.controller.tools.drawingtool.DrawingTool;
-import org.controller.tools.drawingtool.graphiccontrol.Attributes;
+import org.controller.tools.drawingtool.graphiccontrol.attributes.AbstractGeneral;
+import org.controller.tools.drawingtool.graphiccontrol.attributes.RoundRectAttributes;
 import org.controller.tools.drawingtool.graphiccontrol.objects.RoundedRectangle;
 
-public class RoundedRectDrawer implements EventHandler<MouseEvent> {
+public class RoundedRectDrawer implements DrawHandler {
     private Point2D point1;
     private final DrawingTool dt;
-    private final Attributes attributes;
+    private RoundRectAttributes attributes;
 
-    public RoundedRectDrawer(DrawingTool dt, Attributes attributes){
+    public RoundedRectDrawer(DrawingTool dt){
         this.dt = dt;
-        this.attributes = attributes;
     }
 
 
@@ -33,5 +32,10 @@ public class RoundedRectDrawer implements EventHandler<MouseEvent> {
 
 
 
+    }
+
+    @Override
+    public void setAttributes(AbstractGeneral attributes) {
+        this.attributes = (RoundRectAttributes) attributes;
     }
 }

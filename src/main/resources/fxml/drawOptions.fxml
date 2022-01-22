@@ -71,7 +71,7 @@
                                         <Insets bottom="10.0" />
                                     </GridPane.margin>
                                 </Label>
-                                <TextField fx:id="txtRotation" maxHeight="35.0" onAction="#handleTxtRotation" prefHeight="35.0" prefWidth="150.0" promptText="Rotation" styleClass="txtInput" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="3" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
+                                <TextField fx:id="txtRotation" maxHeight="35.0" prefHeight="35.0" prefWidth="150.0" promptText="Rotation" styleClass="txtInput" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="3" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
                                     <font>
                                         <Font name="System Bold" size="20.0" />
                                     </font>
@@ -79,7 +79,7 @@
                                         <Insets left="20.0" right="20.0" />
                                     </GridPane.margin>
                                 </TextField>
-                                <ColorPicker fx:id="cpStrokeFill" onAction="#setColorStrokeFill" prefHeight="25.0" prefWidth="150.0" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER">
+                                <ColorPicker fx:id="cpStrokeFill" prefHeight="25.0" prefWidth="150.0" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER">
                                     <GridPane.margin>
                                         <Insets />
                                     </GridPane.margin></ColorPicker>
@@ -114,7 +114,7 @@
                                         <Insets left="20.0" right="20.0" />
                                     </GridPane.margin>
                                 </Slider>
-                                <TextField fx:id="txtLineWidth" maxHeight="-Infinity" maxWidth="150.0" onAction="#handleTxtLineWidth" prefWidth="50.0" promptText="Line Width" styleClass="txtInput" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="6" GridPane.valignment="BOTTOM" GridPane.vgrow="NEVER">
+                                <TextField fx:id="txtLineWidth" maxHeight="-Infinity" maxWidth="150.0" prefWidth="50.0" promptText="Line Width" styleClass="txtInput" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="6" GridPane.valignment="BOTTOM" GridPane.vgrow="NEVER">
                                     <GridPane.margin>
                                         <Insets bottom="20.0" />
                                     </GridPane.margin>
@@ -126,7 +126,7 @@
                         </GridPane>
                     </content>
                 </Tab>
-                <Tab fx:id="shapes" closable="false" styleClass="gray" text="Shapes">
+                <Tab fx:id="shapes" closable="false" disable="true" styleClass="gray" text="Shapes">
                     <content>
                         <GridPane styleClass="tabGrid">
                             <columnConstraints>
@@ -150,7 +150,7 @@
                                                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                                     </rowConstraints>
                                                     <children>
-                                                        <TextField fx:id="txtArcStart" onAction="#handleTxtArcStart" promptText="Start Angle" styleClass="txtInput" GridPane.hgrow="NEVER" GridPane.vgrow="NEVER">
+                                                        <TextField fx:id="txtArcStart" promptText="Start Angle" styleClass="txtInput" GridPane.hgrow="NEVER" GridPane.vgrow="NEVER">
                                                             <font>
                                                                 <Font name="System Bold" size="20.0" />
                                                             </font>
@@ -158,7 +158,7 @@
                                                                 <Insets left="20.0" right="20.0" />
                                                             </GridPane.margin>
                                                         </TextField>
-                                                        <TextField fx:id="txtArcExtent" onAction="#handleTxtArcExtent" promptText="Arc Extent" styleClass="txtInput" GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.vgrow="NEVER">
+                                                        <TextField fx:id="txtArcExtent" promptText="Arc Extent" styleClass="txtInput" GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.vgrow="NEVER">
                                                             <font>
                                                                 <Font name="System Bold" size="20.0" />
                                                             </font>
@@ -196,7 +196,7 @@
                                                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                                     </rowConstraints>
                                                     <children>
-                                                        <CheckBox fx:id="checkPolyClosed" mnemonicParsing="false" prefHeight="40.0" prefWidth="117.0" text="Closed" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
+                                                        <CheckBox fx:id="checkPolyClosed" mnemonicParsing="false" prefHeight="40.0" prefWidth="117.0" selected="true" text="Closed" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
                                                             <font>
                                                                 <Font name="System Bold" size="20.0" />
                                                             </font>
@@ -219,7 +219,7 @@
                                                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                                     </rowConstraints>
                                                     <children>
-                                                        <TextField fx:id="txtArcWidth" onAction="#handleTxtArcWidth" promptText="Corner Width" styleClass="txtInput" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
+                                                        <TextField fx:id="txtArcWidth" promptText="Corner Width" styleClass="txtInput" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
                                                             <font>
                                                                 <Font name="System Bold" size="20.0" />
                                                             </font>
@@ -227,7 +227,7 @@
                                                                 <Insets left="20.0" right="20.0" />
                                                             </GridPane.margin>
                                                         </TextField>
-                                                        <TextField fx:id="txtArcHeight" onAction="#handleTxtArcHeight" promptText="Corner Height" styleClass="txtInput" GridPane.rowIndex="1">
+                                                        <TextField fx:id="txtArcHeight" promptText="Corner Height" styleClass="txtInput" GridPane.rowIndex="1">
                                                             <font>
                                                                 <Font name="System Bold" size="20.0" />
                                                             </font>
@@ -252,31 +252,39 @@
                                                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                                     </columnConstraints>
                                                     <rowConstraints>
-                                                        <RowConstraints maxHeight="118.66669464111327" minHeight="10.0" prefHeight="112.0" vgrow="SOMETIMES" />
-                                                        <RowConstraints maxHeight="97.66662597656249" minHeight="10.0" prefHeight="60.666625976562486" vgrow="SOMETIMES" />
-                                                        <RowConstraints maxHeight="87.66668701171875" minHeight="10.0" prefHeight="35.33331298828125" vgrow="SOMETIMES" />
-                                                        <RowConstraints maxHeight="74.00002034505206" minHeight="10.0" prefHeight="74.00002034505206" vgrow="SOMETIMES" />
+                                                        <RowConstraints maxHeight="152.0" minHeight="61.0" prefHeight="138.0" vgrow="SOMETIMES" />
+                                                        <RowConstraints maxHeight="72.0" minHeight="0.0" prefHeight="43.0" vgrow="SOMETIMES" />
+                                                        <RowConstraints maxHeight="40.0" minHeight="40.0" prefHeight="50.0" vgrow="SOMETIMES" />
+                                                        <RowConstraints maxHeight="40.0" minHeight="40.0" prefHeight="50.0" vgrow="SOMETIMES" />
                                                     </rowConstraints>
                                                     <children>
                                                         <TextArea fx:id="txtContent" prefHeight="200.0" prefWidth="200.0" promptText="Content" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
                                                             <GridPane.margin>
-                                                                <Insets left="20.0" right="20.0" top="20.0" />
+                                                                <Insets left="20.0" right="20.0" top="10.0" />
                                                             </GridPane.margin>
                                                             <font>
                                                                 <Font size="15.0" />
                                                             </font>
                                                         </TextArea>
-                                                        <ComboBox fx:id="cbFontFamily" prefWidth="150.0" promptText="Font Family" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="NEVER" />
-                                                        <ChoiceBox fx:id="cbTxtAlignment" prefWidth="150.0" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="3" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
+                                                        <ComboBox fx:id="cbFontFamily" prefWidth="150.0" promptText="Font Family" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.valignment="BOTTOM" GridPane.vgrow="NEVER">
+                                             <GridPane.margin>
+                                                <Insets top="10.0" />
+                                             </GridPane.margin></ComboBox>
+                                                        <ChoiceBox fx:id="cbTxtAlignment" minWidth="80.0" prefWidth="80.0" GridPane.halignment="RIGHT" GridPane.hgrow="NEVER" GridPane.rowIndex="3" GridPane.valignment="BOTTOM" GridPane.vgrow="NEVER">
                                                             <GridPane.margin>
-                                                                <Insets bottom="20.0" />
+                                                                <Insets right="20.0" />
                                                             </GridPane.margin>
                                                         </ChoiceBox>
-                                          <TextField fx:id="txtFontSize" maxWidth="150.0" promptText="Font Size" text="16" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="2" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
+                                          <TextField fx:id="txtFontSize" maxWidth="150.0" promptText="Font Size" text="20" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="2" GridPane.valignment="BOTTOM" GridPane.vgrow="NEVER">
                                              <GridPane.margin>
-                                                <Insets />
+                                                <Insets top="12.5" />
                                              </GridPane.margin>
                                           </TextField>
+                                          <ChoiceBox fx:id="cbFontStyle" minWidth="80.0" prefWidth="80.0" GridPane.halignment="LEFT" GridPane.rowIndex="3" GridPane.valignment="BOTTOM">
+                                             <GridPane.margin>
+                                                <Insets left="20.0" />
+                                             </GridPane.margin>
+                                          </ChoiceBox>
                                                     </children>
                                                 </GridPane>
                                             </content>
@@ -290,7 +298,7 @@
                         </GridPane>
                     </content>
                 </Tab>
-                <Tab fx:id="effects" closable="false" styleClass="gray" text="Effects">
+                <Tab fx:id="effects" closable="false" disable="true" styleClass="gray" text="Effects">
                     <content>
                         <GridPane styleClass="tabGrid">
                             <columnConstraints>
@@ -393,12 +401,12 @@
                                                                 <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
                                                             </rowConstraints>
                                                             <children>
-                                                                <TextField fx:id="txtBoxBlurWidth" onAction="#handleTxtBoxBlurWidth" prefHeight="25.0" promptText="width" styleClass="txtInput">
+                                                                <TextField fx:id="txtBoxBlurWidth" prefHeight="25.0" promptText="width" styleClass="txtInput">
                                                                     <GridPane.margin>
                                                                         <Insets left="20.0" right="10.0" />
                                                                     </GridPane.margin>
                                                                 </TextField>
-                                                                <TextField fx:id="txtBoxBlurHeight" onAction="#handleTxtBoxBlurHeight" prefHeight="25.0" promptText="height" styleClass="txtInput" GridPane.columnIndex="1">
+                                                                <TextField fx:id="txtBoxBlurHeight" prefHeight="25.0" promptText="height" styleClass="txtInput" GridPane.columnIndex="1">
                                                                     <GridPane.margin>
                                                                         <Insets left="10.0" right="20.0" />
                                                                     </GridPane.margin>
@@ -459,7 +467,7 @@
                                                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                                     </rowConstraints>
                                                     <children>
-                                                        <TextField fx:id="txtMotionBlurRadius" onAction="#handleTxtMotionBlurRadius" prefHeight="25.0" prefWidth="85.0" promptText="radius" styleClass="txtInput">
+                                                        <TextField fx:id="txtMotionBlurRadius" prefHeight="25.0" prefWidth="85.0" promptText="radius" styleClass="txtInput">
                                                             <GridPane.margin>
                                                                 <Insets left="20.0" right="20.0" />
                                                             </GridPane.margin>
@@ -518,7 +526,7 @@
                                                                 <Insets bottom="15.0" left="5.0" right="5.0" />
                                                             </GridPane.margin>
                                                         </Slider>
-                                                        <TextField fx:id="txtReflectionOffset" onAction="#handleTxtReflectionOffset" prefHeight="25.0" prefWidth="83.0" promptText="offset" styleClass="txtInput" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
+                                                        <TextField fx:id="txtReflectionOffset" prefHeight="25.0" prefWidth="83.0" promptText="offset" styleClass="txtInput" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
                                                             <opaqueInsets>
                                                                 <Insets />
                                                             </opaqueInsets>
@@ -577,75 +585,6 @@
                                                 <Font name="System Bold" size="12.0" />
                                             </font>
                                         </TitledPane>
-                                        <TitledPane animated="false" text="Shadow">
-                                            <content>
-                                                <GridPane styleClass="gray">
-                                                    <columnConstraints>
-                                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-                                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                                    </columnConstraints>
-                                                    <rowConstraints>
-                                                        <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-                                                    </rowConstraints>
-                                                    <children>
-                                                        <GridPane GridPane.columnIndex="1">
-                                                            <columnConstraints>
-                                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                                            </columnConstraints>
-                                                            <rowConstraints>
-                                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                            </rowConstraints>
-                                                            <children>
-                                                                <ColorPicker fx:id="cpShadow" onAction="#setColorShadow" prefHeight="25.0" prefWidth="90.0" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.valignment="TOP" GridPane.vgrow="NEVER">
-                                                                    <GridPane.margin>
-                                                                        <Insets left="5.0" right="5.0" top="15.0" />
-                                                                    </GridPane.margin>
-                                                                </ColorPicker>
-                                                                <ComboBox fx:id="cbShadowBlurType" prefWidth="150.0" promptText="Blur Type" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
-                                                                    <GridPane.margin>
-                                                                        <Insets left="10.0" right="10.0" />
-                                                                    </GridPane.margin>
-                                                                </ComboBox>
-                                                            </children>
-                                                        </GridPane>
-                                                        <GridPane>
-                                                            <columnConstraints>
-                                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                                            </columnConstraints>
-                                                            <rowConstraints>
-                                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                            </rowConstraints>
-                                                            <children>
-                                                                <TextField fx:id="txtShadowWidth" onAction="#handleTxtShadowWidth" prefHeight="25.0" prefWidth="90.0" promptText="width" styleClass="txtInput" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
-                                                                    <GridPane.margin>
-                                                                        <Insets left="5.0" right="5.0" />
-                                                                    </GridPane.margin>
-                                                                </TextField>
-                                                                <TextField fx:id="txtShadowRadius" onAction="#handleTxtShadowRadius" prefHeight="25.0" prefWidth="90.0" promptText="radius" styleClass="txtInput" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="2" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
-                                                                    <GridPane.margin>
-                                                                        <Insets left="5.0" right="5.0" />
-                                                                    </GridPane.margin>
-                                                                </TextField>
-                                                                <TextField fx:id="txtShadowHeight" onAction="#handleTxtShadowHeight" prefHeight="25.0" prefWidth="90.0" promptText="height" styleClass="txtInput" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
-                                                                    <GridPane.margin>
-                                                                        <Insets left="5.0" right="5.0" />
-                                                                    </GridPane.margin>
-                                                                </TextField>
-                                                            </children>
-                                                        </GridPane>
-                                                    </children>
-                                                </GridPane>
-                                            </content>
-                                            <graphic>
-                                                <CheckBox fx:id="applyShadow" mnemonicParsing="false" />
-                                            </graphic>
-                                            <font>
-                                                <Font name="System Bold" size="12.0" />
-                                            </font>
-                                        </TitledPane>
                                         <TitledPane animated="false" text="Drop Shadow">
                                             <content>
                                                 <GridPane styleClass="gray">
@@ -660,32 +599,32 @@
                                                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                                     </rowConstraints>
                                                     <children>
-                                                        <TextField fx:id="txtDropHeight" onAction="#handleTxtDropHeight" prefHeight="25.0" prefWidth="90.0" promptText="height" styleClass="txtInput" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
+                                                        <TextField fx:id="txtDropHeight" prefHeight="25.0" prefWidth="90.0" promptText="height" styleClass="txtInput" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
                                                             <GridPane.margin>
                                                                 <Insets left="5.0" right="5.0" />
                                                             </GridPane.margin>
                                                         </TextField>
-                                                        <TextField fx:id="txtDropOffsetX" onAction="#handleTxtDropOffsetX" prefHeight="25.0" prefWidth="90.0" promptText="offsetX" styleClass="txtInput" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="2" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
+                                                        <TextField fx:id="txtDropOffsetX" prefHeight="25.0" prefWidth="90.0" promptText="offsetX" styleClass="txtInput" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="2" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
                                                             <GridPane.margin>
                                                                 <Insets left="5.0" right="5.0" />
                                                             </GridPane.margin>
                                                         </TextField>
-                                                        <TextField fx:id="txtDropOffsetY" onAction="#handleTxtDropOffsetY" prefHeight="25.0" prefWidth="90.0" promptText="offsetY" styleClass="txtInput" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="3" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
+                                                        <TextField fx:id="txtDropOffsetY" prefHeight="25.0" prefWidth="90.0" promptText="offsetY" styleClass="txtInput" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="3" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
                                                             <GridPane.margin>
                                                                 <Insets left="5.0" right="5.0" />
                                                             </GridPane.margin>
                                                         </TextField>
-                                                        <TextField fx:id="txtDropWidth" onAction="#handleTxtDropWidth" prefHeight="25.0" prefWidth="90.0" promptText="width" styleClass="txtInput" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
+                                                        <TextField fx:id="txtDropWidth" prefHeight="25.0" prefWidth="90.0" promptText="width" styleClass="txtInput" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
                                                             <GridPane.margin>
                                                                 <Insets left="5.0" right="5.0" />
                                                             </GridPane.margin>
                                                         </TextField>
-                                                        <TextField fx:id="txtDropRadius" onAction="#handleTxtDropRadius" prefHeight="25.0" prefWidth="90.0" promptText="radius" styleClass="txtInput" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
+                                                        <TextField fx:id="txtDropRadius" prefHeight="25.0" prefWidth="90.0" promptText="radius" styleClass="txtInput" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
                                                             <GridPane.margin>
                                                                 <Insets left="5.0" right="5.0" />
                                                             </GridPane.margin>
                                                         </TextField>
-                                                        <ColorPicker fx:id="cpDrop" onAction="#setColorDrop" prefHeight="25.0" prefWidth="90.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="2" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
+                                                        <ColorPicker fx:id="cpDrop" prefHeight="25.0" prefWidth="90.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="2" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
                                                             <GridPane.margin>
                                                                 <Insets left="5.0" right="5.0" />
                                                             </GridPane.margin>
@@ -732,32 +671,32 @@
                                                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                                     </rowConstraints>
                                                     <children>
-                                                        <TextField fx:id="txtInnerHeight" onAction="#handleTxtInnerHeight" prefHeight="25.0" prefWidth="90.0" promptText="height" styleClass="txtInput" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
+                                                        <TextField fx:id="txtInnerHeight" prefHeight="25.0" prefWidth="90.0" promptText="height" styleClass="txtInput" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
                                                             <GridPane.margin>
                                                                 <Insets left="5.0" right="5.0" />
                                                             </GridPane.margin>
                                                         </TextField>
-                                                        <TextField fx:id="txtInnerOffsetX" onAction="#handleTxtInnerOffsetX" prefHeight="25.0" prefWidth="90.0" promptText="offsetX" styleClass="txtInput" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="2" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
+                                                        <TextField fx:id="txtInnerOffsetX" prefHeight="25.0" prefWidth="90.0" promptText="offsetX" styleClass="txtInput" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="2" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
                                                             <GridPane.margin>
                                                                 <Insets left="5.0" right="5.0" />
                                                             </GridPane.margin>
                                                         </TextField>
-                                                        <TextField fx:id="txtInnerOffsetY" onAction="#handleTxtInnerOffsetY" prefHeight="25.0" prefWidth="90.0" promptText="offsetY" styleClass="txtInput" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="3" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
+                                                        <TextField fx:id="txtInnerOffsetY" prefHeight="25.0" prefWidth="90.0" promptText="offsetY" styleClass="txtInput" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="3" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
                                                             <GridPane.margin>
                                                                 <Insets left="5.0" right="5.0" />
                                                             </GridPane.margin>
                                                         </TextField>
-                                                        <TextField fx:id="txtInnerWidth" onAction="#handleTxtInnerWidth" prefHeight="25.0" prefWidth="90.0" promptText="width" styleClass="txtInput" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
+                                                        <TextField fx:id="txtInnerWidth" prefHeight="25.0" prefWidth="90.0" promptText="width" styleClass="txtInput" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
                                                             <GridPane.margin>
                                                                 <Insets left="5.0" right="5.0" />
                                                             </GridPane.margin>
                                                         </TextField>
-                                                        <TextField fx:id="txtInnerRadius" onAction="#handleTxtInnerRadius" prefHeight="25.0" prefWidth="90.0" promptText="radius" styleClass="txtInput" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
+                                                        <TextField fx:id="txtInnerRadius" prefHeight="25.0" prefWidth="90.0" promptText="radius" styleClass="txtInput" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
                                                             <GridPane.margin>
                                                                 <Insets left="5.0" right="5.0" />
                                                             </GridPane.margin>
                                                         </TextField>
-                                                        <ColorPicker fx:id="cpInner" onAction="#setColorInner" prefHeight="25.0" prefWidth="90.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="2" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
+                                                        <ColorPicker fx:id="cpInner" prefHeight="25.0" prefWidth="90.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="2" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
                                                             <GridPane.margin>
                                                                 <Insets left="5.0" right="5.0" />
                                                             </GridPane.margin>
@@ -800,7 +739,7 @@
                         </GridPane>
                     </content>
                 </Tab>
-            <Tab fx:id="eraser" styleClass="gray" text="Eraser">
+            <Tab fx:id="eraser" disable="true" styleClass="gray" text="Eraser">
               <content>
                   <GridPane prefHeight="369.0" prefWidth="242.0" styleClass="tabGrid">
                      <columnConstraints>

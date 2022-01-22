@@ -1,18 +1,17 @@
 package org.controller.tools.drawingtool.graphiccontrol.handlers;
 
-import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 import org.controller.tools.drawingtool.DrawingTool;
-import org.controller.tools.drawingtool.graphiccontrol.Attributes;
+import org.controller.tools.drawingtool.graphiccontrol.attributes.AbstractGeneral;
+import org.controller.tools.drawingtool.graphiccontrol.attributes.General;
 
-public class PathDrawer implements EventHandler<MouseEvent> {
+public class PathDrawer implements DrawHandler {
     private final DrawingTool dt;
-    private final Attributes attributes;
+    private General attributes;
 
 
-    public PathDrawer(DrawingTool dt, Attributes attributes){
+    public PathDrawer(DrawingTool dt){
         this.dt = dt;
-        this.attributes = attributes;
     }
 
     private void setPathAttributes(){
@@ -41,5 +40,10 @@ public class PathDrawer implements EventHandler<MouseEvent> {
                 dt.getGcBrush().stroke();
             }
         }
+    }
+
+    @Override
+    public void setAttributes(AbstractGeneral attributes) {
+        this.attributes = (General) attributes;
     }
 }

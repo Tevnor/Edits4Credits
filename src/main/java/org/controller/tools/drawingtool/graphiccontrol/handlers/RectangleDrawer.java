@@ -1,22 +1,21 @@
 package org.controller.tools.drawingtool.graphiccontrol.handlers;
 
-import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.input.MouseEvent;
 import org.controller.tools.drawingtool.DrawingTool;
-import org.controller.tools.drawingtool.graphiccontrol.Attributes;
+import org.controller.tools.drawingtool.graphiccontrol.attributes.AbstractGeneral;
+import org.controller.tools.drawingtool.graphiccontrol.attributes.General;
 import org.controller.tools.drawingtool.graphiccontrol.objects.Rectangle;
 
 
-public class RectangleDrawer implements EventHandler<MouseEvent> {
+public class RectangleDrawer implements DrawHandler {
 
     private Point2D point1;
     private final DrawingTool dt;
-    private final Attributes attributes;
+    private General attributes;
 
-    public RectangleDrawer(DrawingTool dt, Attributes attributes){
+    public RectangleDrawer(DrawingTool dt){
         this.dt = dt;
-        this.attributes = attributes;
     }
 
 
@@ -34,5 +33,10 @@ public class RectangleDrawer implements EventHandler<MouseEvent> {
 
 
 
+    }
+
+    @Override
+    public void setAttributes(AbstractGeneral attributes) {
+        this.attributes = (General) attributes;
     }
 }

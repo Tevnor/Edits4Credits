@@ -5,80 +5,70 @@ import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.shape.Shape;
 import javafx.scene.transform.Rotate;
-import org.controller.tools.drawingtool.graphiccontrol.Attributes;
+import org.controller.tools.drawingtool.graphiccontrol.attributes.AbstractGeneral;
 
 import static org.controller.tools.drawingtool.graphiccontrol.objects.Shapes.Type.RECTANGLE;
 
 public class Rectangle extends Shapes {
 
-
-
-    public Rectangle(double minX, double minY, double width, double height, Attributes attributes){
-        this.minX = minX;
-        this.minY = minY;
-        this.width = width;
-        this.height = height;
-        this.attributes = attributes;
+    public Rectangle(double minX, double minY, double width, double height, AbstractGeneral attributes){
+        super(minX,minY,width,height,attributes);
         setRotation(attributes.getRotation());
         this.type = RECTANGLE;
     }
+    Rectangle(double minX, double minY, double width, double height) {
+        super(minX, minY, width, height);
+    }
 
     void drawStroke(GraphicsContext gc) {
-        gc.setStroke(attributes.getColor());
-        setAttributes(gc);
-        gc.strokeRect(minX, minY, width, height);
+        gc.setStroke(getDirectAttributes().getColor());
+        setAttributesOfGc(gc);
+        gc.strokeRect(getMinX(), getMinY(), getWidth(), getHeight());
     }
-
     void drawFill(GraphicsContext gc) {
-        gc.setFill(attributes.getColor());
-        setAttributes(gc);
-        gc.fillRect(minX, minY, width, height);
+        gc.setFill(getDirectAttributes().getColor());
+        setAttributesOfGc(gc);
+        gc.fillRect(getMinX(), getMinY(), getWidth(), getHeight());
     }
-
     @Override
     public void draw(GraphicsContext gc) {
         writeBeforeARGB(gc);
-        if(attributes.isFill()){
+        if(getDirectAttributes().isFill()){
             drawFill(gc);
         }else{
             drawStroke(gc);
         }
         writeChangeARGB(gc);
     }
-
     @Override
     public void drawAfterMove(GraphicsContext gc) {
-        if(attributes.isFill()){
+        if(getDirectAttributes().isFill()){
             drawFill(gc);
         }else{
             drawStroke(gc);
         }
     }
-
     @Override
     public void setRotation(double angle) {
-        this.r = new Rotate(angle, minX+(width/2), minY+(height/2));
+        this.r = new Rotate(angle, getMinX()+(getWidth()/2), getMinY()+(getHeight()/2));
     }
-
     @Override
     public Shape getShapeRepresentation() {
-        javafx.scene.shape.Rectangle rect = new javafx.scene.shape.Rectangle(width,height);
+        javafx.scene.shape.Rectangle rect = new javafx.scene.shape.Rectangle(getWidth(),getHeight());
         rect.setRotate(this.r.getAngle());
         return rect;
     }
-
     @Override
     public Shapes reposition(Point2D point) {
-        Rectangle r = new Rectangle(point.getX(),point.getY(),width,height,attributes);
+        Rectangle r = new Rectangle(point.getX(),point.getY(),getWidth(),getHeight(),getAttributes());
         r.setOpType(OpType.MOVE);
         return r;
     }
-
     @Override
     public boolean pointInside(Point2D point) {
         Point2D postRotate = r.inverseTransform(point.getX(),point.getY());
-        return postRotate.getX() >= minX && postRotate.getX() <= minX + width
-                && postRotate.getY() >= minY && postRotate.getY() <= minY + height;
+        return postRotate.getX() >= getMinX() && postRotate.getX() <= getMinX() + getWidth()
+                && postRotate.getY() >= getMinY() && postRotate.getY() <= getMinY() + getHeight();
     }
 
 

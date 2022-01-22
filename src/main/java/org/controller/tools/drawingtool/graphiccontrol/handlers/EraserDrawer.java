@@ -1,30 +1,29 @@
 package org.controller.tools.drawingtool.graphiccontrol.handlers;
 
-import javafx.event.EventHandler;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import org.controller.tools.drawingtool.DrawingTool;
-import org.controller.tools.drawingtool.graphiccontrol.Attributes;
+import org.controller.tools.drawingtool.graphiccontrol.attributes.AbstractGeneral;
+import org.controller.tools.drawingtool.graphiccontrol.attributes.EraserAttributes;
 
 
-public class EraserDrawer implements EventHandler<MouseEvent> {
+public class EraserDrawer implements DrawHandler {
 
     private final DrawingTool dt;
-    private final Attributes attributes;
+    private EraserAttributes attributes;
     private final PixelWriter pw;
 
-    public EraserDrawer(DrawingTool dt, Attributes attributes){
+    public EraserDrawer(DrawingTool dt){
         this.dt = dt;
-        this.attributes = attributes;
         this.pw = dt.getGcBrush().getPixelWriter();
     }
 
     @Override
     public void handle(MouseEvent mouseEvent) {
         if(MouseEvent.MOUSE_PRESSED.equals(mouseEvent.getEventType()) || MouseEvent.MOUSE_DRAGGED.equals(mouseEvent.getEventType())) {
-            double width = attributes.getEraserSize();
-            if (attributes.isEraserSquare()) {
+            double width = attributes.getSize();
+            if (attributes.isCircle()) {
                 deleteRectangle(mouseEvent.getX(), mouseEvent.getY(), width);
             } else {
                 deleteCircle(mouseEvent.getX(), mouseEvent.getY(), width / 2);
@@ -44,7 +43,6 @@ public class EraserDrawer implements EventHandler<MouseEvent> {
             }
         }
     }
-
     private void deleteRectangle(double pX, double pY, double width){
         int minX = (int)Math.round(pX-width/2);
         int minY = (int)Math.round(pY-width/2);
@@ -55,5 +53,10 @@ public class EraserDrawer implements EventHandler<MouseEvent> {
             }
         }
 
+    }
+
+    @Override
+    public void setAttributes(AbstractGeneral attributes) {
+        this.attributes = (EraserAttributes) attributes;
     }
 }

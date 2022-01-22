@@ -1,28 +1,26 @@
 package org.controller.tools.drawingtool.graphiccontrol.handlers;
 
-import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import org.controller.tools.drawingtool.DrawingTool;
-import org.controller.tools.drawingtool.graphiccontrol.Attributes;
+import org.controller.tools.drawingtool.graphiccontrol.attributes.AbstractGeneral;
+import org.controller.tools.drawingtool.graphiccontrol.attributes.PolygonAttributes;
 import org.controller.tools.drawingtool.graphiccontrol.objects.Polygon;
 
 import java.util.ArrayList;
 
-public class PolygonDrawer implements EventHandler<MouseEvent> {
+public class PolygonDrawer implements DrawHandler {
 
     private final ArrayList<Point2D> points = new ArrayList<>();
     private final DrawingTool dt;
     private final ArrayList<Circle> circles = new ArrayList<>();
-    private final Attributes attributes;
+    private PolygonAttributes attributes;
 
-    public PolygonDrawer(DrawingTool dt, Attributes attributes){
+    public PolygonDrawer(DrawingTool dt){
         this.dt = dt;
-        this.attributes = attributes;
-
     }
 
     public void drawPolygon(){
@@ -35,11 +33,33 @@ public class PolygonDrawer implements EventHandler<MouseEvent> {
                 xPoints[i]= points.get(i).getX();
                 yPoints[i]= points.get(i).getY();
             }
-            dt.getDb().addDrawOperation(new Polygon(xPoints,yPoints,nPoints, attributes));
+            dt.getDb().addDrawOperation(new Polygon(getDims(xPoints,yPoints),
+                    xPoints, yPoints,nPoints, attributes));
         }
         resetPoints();
 
     }
+
+    private double[] getDims(double[] xPoints, double[] yPoints){
+        double minX = Integer.MAX_VALUE;
+        double maxX = -Integer.MAX_VALUE;
+
+        for(double x : xPoints){
+            minX = Math.min(minX, x);
+            maxX = Math.max(maxX, x);
+        }
+
+        double minY = Integer.MAX_VALUE;
+        double maxY = -Integer.MAX_VALUE;
+
+        for(double y : yPoints){
+            minY = Math.min(minY, y);
+            maxY = Math.max(maxY, y);
+        }
+
+        return new double[]{minX,minY,maxX-minX,maxY};
+    }
+
 
     @Override
     public void handle(MouseEvent mouseEvent) {
@@ -58,5 +78,9 @@ public class PolygonDrawer implements EventHandler<MouseEvent> {
         points.clear();
         dt.getStack().getChildren().removeAll(circles);
         circles.clear();
+    }
+    @Override
+    public void setAttributes(AbstractGeneral attributes) {
+        this.attributes = (PolygonAttributes) attributes;
     }
 }

@@ -12,4 +12,7 @@ module gui {
 
     opens org.controller to javafx.fxml;
     exports org.controller;
+    exports org.controller.tools.drawingtool.graphiccontrol.attributes;
+    exports org.controller.tools.drawingtool.graphiccontrol.handlers;
+    exports org.controller.tools.drawingtool;
 }

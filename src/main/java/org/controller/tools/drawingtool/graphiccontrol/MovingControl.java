@@ -4,6 +4,7 @@ import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Shape;
 import javafx.scene.transform.Rotate;
+import org.controller.tools.drawingtool.graphiccontrol.attributes.TextAttributes;
 import org.controller.tools.drawingtool.graphiccontrol.objects.*;
 
 import java.util.List;
@@ -41,8 +42,8 @@ public class MovingControl {
                     Text txt = (Text) shape;
                     minX = txt.getMinX();
                     maxX = minX + txt.getWidth();
-                    minY = txt.getMinY() - txt.getFm().getAscent();
-                    maxY = txt.getMinY() + txt.getFm().getDescent();
+                    minY = txt.getMinY() - txt.getAttributes().getFm().getAscent();
+                    maxY = txt.getMinY() + txt.getAttributes().getFm().getDescent();
                 }else{
                     minX = shape.getMinX();
                     maxX = minX + shape.getWidth();
@@ -141,7 +142,7 @@ public class MovingControl {
     public void positionMovingShape(Point2D p){
 
         if(preSelectedShape instanceof Text){
-            movingShape.setTranslateY(p.getY() - offset.getY() - ((Text) preSelectedShape).getFm().getAscent());
+            movingShape.setTranslateY(p.getY() - offset.getY() - ((TextAttributes)(preSelectedShape.getAttributes())).getFm().getAscent());
             movingShape.setTranslateX(p.getX() - offset.getX());
         }else{
             movingShape.setTranslateX(p.getX() - offset.getX());
