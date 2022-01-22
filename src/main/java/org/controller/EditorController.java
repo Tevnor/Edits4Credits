@@ -146,6 +146,17 @@ public class EditorController implements Initializable, ControlScreen {
     private FXMLLoader scaleOptLoader;
     private ScaleOptionsController scaleOptions;
 
+    private Canvas originalCanvas;
+    private Image resizedOriginalImage;
+    private double currentOriginalImageHeight;
+    private double currentOriginalImageWidth;
+    private double xOriginalPosition = 0;
+    private double yOriginalPosition = 0;
+    private Boolean isFiltered = false;
+    private Image filteredOriginalImage;
+
+
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {}
 
@@ -399,6 +410,7 @@ public class EditorController implements Initializable, ControlScreen {
         //creates new image from the selected path
         Image fileChooserImage = new Image(f.getPath());
         setImageToCanvas(fileChooserImage);
+        setImportOriginalImage(fileChooserImage);
     }
 
     public void setImageToCanvas(Image image) {
@@ -406,6 +418,7 @@ public class EditorController implements Initializable, ControlScreen {
 
         // Pass image to setter method
         setEditorImageCanvas();
+        setOriginalImageCanvas();
         setImportedImage(image);
     }
 
@@ -641,7 +654,7 @@ public class EditorController implements Initializable, ControlScreen {
     }
 
     public void handleSaveFile(ActionEvent event) {
-        saveToFile(filteredImage);
+        saveToFile(createImageFromOriginalCanvas());
     }
     public static void saveToFile(Image writableImage) {
         try {
@@ -662,4 +675,58 @@ public class EditorController implements Initializable, ControlScreen {
         Screen screen = Screen.getPrimary();
         return screen.getOutputScaleY();
     }
+
+    public void setOriginalImageCanvas(){
+        this.originalCanvas = new Canvas(canvasWidth, canvasHeight);
+    }
+
+    public void setImportOriginalImage(Image importedImage){
+        gc = originalCanvas.getGraphicsContext2D();
+
+        double ratio = getImageAspectRatio(importedImage);
+
+        // Instantiate resized image from imported image
+        if (ratio >= 1){
+            resizedOriginalImage = scaleImage(importedImage, canvasWidth, getResizedImageHeight(canvasHeight, ratio), true, true);
+            if(resizedOriginalImage.getHeight() > stack.getPrefHeight()){
+                resizedOriginalImage = scaleImage(importedImage, getResizedImageWidth(canvasWidth, ratio), canvasHeight, true, true);
+            }
+        } else {
+            resizedOriginalImage = scaleImage(importedImage, getResizedImageWidth(canvasWidth, ratio), canvasHeight, true, true);
+        }
+
+        this.currentOriginalImageHeight = resizedOriginalImage.getHeight();
+        this.currentOriginalImageWidth = resizedOriginalImage.getWidth();
+        // Draw resized image onto editorCanvasImage
+        gc.drawImage(resizedOriginalImage,0, 0, resizedOriginalImage.getWidth(), resizedOriginalImage.getHeight());
+    }
+    public WritableImage createImageFromOriginalCanvas(){
+        WritableImage filterImage = originalCanvas.snapshot(null, null);
+        return filterImage;
+    }
+    public void setChangedOriginalPosition(double xPosition, double yPosition, double currentOriginalImageWidth, double currentOriginalImageHeight){
+
+
+        double ratio = originalCanvas.getHeight()/ editorCanvasImage.getHeight();
+
+        this.xOriginalPosition = xPosition * ratio;
+        this.yOriginalPosition = yPosition * ratio;
+
+        GraphicsContext gc = originalCanvas.getGraphicsContext2D();
+        gc.clearRect(0, 0, originalCanvas.getWidth(), originalCanvas.getHeight());
+        if (isFiltered == false){
+            gc.drawImage(originalImage, xOriginalPosition, yOriginalPosition, currentOriginalImageWidth,currentOriginalImageHeight);
+        }
+        else if (isFiltered){
+            gc.drawImage(filteredOriginalImage, xOriginalPosition, yOriginalPosition, currentOriginalImageWidth,currentOriginalImageHeight);
+        }
+    }
+    public double getCurrentOriginalImageWidth(){
+        return currentOriginalImageWidth;
+    }
+    public double getCurrentOriginalImageHeight(){
+        return currentOriginalImageHeight;
+    }
+
 }
+

@@ -25,6 +25,7 @@ import java.util.ResourceBundle;
 
 import static org.controller.tools.drawingtool.graphiccontrol.handlers.HandlerFactory.*;
 
+
 public class DrawOptionsController implements Initializable {
     @FXML
     private Slider sliderAlpha, sliderBloom, sliderGlow, sliderBoxBlur, sliderGaussianBlur, sliderMotionBlur;

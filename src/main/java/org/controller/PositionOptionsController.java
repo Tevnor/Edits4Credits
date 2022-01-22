@@ -38,6 +38,7 @@ public class PositionOptionsController implements Initializable {
             yPosition = Double.parseDouble(yPositionInput.getText());
         }
         editorController.setChangedPosition(xPosition, yPosition, editorController.getCurrentImageWidth(), editorController.getCurrentImageHeight());
+        editorController.setChangedOriginalPosition(xPosition,yPosition,editorController.getCurrentOriginalImageWidth(), editorController.getCurrentOriginalImageHeight());
     }
 
     public void setEditorController(EditorController editorController) {
