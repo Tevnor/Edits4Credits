@@ -693,7 +693,7 @@ public class EditorController implements Initializable, ControlScreen {
     }
 
     public void setOriginalImageCanvas(){
-        this.originalCanvas = new Canvas(canvasWidth, canvasHeight);
+        this.originalCanvas = new Canvas(project.getProjectWidth(), project.getProjectHeight());
     }
 
     public void setImportOriginalImage(Image importedImage){
@@ -703,12 +703,12 @@ public class EditorController implements Initializable, ControlScreen {
 
         // Instantiate resized image from imported image
         if (ratio >= 1){
-            resizedOriginalImage = scaleImage(importedImage, canvasWidth, getResizedImageHeight(canvasHeight, ratio), true, true);
+            resizedOriginalImage = scaleImage(importedImage, project.getProjectWidth(), getResizedImageHeight(project.getProjectHeight(), ratio), true, true);
             if(resizedOriginalImage.getHeight() > stack.getPrefHeight()){
-                resizedOriginalImage = scaleImage(importedImage, getResizedImageWidth(canvasWidth, ratio), canvasHeight, true, true);
+                resizedOriginalImage = scaleImage(importedImage, getResizedImageWidth(project.getProjectWidth(), ratio), project.getProjectHeight(), true, true);
             }
         } else {
-            resizedOriginalImage = scaleImage(importedImage, getResizedImageWidth(canvasWidth, ratio), canvasHeight, true, true);
+            resizedOriginalImage = scaleImage(importedImage, getResizedImageWidth(project.getProjectWidth(), ratio), project.getProjectHeight(), true, true);
         }
 
         this.currentOriginalImageHeight = resizedOriginalImage.getHeight();
