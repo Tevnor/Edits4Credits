@@ -520,12 +520,13 @@ public class EditorController implements Initializable, ControlScreen {
         StackPane.setAlignment(editorCanvasImage, Pos.CENTER);
         editorCanvasImage.toBack();
     }
-    public void setFilteredImage(){
-        filteredImage = noiseController.getFilteredImage();
-//        gc = editorCanvasImage.getGraphicsContext2D();
-        gc.drawImage(filteredImage,0, 0, filteredImage.getWidth(), filteredImage.getHeight());
-
-        initImageTool(filteredImage);
+    public void setFilteredImage(Image image){
+        this.filteredImage = image;
+    }
+    public void drawFilteredImage(){
+        gc = editorCanvasImage.getGraphicsContext2D();
+        gc.drawImage(filteredImage,xPosition, yPosition, currentImageWidth, currentImageHeight);
+        //initImageTool(filteredImage);
     }
 
     // draw selected image to the image canvas
@@ -789,6 +790,23 @@ public class EditorController implements Initializable, ControlScreen {
     }
     public Image getOriginalFilteredImage(){
         return this.filteredOriginalImage;
+    }
+
+    public WritableImage createWritableOriginalImage(){
+        Canvas tmp = new Canvas(originalImage.getWidth(), originalImage.getHeight());
+        gc = tmp.getGraphicsContext2D();
+        gc.drawImage(originalImage, 0, 0, originalImage.getWidth(), originalImage.getHeight());
+        WritableImage originalImage = tmp.snapshot(null, null);
+        return originalImage;
+    }
+
+    public void setFilteredOriginalImage(Image image){
+        this.filteredOriginalImage = image;
+    }
+    public void drawFilteredOriginalImage(){
+        gc = originalCanvas.getGraphicsContext2D();
+        gc.drawImage(filteredOriginalImage,xOriginalPosition, yOriginalPosition, getCurrentOriginalImageWidth(), getCurrentOriginalImageWidth());
+        //initImageTool(filteredOriginalImage);
     }
 
 }
