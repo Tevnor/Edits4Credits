@@ -2,6 +2,7 @@ package org.controller.tools.drawingtool;
 
 import javafx.geometry.Pos;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -71,8 +72,11 @@ public class DrawingTool implements EditingTools {
     public GraphicsContext getGcBrush(){
         return gcBrush;
     }
-    public Canvas getCanvas() {
+    public Node getCanvasShapes() {
         return canvasShapes;
+    }
+    public Node getCanvasBrush(){
+        return canvasBrush;
     }
     public StackPane getStack() {
         return stack;

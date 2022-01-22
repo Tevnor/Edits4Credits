@@ -91,8 +91,6 @@ public class EditorController implements Initializable, ControlScreen {
     @FXML
     private ToggleButton moveBtn;
     @FXML
-    private ToggleButton drawOptionsBtn;
-    @FXML
     private StackPane stack;
     @FXML
     private Button btnDrawUndo, btnDrawRedo;
@@ -103,24 +101,23 @@ public class EditorController implements Initializable, ControlScreen {
     @FXML
     private ToolBar toolBar;
 
+    private Project project;
+    private Window window;
     private File imagePath;
+    private ScreensController screensController;
+
     private EventHandler<MouseEvent> mover;
     private DrawHandler drawer;
     private DrawingTool dt;
     private HandlerFactory handlerFactory;
-    private Canvas editorCanvasImage;
-    private Project project;
     private Parent drawOptRoot;
-    private Parent noiseOptRoot;
     private DrawOptionsController options;
-    private NoiseController noiseController;
     private Stage drawOptStage = new Stage();
+
+    private Canvas editorCanvasImage;
+    private Parent noiseOptRoot;
+    private NoiseController noiseController;
     private Stage noiseOptStage = new Stage();
-
-    private ScreensController screensController;
-    private Window window;
-
-
     private Image resizedImage;
     private Image originalImage;
     private Image filteredImage;
@@ -180,6 +177,7 @@ public class EditorController implements Initializable, ControlScreen {
         initAddNoiseOpt();
         initControls();
         initBackground();
+        orderStack();
     }
     // method to calculate stack pane size
     private void initStackPane() {
@@ -290,7 +288,29 @@ public class EditorController implements Initializable, ControlScreen {
 
         });
     }
+    private void loadDrawOptions(){
+        try{
+            FXMLLoader drawOptLoader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/fxml/drawOptions.fxml")));
+            drawOptRoot = drawOptLoader.load();
+            options = drawOptLoader.getController();
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
+    }
 
+    /**
+     *  Organizer
+     **/
+
+    private void orderStack(){
+        importButton.toFront();
+        dt.getCanvasBrush().toBack();
+        dt.getCanvasShapes().toBack();
+        if(editorCanvasImage != null){
+            editorCanvasImage.toBack();
+        }
+        project.getBackground().toBack();
+    }
 
     /**
      *  Drawing
@@ -364,15 +384,6 @@ public class EditorController implements Initializable, ControlScreen {
         drawOptStage.show();
     }
 
-    private void loadDrawOptions(){
-        try{
-            FXMLLoader drawOptLoader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/fxml/drawOptions.fxml")));
-            drawOptRoot = drawOptLoader.load();
-            options = drawOptLoader.getController();
-        } catch (IOException exception) {
-            exception.printStackTrace();
-        }
-    }
     private void initShapeHandler(){
         importButton.setVisible(false);
         if(mover != null){
@@ -473,6 +484,7 @@ public class EditorController implements Initializable, ControlScreen {
 
     public void handleImportButton(ActionEvent event) throws IOException {
         importImageFromExplorer();
+        orderStack();
     }
     public void importImageFromExplorer(){
 

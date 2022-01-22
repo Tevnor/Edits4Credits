@@ -41,6 +41,7 @@ public class Project {
         addGroupMember(bgColor);
     }
 
+
     public boolean isTransparent(){
         return this.transparent;
     }
