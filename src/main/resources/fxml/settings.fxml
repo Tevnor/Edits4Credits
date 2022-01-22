@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ColorPicker?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.effect.DropShadow?>
@@ -138,8 +140,18 @@
                   </DropShadow>
                </effect>
             </Button>
-            <ColorPicker fx:id="cpBackgroundColor" layoutX="87.0" layoutY="400.0" opacity="0.7" prefHeight="40.0" prefWidth="460.0" style="-fx-background-color: #282828; -fx-background-radius: 15;" stylesheets="@../styles/settingsStyle.css" />
-            <RadioButton fx:id="radioBackground" layoutX="60.0" layoutY="411.0" mnemonicParsing="false" />
+            <ColorPicker fx:id="cpBackgroundColor" disable="true" layoutX="347.0" layoutY="400.0" opacity="0.7" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #282828; -fx-background-radius: 15;" stylesheets="@../styles/settingsStyle.css" />
+            <Label alignment="CENTER" layoutX="50.0" layoutY="400.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" opacity="0.7" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #282828; -fx-text-fill: #eeeeee; -fx-background-radius: 15px;" text="Transparent">
+               <font>
+                  <Font name="Segoe UI Semibold" size="18.0" />
+               </font>
+               <graphic>
+                  <RadioButton fx:id="radioBackground" mnemonicParsing="false" onAction="#handleTransparent" scaleX="0.6" scaleY="0.6" selected="true" />
+               </graphic>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+            </Label>
          </children>
       </Pane>
    </children>

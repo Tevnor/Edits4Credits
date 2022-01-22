@@ -19,7 +19,6 @@ public class SettingsController implements Initializable, ControlScreen {
     private ScreensController screensController;
     private Window window;
     private Project project;
-    private Color background;
 
     @FXML
     private TextField projectName;
@@ -49,6 +48,7 @@ public class SettingsController implements Initializable, ControlScreen {
                 t.setText(newValue.replaceAll("[^\\d]", ""));
             }
         }));
+        cpBackgroundColor.setValue(Color.WHITE);
     }
 
     @Override
@@ -65,12 +65,16 @@ public class SettingsController implements Initializable, ControlScreen {
         try {
             double projectWidth = Double.parseDouble(widthInput.getText());
             double projectHeight = Double.parseDouble(heightInput.getText());
-            handleBackgroundColor();
-            if(background != null){
-                project = new Project(projectWidth, projectHeight, background);
+            if(!radioBackground.isSelected()){
+                if(cpBackgroundColor.getValue() != null){
+                    project = new Project(projectWidth, projectHeight, cpBackgroundColor.getValue());
+                }else{
+                    project = new Project(projectWidth, projectHeight);
+                }
             }else{
                 project = new Project(projectWidth, projectHeight);
             }
+
             enterProject();
         } catch (NumberFormatException e) {
             e.printStackTrace();
@@ -93,10 +97,8 @@ public class SettingsController implements Initializable, ControlScreen {
         screensController.setScreen(ScreenName.EDITOR);
         setEditorPresets();
     }
-    public void handleBackgroundColor(){
-        if(radioBackground.isSelected()){
-            background = cpBackgroundColor.getValue();
-        }
+    public void handleTransparent(){
+        cpBackgroundColor.setDisable(radioBackground.isSelected());
     }
 
     public void handleOpenGallery(ActionEvent event) {
@@ -109,11 +111,7 @@ public class SettingsController implements Initializable, ControlScreen {
 
     public void setEditorPresets(){
         EditorController ec = screensController.getLoader().getController();
-        ec.setWidthHeightAspectRatio(project);
-        ec.setStackPane();
-        ec.setCanvas(project);
-        ec.initDrawOptions();
-        ec.initAddNoiseOpt();
-        ec.setControls();
+        ec.setProject(project);
+        ec.initEC();
     }
 }
