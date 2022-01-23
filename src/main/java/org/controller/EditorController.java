@@ -688,6 +688,20 @@ public class EditorController implements Initializable, ControlScreen {
     }
 
     public void handleSaveFile(ActionEvent event) {
+        Stage fileWindow = new Stage();
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save Image");
+
+        File outputFile = fileChooser.showSaveDialog(fileWindow);
+        if (outputFile != null) {
+            try {
+                BufferedImage bufferedImage = SwingFXUtils.fromFXImage(createImageFromOriginalCanvas(), null);
+                ImageIO.write(bufferedImage, "png", outputFile);
+            } catch (IOException ex) {
+            }
+        }
+
+
         saveToFile(createImageFromOriginalCanvas());
     }
     public static void saveToFile(Image writableImage) {
