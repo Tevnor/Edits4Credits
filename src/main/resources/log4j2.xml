@@ -17,16 +17,16 @@
     <Loggers>
 
         <!-- You my want to define class or package level per-logger rules -->
-        <Logger name="org.controller.EditorController" level="debug">
+        <Logger name="org.editor.EditorController" level="debug">
             <AppenderRef ref="EditorLog"/>
         </Logger>
-        <Logger name="org.controller.tools.drawingtool.DrawingTool" level="debug">
+        <Logger name="org.editor.tools.drawingtool.DrawingTool" level="debug">
             <AppenderRef ref="DrawLog"/>
         </Logger>
-        <Logger name="org.controller.tools.drawingtool.graphiccontrol.DrawBoard" level="debug">
+        <Logger name="org.editor.tools.drawingtool.graphiccontrol.DrawBoard" level="debug">
             <AppenderRef ref="DrawLog"/>
         </Logger>
-        <Logger name="org.controller.tools.drawingtool.graphiccontrol.ShapePixelMap" level="debug">
+        <Logger name="org.editor.tools.drawingtool.graphiccontrol.ShapePixelMap" level="debug">
             <AppenderRef ref="STDOUT"/>
         </Logger>
         <Root level="info">
