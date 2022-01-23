@@ -530,7 +530,6 @@ public class EditorController implements Initializable, ControlScreen {
     public void drawFilteredImage(){
         gc = editorCanvasImage.getGraphicsContext2D();
         gc.drawImage(filteredImage,xPosition, yPosition, currentImageWidth, currentImageHeight);
-        System.out.println("drawFilteredImage: " + currentImageWidth + " " + currentImageHeight);
         //initImageTool(filteredImage);
     }
 
@@ -828,7 +827,6 @@ public class EditorController implements Initializable, ControlScreen {
     public void drawFilteredOriginalImage(){
         gc = originalCanvas.getGraphicsContext2D();
         gc.drawImage(filteredOriginalImage,xOriginalPosition, yOriginalPosition, currentOriginalImageWidth, currentOriginalImageHeight);
-        System.out.println("drawFilteredOriginalImage: " + currentOriginalImageWidth + " " + currentOriginalImageHeight);
         //initImageTool(filteredOriginalImage);
     }
 
