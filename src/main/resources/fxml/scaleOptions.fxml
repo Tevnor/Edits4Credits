@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Text?>
 
-<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="200.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17" fx:controller="org.editor.tools.imagetool.ScaleOptionsController">
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.editor.tools.imagetool.ScaleOptionsController">
     <columnConstraints>
         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
     </columnConstraints>
@@ -18,7 +18,7 @@
     </rowConstraints>
     <children>
         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Scale Image" />
-        <TextField fx:id="scaleFactorInput" promptText="Scale Factor" GridPane.rowIndex="1" />
+        <TextField fx:id="scaleFactorInput" onAction="#handleChangeInput" promptText="Scale Factor" GridPane.rowIndex="1" />
         <Button fx:id="applyScale" mnemonicParsing="false" onAction="#handleApplyScale" text="Apply Scale" GridPane.rowIndex="2" />
     </children>
 </GridPane>

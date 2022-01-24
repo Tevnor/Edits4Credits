@@ -147,8 +147,6 @@ public class EditorController implements Initializable, ControlScreen {
 
     private Canvas originalCanvas;
     private Boolean isFiltered = false;
-    private Image filteredOriginalImage;
-
     private OriginalImage originalImageObject;
 
 

@@ -22,6 +22,7 @@ public class ScaleOptionsController implements Initializable {
     public void handleApplyScale(ActionEvent event) {
         scaleFactor = Double.parseDouble(scaleFactorInput.getText());
 
+        //jedes mal wenn sich slider ändert wird das neu ausgeführt
         double newWidth = editorController.getScaledWidth(scaleFactor);
         double newHeight = editorController.getScaledHeight(scaleFactor);
 
@@ -32,11 +33,8 @@ public class ScaleOptionsController implements Initializable {
         editorController.setCurrentImageWidth(newWidth);
         editorController.setCurrentImageHeight(newHeight);
 
-        editorController.getOriginalImageObject().setCurrentWidth(newOriginalWidth);
-        editorController.getOriginalImageObject().setCurrentHeight(newOriginalHeight);
 
-
-        if(editorController.getIsFiltered()== false){
+        if(!editorController.getIsFiltered()){
             editorController.drawScaledImage(editorController.getOriginalImage(), editorController.getXPosition(), editorController.getYPosition(), newWidth, newHeight);
             editorController.drawScaledOriginalImage(editorController.getOriginalImageObject().getOriginalImage(), editorController.getOriginalImageObject().getCurrentXPosition(), editorController.getOriginalImageObject().getCurrentYPosition(), newOriginalWidth, newOriginalHeight);
         }
@@ -44,8 +42,32 @@ public class ScaleOptionsController implements Initializable {
             editorController.drawScaledImage(editorController.getOriginalImageObject().getOriginalFilteredImage(), editorController.getXPosition(), editorController.getYPosition(), newWidth, newHeight);
             editorController.drawScaledOriginalImage(editorController.getOriginalImageObject().getOriginalFilteredImage(), editorController.getOriginalImageObject().getCurrentXPosition(), editorController.getOriginalImageObject().getCurrentYPosition(), newOriginalWidth, newOriginalHeight);
         }
+
+        editorController.getOriginalImageObject().setCurrentWidth(newOriginalWidth);
+        editorController.getOriginalImageObject().setCurrentHeight(newOriginalHeight);
+
+
+
     }
 
+    public void handleChangeInput(ActionEvent e){
+        if(!scaleFactorInput.getText().equals("")){
+            try {
+                scaleFactor = Double.parseDouble(scaleFactorInput.getText());
+                double newWidth = editorController.getScaledWidth(scaleFactor);
+                double newHeight = editorController.getScaledHeight(scaleFactor);
+                if(!editorController.getIsFiltered()) {
+                    editorController.drawScaledImage(editorController.getOriginalImage(), editorController.getXPosition(), editorController.getYPosition(), newWidth, newHeight);
+                }
+                else if(editorController.getIsFiltered()) {
+                    editorController.drawScaledImage(editorController.getOriginalImageObject().getOriginalFilteredImage(), editorController.getXPosition(), editorController.getYPosition(), newWidth, newHeight);
+                }
+
+                } catch (NumberFormatException exception){
+                exception.printStackTrace();
+            }
+        }
+    }
 
     public void setEditorController(EditorController editorController) {
         this.editorController = editorController;
