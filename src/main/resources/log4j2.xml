@@ -5,7 +5,7 @@
             <PatternLayout pattern="[%t] %-5p %c{2} - %m%n"/>
         </File>
         <File name="DrawLog" fileName="DrawLog.log" append="false">
-            <PatternLayout pattern="[%t] %-5p %c{4} - %m%n"/>
+            <PatternLayout pattern="[%t] %-5p %c{1} - %m%n"/>
         </File>
         <File name="EditorLog" fileName="EditorLog.log" append="false">
             <PatternLayout pattern="[%t] %-5p %c{2} - %m%n"/>
@@ -27,7 +27,16 @@
             <AppenderRef ref="DrawLog"/>
         </Logger>
         <Logger name="org.editor.tools.drawingtool.graphiccontrol.ShapePixelMap" level="debug">
-            <AppenderRef ref="STDOUT"/>
+            <AppenderRef ref="DrawLog"/>
+        </Logger>
+        <Logger name="org.editor.tools.drawingtool.graphiccontrol.MovingControl" level="debug">
+            <AppenderRef ref="DrawLog"/>
+        </Logger>
+        <Logger name="org.editor.tools.drawingtool.graphiccontrol.DrawingControl" level="debug">
+            <AppenderRef ref="DrawLog"/>
+        </Logger>
+        <Logger name="org.editor.tools.drawingtool.graphiccontrol.handlers.HandlerFactory" level="debug">
+            <AppenderRef ref="DrawLog"/>
         </Logger>
         <Root level="info">
             <AppenderRef ref="STDOUT"/>

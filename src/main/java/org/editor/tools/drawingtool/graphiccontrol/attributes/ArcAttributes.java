@@ -1,9 +1,11 @@
 package org.editor.tools.drawingtool.graphiccontrol.attributes;
 
 import javafx.scene.shape.ArcType;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class ArcAttributes extends AbstractGeneral {
-
+    private static final Logger AA_LOGGER = LogManager.getLogger(ArcAttributes.class.getName());
     private final ArcType arcType;
     private final double startAngle, arcExtent;
 
@@ -12,6 +14,7 @@ public class ArcAttributes extends AbstractGeneral {
         this.arcType = arcType;
         this.startAngle = startAngle;
         this.arcExtent = arcExtent;
+        AA_LOGGER.debug("ArcAttributes object created");
     }
 
     public ArcType getArcType() {

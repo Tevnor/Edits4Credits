@@ -1,6 +1,10 @@
 package org.editor.tools.drawingtool.graphiccontrol.attributes;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 public class EraserAttributes extends AbstractGeneral {
+    private static final Logger EA_LOGGER = LogManager.getLogger(EraserAttributes.class.getName());
     private final double size;
     private final boolean circle;
 
@@ -8,6 +12,7 @@ public class EraserAttributes extends AbstractGeneral {
         super(abstractGeneral);
         this.size = size;
         this.circle = circle;
+        EA_LOGGER.debug("EraserAttributes object created");
     }
 
     public double getSize() {

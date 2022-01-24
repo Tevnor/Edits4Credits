@@ -2,9 +2,12 @@ package org.editor.tools.drawingtool.graphiccontrol.attributes;
 
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.editor.tools.drawingtool.graphiccontrol.FontMetrics;
 
 public class TextAttributes extends AbstractGeneral {
+    private static final Logger TA_LOGGER = LogManager.getLogger(RoundRectAttributes.class.getName());
     private final String content;
     private final Font font;
     private final TextAlignment txtAlignment;
@@ -15,6 +18,7 @@ public class TextAttributes extends AbstractGeneral {
         this.font = font;
         this.txtAlignment = txtAlignment;
         this.fm = new FontMetrics(font);
+        TA_LOGGER.debug("TextAttributes object created");
     }
 
     public String getContent() {

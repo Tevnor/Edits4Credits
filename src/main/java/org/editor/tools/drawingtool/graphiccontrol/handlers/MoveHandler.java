@@ -28,7 +28,7 @@ public class MoveHandler implements EventHandler<MouseEvent> {
                 mc.setOffset(point1);
                 mc.initMovingShape();
                 mc.positionMovingShape(point1);
-                dt.getStack().getChildren().add(mc.getMovingShape());
+                mc.addMovingShape(dt.getStack());
                 dt.getStack().setCursor(Cursor.CLOSED_HAND);
             }
         }else if(MouseEvent.MOUSE_DRAGGED.equals(mouseEvent.getEventType())){
@@ -39,9 +39,9 @@ public class MoveHandler implements EventHandler<MouseEvent> {
         }else if(MouseEvent.MOUSE_RELEASED.equals(mouseEvent.getEventType())){
             if(overShape){
                 dt.getDb().addDrawOperation(mc.getPostSelectedShape());
-                dt.getStack().getChildren().removeAll(mc.getMovingShape());
+                mc.removeMovingShape(dt.getStack());
                 overShape = false;
-                mc.reset();
+                mc.resetMovingControl();
                 dt.getStack().setCursor(Cursor.OPEN_HAND);
             }
         }

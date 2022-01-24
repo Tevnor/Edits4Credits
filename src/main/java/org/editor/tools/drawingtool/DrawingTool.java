@@ -47,7 +47,7 @@ public class DrawingTool implements EditingTools {
 
         dc = new DrawingControl();
         dc.initMarkingRect(stack);
-        stack.addEventHandler(MouseEvent.ANY, dc.getMarking());
+        dc.addMarkingHandler(stack);
 
         DT_LOGGER.debug("Successfully created drawing tool");
     }

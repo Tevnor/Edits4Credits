@@ -28,6 +28,7 @@ public class ShapePixelMap extends HashMap<Integer,Integer> {
         SPM_LOGGER.debug("replaced values with input map");
     }
     public Set<Integer> getIntersect(ShapePixelMap input){
+        SPM_LOGGER.debug("getIntersect() entered");
         HashSet<Integer> intersect = new HashSet<>(keySet());
         intersect.retainAll(input.keySet());
         return intersect;
