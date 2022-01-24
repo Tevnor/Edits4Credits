@@ -25,6 +25,7 @@ public class NoiseControllerTest {
 
         assertEquals("First Pixel is the same after applying noise.", true,firstPixelColor(testImage) != firstPixelColor(tester.addNoiseToImage(testImage,5)));
         assertFalse("Doesn't return image.", tester.addNoiseToImage(testImage,5) == null);
+        assertNotNull("Image is empty", tester.addNoiseToImage(testImage, 5));
     }
 
     @Test
