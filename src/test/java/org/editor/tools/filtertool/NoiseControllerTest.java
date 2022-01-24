@@ -5,13 +5,16 @@ import javafx.embed.swing.JFXPanel;
 import javafx.fxml.FXML;
 import javafx.scene.image.*;
 import javafx.scene.paint.Color;
+import org.junit.Before;
 import org.junit.Test;
+import static org.junit.Assert.fail;
 
 import static org.junit.Assert.*;
 
 public class NoiseControllerTest {
     private NoiseController tester;
     private WritableImage testImage;
+    private WritableImage emptyTestImage;
     JFXPanel jfxPanel = new JFXPanel();
 
     @Test
@@ -20,9 +23,25 @@ public class NoiseControllerTest {
         Image image = new Image("https://www.chip.de/ii/4/7/2/8/5/5/4/f8c3bf084e08658b.jpg");
         testImage = clone(image);
 
-        assertEquals("First Pixel is different after applying noise", true,firstPixelColor(testImage) != firstPixelColor(tester.addNoiseToImage(testImage,5)));
-
+        assertEquals("First Pixel is the same after applying noise.", true,firstPixelColor(testImage) != firstPixelColor(tester.addNoiseToImage(testImage,5)));
+        assertFalse("Doesn't return image.", tester.addNoiseToImage(testImage,5) == null);
     }
+
+    @Test
+    public void addNoiseToImageException() {
+        tester = new NoiseController();
+
+        try {
+            tester.addNoiseToImage(emptyTestImage, 5);
+            fail("Image was empty");
+        }
+        catch (Exception e) {
+            assertNotNull(e);
+        }
+    }
+
+
+
     public static WritableImage clone(Image image) {
         int height = (int) image.getHeight();
         int width = (int) image.getWidth();
