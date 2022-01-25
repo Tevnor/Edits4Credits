@@ -3,6 +3,7 @@ package org.editor.tools.imagetool;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 
 public class ImageDimensions {
@@ -53,6 +54,7 @@ public class ImageDimensions {
     public Image getFilteredImage(){
         return this.filteredImage;
     }
+
     public double getScaledWidth(double scaleFactor) {
         double scaledWidth = currentWidth * scaleFactor /100;
         return scaledWidth;
@@ -67,6 +69,16 @@ public class ImageDimensions {
         gc.drawImage(originalImage, 0, 0, originalImage.getWidth(), originalImage.getHeight());
         WritableImage originalImage = tmp.snapshot(null, null);
         return originalImage;
+    }
+    public Image scaleImage(Image sourceImage, double targetWidth, double targetHeight, boolean preserveRatio, boolean smooth) {
+        ImageView resizedImageView = new ImageView(sourceImage);
+        resizedImageView.setPreserveRatio(preserveRatio);
+        resizedImageView.setSmooth(smooth);
+
+        resizedImageView.setFitWidth(targetWidth);
+        resizedImageView.setFitHeight(targetHeight);
+
+        return resizedImageView.snapshot(null, null);
     }
 
 }

@@ -113,7 +113,6 @@ public class EditorController implements Initializable, ControlScreen {
 
     private Project project;
     private org.screencontrol.Window window;
-    private File imagePath;
     private ScreensController screensController;
 
     private EventHandler<MouseEvent> mover;
@@ -129,7 +128,6 @@ public class EditorController implements Initializable, ControlScreen {
     private NoiseController noiseController;
     private Stage noiseOptStage = new Stage();
     private Image filteredImage;
-
     private ImageTool imageTool;
     List<FilterType> filterTypeEnumList;
 
@@ -458,7 +456,7 @@ public class EditorController implements Initializable, ControlScreen {
             dragEvent.acceptTransferModes(TransferMode.ANY);
         }
     }
-    @FXML
+    /*@FXML
     private void handleDragDropped(DragEvent dragEvent) {
         try {
             File f = dragEvent.getDragboard().getFiles().get(0);
@@ -472,6 +470,7 @@ public class EditorController implements Initializable, ControlScreen {
             e.getCause();
         }
     }
+    */
 
     public void handleImportButton(ActionEvent event) throws IOException {
         importImageFromExplorer();
@@ -522,14 +521,14 @@ public class EditorController implements Initializable, ControlScreen {
 
         // Instantiate resized image from imported image
         if (ratio >= 1){
-            resizedImage = scaleImage(importedImage, editorCanvasImageWidth, getResizedImageHeight(editorCanvasImageWidth, ratio), true, true);
+            resizedImage = editorImageObject.scaleImage(importedImage, editorCanvasImageWidth, getResizedImageHeight(editorCanvasImageWidth, ratio), true, true);
             if(resizedImage.getHeight() > stack.getPrefHeight()){
-                resizedImage = scaleImage(importedImage, getResizedImageWidth(editorCanvasImageHeight, ratio), editorCanvasImageHeight, true, true);
+                resizedImage = editorImageObject.scaleImage(importedImage, getResizedImageWidth(editorCanvasImageHeight, ratio), editorCanvasImageHeight, true, true);
             }
         } else {
-            resizedImage = scaleImage(importedImage, getResizedImageWidth(editorCanvasImageHeight, ratio), editorCanvasImageHeight, true, true);
+            resizedImage = editorImageObject.scaleImage(importedImage, getResizedImageWidth(editorCanvasImageHeight, ratio), editorCanvasImageHeight, true, true);
             if(resizedImage.getWidth() > stack.getPrefWidth()){
-                resizedImage = scaleImage(importedImage, editorCanvasImageWidth, getResizedImageHeight(editorCanvasImageWidth,ratio), true, true);
+                resizedImage = editorImageObject.scaleImage(importedImage, editorCanvasImageWidth, getResizedImageHeight(editorCanvasImageWidth,ratio), true, true);
             }
         }
 
@@ -557,14 +556,14 @@ public class EditorController implements Initializable, ControlScreen {
 
         // Instantiate resized image from imported image
         if (ratio >= 1){
-            resizedOriginalImage = scaleImage(importedImage, project.getProjectWidth(), getResizedImageHeight(project.getProjectWidth(), ratio), true, true);
+            resizedOriginalImage = originalImageObject.scaleImage(importedImage, project.getProjectWidth(), getResizedImageHeight(project.getProjectWidth(), ratio), true, true);
             if(resizedOriginalImage.getHeight() > project.getProjectHeight()) {
-                resizedOriginalImage = scaleImage(importedImage, getResizedImageWidth(project.getProjectHeight(), ratio), project.getProjectHeight(), true, true);
+                resizedOriginalImage = originalImageObject.scaleImage(importedImage, getResizedImageWidth(project.getProjectHeight(), ratio), project.getProjectHeight(), true, true);
             }
         } else {
-            resizedOriginalImage = scaleImage(importedImage, getResizedImageWidth(project.getProjectHeight(), ratio), project.getProjectHeight(), true, true);
+            resizedOriginalImage = originalImageObject.scaleImage(importedImage, getResizedImageWidth(project.getProjectHeight(), ratio), project.getProjectHeight(), true, true);
             if(resizedOriginalImage.getWidth() > project.getProjectWidth()){
-                resizedOriginalImage = scaleImage(importedImage, project.getProjectWidth(),  getResizedImageHeight(project.getProjectWidth(), ratio), true, true);
+                resizedOriginalImage = originalImageObject.scaleImage(importedImage, project.getProjectWidth(),  getResizedImageHeight(project.getProjectWidth(), ratio), true, true);
             }
         }
 
@@ -582,16 +581,6 @@ public class EditorController implements Initializable, ControlScreen {
     }
 
     // Scale the imported source image to the maximum canvas size
-    public Image scaleImage(Image sourceImage, double targetWidth, double targetHeight, boolean preserveRatio, boolean smooth) {
-        ImageView resizedImageView = new ImageView(sourceImage);
-        resizedImageView.setPreserveRatio(preserveRatio);
-        resizedImageView.setSmooth(smooth);
-
-        resizedImageView.setFitWidth(targetWidth);
-        resizedImageView.setFitHeight(targetHeight);
-
-        return resizedImageView.snapshot(null, null);
-    }
 
 
     public double getImageAspectRatio(Image image){
