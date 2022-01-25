@@ -30,6 +30,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.editor.layout.EditorControllerLayoutManager;
 import org.editor.project.Project;
 import org.editor.tools.drawingtool.DrawOptionsController;
 import org.editor.tools.drawingtool.DrawingTool;
@@ -146,6 +147,7 @@ public class EditorController implements Initializable, ControlScreen {
     private Boolean isFiltered = false;
     private ImageDimensions originalImageObject;
     private ImageDimensions editorImageObject;
+    private EditorControllerLayoutManager stackSize;
 
 
 
@@ -181,36 +183,12 @@ public class EditorController implements Initializable, ControlScreen {
     }
     // method to calculate stack pane size
     private void initStackPane() {
-
-        // define the maximum size for the stack pane based on the monitor size
-        int maxStackHeight = (int)(window.getScreenHeight() - getMenuBarHeight());
-        int maxStackWidth = (int)(window.getScreenWidth() - getToolBarWidth());
-
-        // when the aspect ratio is greater than 1 calculate based on the width
-        if (useWidthOrHeight()){
-            double stackHeight = Math.round(window.getScreenHeight() - getMenuBarHeight());
-            double stackWidth = Math.round(stackHeight * project.getProjectAspectRatio());
-
-            if (stackWidth > maxStackWidth) {
-                stackWidth = maxStackWidth;
-                stackHeight = Math.round(stackWidth * project.getProjectAspectRatio());
-            }
-            stack.setPrefHeight(stackHeight);
-            stack.setPrefWidth(stackWidth);
-        }
-        // when the aspect ratio is smaller than 1 calculate based on height
-        else {
-            double stackWidth = Math.round(window.getScreenWidth() - getToolBarWidth());
-            double stackHeight = Math.round(stackWidth * (1 / project.getProjectAspectRatio()));
-
-            if (stackHeight > maxStackHeight) {
-                stackHeight = maxStackHeight;
-                stackWidth = Math.round(stackHeight * project.getProjectAspectRatio());
-            }
-            stack.setPrefWidth(stackWidth);
-            stack.setPrefHeight(stackHeight);
-        }
+            stackSize = new EditorControllerLayoutManager();
+            stack.setPrefWidth(stackSize.getStackWidth(this));
+            stack.setPrefHeight(stackSize.getStackHeight(this));
     }
+    public Window getWindow(){return this.window;}
+    public Project getProject(){return this.project;}
     private void initDrawTool() {
         this.dt = new DrawingTool(stack);
         handlerFactory = new HandlerFactory();
