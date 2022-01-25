@@ -35,7 +35,7 @@ public class NoiseController {
         editorController.setFilteredImage(filteredImage);
         editorController.drawFilteredImage();
 
-        editorController.getOriginalImageObject().setOriginalFilteredImage(filteredOriginalImage);
+        editorController.getOriginalImageObject().setFilteredImage(filteredOriginalImage);
         editorController.drawFilteredOriginalImage();
         editorController.setIsFiltered();
     }

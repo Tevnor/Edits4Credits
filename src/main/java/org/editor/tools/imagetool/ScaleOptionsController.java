@@ -27,8 +27,8 @@ public class ScaleOptionsController implements Initializable {
         double newHeight = editorController.getEditorImageObject().getScaledHeight(scaleFactor);
 
 
-        double newOriginalWidth = editorController.getOriginalImageObject().getScaledOriginalWidth(scaleFactor);
-        double newOriginalHeight = editorController.getOriginalImageObject().getScaledOriginalHeight(scaleFactor);
+        double newOriginalWidth = editorController.getOriginalImageObject().getScaledWidth(scaleFactor);
+        double newOriginalHeight = editorController.getOriginalImageObject().getScaledHeight(scaleFactor);
 
         editorController.getEditorImageObject().setCurrentWidth(newWidth);
         editorController.getEditorImageObject().setCurrentHeight(newHeight);

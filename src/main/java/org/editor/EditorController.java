@@ -47,7 +47,7 @@ import java.util.Objects;
 import java.util.ResourceBundle;
 
 import org.editor.tools.filtertool.NoiseController;
-import org.editor.tools.imagetool.EditorImage;
+import org.editor.tools.imagetool.ImageDimensions;
 import org.editor.tools.imagetool.ImageTool;
 import org.editor.tools.imagetool.PositionOptionsController;
 import org.editor.tools.imagetool.ScaleOptionsController;
@@ -144,8 +144,8 @@ public class EditorController implements Initializable, ControlScreen {
 
     private Canvas originalCanvas;
     private Boolean isFiltered = false;
-    private OriginalImage originalImageObject;
-    private EditorImage editorImageObject;
+    private ImageDimensions originalImageObject;
+    private ImageDimensions editorImageObject;
 
 
 
@@ -543,7 +543,7 @@ public class EditorController implements Initializable, ControlScreen {
     }
     public void drawFilteredImage(){
         gc = editorCanvasImage.getGraphicsContext2D();
-        gc.drawImage(filteredImage,editorImageObject.getCurrentXPosition(), editorImageObject.getCurrentYPosition(), editorImageObject.getCurrentWidth(), editorImageObject.getCurrentHeight());
+        gc.drawImage(filteredImage, editorImageObject.getCurrentXPosition(), editorImageObject.getCurrentYPosition(), editorImageObject.getCurrentWidth(), editorImageObject.getCurrentHeight());
         //initImageTool(filteredImage);
     }
 
@@ -684,7 +684,7 @@ public class EditorController implements Initializable, ControlScreen {
             exception.printStackTrace();
         }
     }
-    public EditorImage getEditorImageObject(){
+    public ImageDimensions getEditorImageObject(){
         return this.editorImageObject;
     }
     public void drawScaledImage(double scaledWidth, double scaledHeight){
@@ -739,10 +739,10 @@ public class EditorController implements Initializable, ControlScreen {
 
 
     public void createOriginalImage(Image image){
-        this.originalImageObject = new OriginalImage(image, 0,0, image.getWidth(), image.getHeight());
+        this.originalImageObject = new ImageDimensions(image, 0,0, image.getWidth(), image.getHeight());
     }
     public void createEditorImage(Image image){
-        this.editorImageObject = new EditorImage(image, 0,0, image.getWidth(), image.getHeight());
+        this.editorImageObject = new ImageDimensions(image, 0,0, image.getWidth(), image.getHeight());
     }
 
 
@@ -757,7 +757,7 @@ public class EditorController implements Initializable, ControlScreen {
             gc.drawImage(originalImageObject.getOriginalImage(), originalImageObject.getCurrentXPosition(), originalImageObject.getCurrentYPosition(), originalImageObject.getCurrentWidth(),originalImageObject.getCurrentHeight());
         }
         else if (isFiltered){
-            gc.drawImage(originalImageObject.getOriginalFilteredImage(), originalImageObject.getCurrentXPosition(), originalImageObject.getCurrentYPosition(), originalImageObject.getCurrentWidth(),originalImageObject.getCurrentHeight());
+            gc.drawImage(originalImageObject.getFilteredImage(), originalImageObject.getCurrentXPosition(), originalImageObject.getCurrentYPosition(), originalImageObject.getCurrentWidth(),originalImageObject.getCurrentHeight());
         }
     }
     public boolean getIsFiltered(){
@@ -773,15 +773,15 @@ public class EditorController implements Initializable, ControlScreen {
             gc.drawImage(originalImageObject.getOriginalImage(), originalImageObject.getCurrentXPosition(), originalImageObject.getCurrentYPosition(), newWidth, newHeight);
         }
         else if(isFiltered){
-            gc.drawImage(originalImageObject.getOriginalFilteredImage(), originalImageObject.getCurrentXPosition(), originalImageObject.getCurrentYPosition(), newWidth, newHeight);
+            gc.drawImage(originalImageObject.getFilteredImage(), originalImageObject.getCurrentXPosition(), originalImageObject.getCurrentYPosition(), newWidth, newHeight);
         }
     }
     public void drawFilteredOriginalImage(){
         gc = originalCanvas.getGraphicsContext2D();
-        gc.drawImage(originalImageObject.getOriginalFilteredImage(),originalImageObject.getCurrentXPosition(), originalImageObject.getCurrentYPosition(), originalImageObject.getCurrentWidth(), originalImageObject.getCurrentHeight());
+        gc.drawImage(originalImageObject.getOriginalImage(),originalImageObject.getCurrentXPosition(), originalImageObject.getCurrentYPosition(), originalImageObject.getCurrentWidth(), originalImageObject.getCurrentHeight());
         //initImageTool(filteredOriginalImage);
     }
-    public OriginalImage getOriginalImageObject(){
+    public ImageDimensions getOriginalImageObject(){
         return this.originalImageObject;
     }
 
