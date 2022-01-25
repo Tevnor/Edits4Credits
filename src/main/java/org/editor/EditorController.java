@@ -1,16 +1,13 @@
 package org.editor;
 
-import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
@@ -18,11 +15,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.MenuBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.image.WritableImage;
-import javafx.scene.image.WritablePixelFormat;
-import javafx.scene.input.DragEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -36,9 +29,6 @@ import org.editor.tools.drawingtool.DrawOptionsController;
 import org.editor.tools.drawingtool.DrawingTool;
 import org.editor.tools.drawingtool.graphiccontrol.handlers.HandlerFactory;
 import org.editor.tools.drawingtool.graphiccontrol.handlers.PolygonDrawer;
-
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -46,21 +36,21 @@ import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
+import org.editor.tools.filtertool.FilterOptionsController;
 import org.editor.tools.filtertool.NoiseController;
+import org.editor.tools.filtertool.filtercontrol.filter.FilterType;
 import org.editor.tools.imagetool.ImageDimensions;
 import org.editor.tools.imagetool.ImageTool;
 import org.editor.tools.imagetool.PositionOptionsController;
 import org.editor.tools.imagetool.ScaleOptionsController;
-import org.editor.tools.imagetool.filtercontrol.filter.FilterType;
 import org.screencontrol.ControlScreen;
 import org.screencontrol.ScreensController;
 import org.screencontrol.Window;
 
-import javax.imageio.ImageIO;
-
 public class EditorController implements Initializable, ControlScreen {
 
     private static final Logger EC_LOGGER = LogManager.getLogger(EditorController.class.getName());
+
     @FXML
     private ContextMenu contextPoly, contextRect;
     @FXML
@@ -129,7 +119,7 @@ public class EditorController implements Initializable, ControlScreen {
     private Stage noiseOptStage = new Stage();
     private Image filteredImage;
     private ImageTool imageTool;
-    List<FilterType> filterTypeEnumList;
+
 
     private Parent moveOptRoot;
     private FXMLLoader moveOptLoader;
@@ -146,6 +136,14 @@ public class EditorController implements Initializable, ControlScreen {
     private ImageDimensions originalImageObject;
     private ImageDimensions editorImageObject;
     private EditorControllerLayoutManager layoutManager;
+
+    /**
+     * Filter Variables
+     * */
+    private Parent filterOptRoot;
+    private FilterOptionsController filterOptionsController;
+    private Stage filterOptStage = new Stage();
+    private List<FilterType> filterTypeList;
 
 
 
@@ -166,7 +164,6 @@ public class EditorController implements Initializable, ControlScreen {
     /**
      *  Initializer
      **/
-
     public void setProject(Project project){
         this.project = project;
     }
@@ -177,6 +174,7 @@ public class EditorController implements Initializable, ControlScreen {
         initAddNoiseOpt();
         initControls();
         initBackground();
+        initFilterOptions();
         orderStack();
     }
     // method to calculate stack pane size
@@ -393,63 +391,166 @@ public class EditorController implements Initializable, ControlScreen {
     /**
      * Filter
      * */
+    public void initFilterOptions() {
+        try {
+            /**
+             * Filter Variables
+             * */
+            FXMLLoader filterOptLoader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/fxml/filterOptions.fxml")));
+            filterOptRoot = filterOptLoader.load();
+            filterOptionsController = filterOptLoader.getController();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        filterOptStage = new Stage();
+        Scene glitchOptScene = new Scene(filterOptRoot);
+        glitchOptScene.setFill(Color.TRANSPARENT);
+        filterOptStage.setScene(glitchOptScene);
+        filterOptStage.centerOnScreen();
+        filterOptStage.initStyle(StageStyle.UNDECORATED);
+        filterOptStage.initStyle(StageStyle.TRANSPARENT);
+    }
 
     public void handleAddNoise(ActionEvent event) {
         noiseOptStage.centerOnScreen();
         noiseOptStage.show();
     }
 
+    //TODO duplicate code snippets
+
     // Apply the checkerboard filter to the filterTool object that was instantiated at setImportedImage()
     public void handleApplyCheckerboard(ActionEvent event) {
-        filterTypeEnumList = new ArrayList<>();
-        filterTypeEnumList.add(FilterType.ORIGINAL);
-        filterTypeEnumList.add(FilterType.GLITCH);
-        filterTypeEnumList.add(FilterType.INVERTED);
-        filterTypeEnumList.add(FilterType.GRAYSCALE);
+        filterTypeList = new ArrayList<>();
+        filterTypeList.add(FilterType.ORIGINAL);
+        filterTypeList.add(FilterType.GLITCH);
+        filterTypeList.add(FilterType.INVERTED);
+        filterTypeList.add(FilterType.GRAYSCALE);
 
-        startImageTool();
+        try {
+            filterOptionsController.initFilterOptions(
+                    originalImageObject.getFilteredImage(),
+                    editorImageObject.getFilteredImage(),
+                    filterTypeList,
+                    "Checkerboard",
+                    this);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            EC_LOGGER.debug("Images not loaded");
+            // Maybe add finally to prompt users to import image
+        }
+        filterOptStage.centerOnScreen();
+        filterOptStage.show();
     }
 
     public void handleAddGlitch(ActionEvent event) {
-        filterTypeEnumList = new ArrayList<>();
-        filterTypeEnumList.add(FilterType.GLITCH);
+        filterTypeList = new ArrayList<>();
+        filterTypeList.add(FilterType.GLITCH);
+        try {
+            filterOptionsController.initFilterOptions(
+                    originalImageObject.getFilteredImage(),
+                    editorImageObject.getFilteredImage(),
+                    filterTypeList,
+                    "Glitch Filter",
+                    this);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            EC_LOGGER.debug("Images not loaded");
+            // Maybe add finally to prompt users to import image
+        }
 
-        startImageTool();
+        filterOptStage.centerOnScreen();
+        filterOptStage.show();
     }
     public void handleAddInverse(ActionEvent event) {
-        filterTypeEnumList = new ArrayList<>();
-        filterTypeEnumList.add(FilterType.INVERTED);
-
-        startImageTool();
+        filterTypeList = new ArrayList<>();
+        filterTypeList.add(FilterType.INVERTED);
+        try {
+            filterOptionsController.initFilterOptions(
+                    originalImageObject.getFilteredImage(),
+                    editorImageObject.getFilteredImage(),
+                    filterTypeList,
+                    "Inverse Filter",
+                    this);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            EC_LOGGER.debug("Images not loaded");
+            // Maybe add finally to prompt users to import image
+        }
+        filterOptStage.centerOnScreen();
+        filterOptStage.show();
     }
     public void handleAddGrayscale(ActionEvent event) {
-        filterTypeEnumList = new ArrayList<>();
-        filterTypeEnumList.add(FilterType.GRAYSCALE);
-
-        startImageTool();
+        filterTypeList = new ArrayList<>();
+        filterTypeList.add(FilterType.GRAYSCALE);
+        try {
+            filterOptionsController.initFilterOptions(
+                    originalImageObject.getFilteredImage(),
+                    editorImageObject.getFilteredImage(),
+                    filterTypeList,
+                    "Grayscale Filter",
+                    this);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            EC_LOGGER.debug("Images not loaded");
+            // Maybe add finally to prompt users to import image
+        }
+        filterOptStage.centerOnScreen();
+        filterOptStage.show();
     }
 
-    public void startImageTool() {
-        imageTool.startProcess(filterTypeEnumList);
-        filteredImage = imageTool.getFilteredImage();
-        setImage();
-    }
-
-    public void setImage() {
-        gc.drawImage(filteredImage,0, 0, filteredImage.getWidth(), filteredImage.getHeight());
-        ic.getImageTool(editorCanvas,filteredImage);
-
-        filterTypeEnumList.clear();
-    }
-
-
+    /**
+     * Image Object
+     * */
     public void setFilteredImage(Image image){
         this.filteredImage = image;
+    }
+
+    //TODO new
+    public void setFilteredImages(Image originalImage, Image editorImage) {
+        originalImageObject.setFilteredImage(originalImage);
+        editorImageObject.setFilteredImage(editorImage);
+        editorImageObject.setPreviousImage(editorImage);
     }
     public void drawFilteredImage(){
         gc = editorCanvasImage.getGraphicsContext2D();
         gc.drawImage(filteredImage, editorImageObject.getCurrentXPosition(), editorImageObject.getCurrentYPosition(), editorImageObject.getCurrentWidth(), editorImageObject.getCurrentHeight());
         //initImageTool(filteredImage);
+    }
+
+    /**
+     * Drawing to Canvas
+     * */
+    //TODO duplicate code
+
+    // overwrite both canvases
+    public void drawFilteredImages(){
+        // Draw resized
+        gc = editorCanvasImage.getGraphicsContext2D();
+        gc.drawImage(
+                editorImageObject.getFilteredImage(),
+                editorImageObject.getCurrentXPosition(),
+                editorImageObject.getCurrentYPosition(),
+                editorImageObject.getCurrentWidth(),
+                editorImageObject.getCurrentHeight());
+
+        //Draw original
+        GraphicsContext orig = originalCanvas.getGraphicsContext2D();
+        orig.drawImage(
+                originalImageObject.getFilteredImage(),
+                originalImageObject.getCurrentXPosition(),
+                originalImageObject.getCurrentYPosition(),
+                originalImageObject.getCurrentWidth(),
+                originalImageObject.getCurrentHeight());
+    }
+    // Draw temporary preview image
+    public void drawPreviousImage(){
+        gc = editorCanvasImage.getGraphicsContext2D();
+        gc.drawImage(editorImageObject.getPreviousImage() ,editorImageObject.getCurrentXPosition(), editorImageObject.getCurrentYPosition(), editorImageObject.getCurrentWidth(), editorImageObject.getCurrentHeight());
+    }
+    // Draw temporary preview image
+    public void drawPreviewImage(Image previewImage){
+        gc = editorCanvasImage.getGraphicsContext2D();
+        gc.drawImage(previewImage,editorImageObject.getCurrentXPosition(), editorImageObject.getCurrentYPosition(), editorImageObject.getCurrentWidth(), editorImageObject.getCurrentHeight());
     }
 
     // Scale the imported source image to the maximum canvas size
@@ -544,10 +645,6 @@ public class EditorController implements Initializable, ControlScreen {
     }
 
 
-
-
-
-
     public double getOriginalAndEditorCanvasRatio(){
         double ratio = originalCanvas.getHeight()/ editorCanvasImage.getHeight();
         return ratio;
@@ -586,7 +683,4 @@ public class EditorController implements Initializable, ControlScreen {
     public ImageDimensions getOriginalImageObject(){
         return this.originalImageObject;
     }
-
-
 }
-

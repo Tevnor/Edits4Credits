@@ -29,4 +29,8 @@ module gui {
     opens org.editor.tools.imagetool to javafx.fxml;
     exports org.editor.project;
     opens org.editor.project to javafx.fxml;
+    exports org.editor.tools.filtertool.filtercontrol;
+    opens org.editor.tools.filtertool.filtercontrol to javafx.fxml;
+    exports org.editor.tools.filtertool.filtercontrol.filter;
+    opens org.editor.tools.filtertool.filtercontrol.filter to javafx.fxml;
 }

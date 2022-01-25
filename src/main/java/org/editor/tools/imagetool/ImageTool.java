@@ -4,18 +4,17 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import org.editor.tools.EditingTools;
-import org.editor.tools.imagetool.filtercontrol.ImageGrid;
-import org.editor.tools.imagetool.filtercontrol.filter.FilterType;
+import org.editor.tools.filtertool.filtercontrol.filter.FilterType;
 
 import java.util.List;
 
 public class ImageTool implements EditingTools {
 
     private ImageGrid imageGrid;
-    private final Image image;
+    private Image image;
     private Image filteredImage;
-    private final Canvas canvas;
-    private final GraphicsContext graphicsContext;
+    private Canvas canvas;
+    private GraphicsContext graphicsContext;
 
     public ImageTool(Image image, Canvas canvas, GraphicsContext graphicsContext) {
         this.image = image;
@@ -26,15 +25,6 @@ public class ImageTool implements EditingTools {
     public void createPixelArray() {
         imageGrid = new ImageGrid(image);
         this.imageGrid.setPixelArray();
-    }
-
-    public void startProcess(List<FilterType> filterTypeList) {
-        filteredImage = this.imageGrid.processImage(maximizeList(filterTypeList));
-        graphicsContext.drawImage(filteredImage, 0, 0);
-//        saveToFile(imageNew);
-    }
-    public Image getFilteredImage(){
-        return filteredImage;
     }
 
     public List<FilterType> maximizeList(List<FilterType> filterTypeList) {
@@ -58,16 +48,6 @@ public class ImageTool implements EditingTools {
                 return filterTypeList;
         }
     }
-
-//    public void saveToFile(Image writableImage) {
-//        try {
-//            File outputFile = new File("savedImage.png");
-//            BufferedImage bufferedImage = SwingFXUtils.fromFXImage(writableImage, null);
-//            ImageIO.write(bufferedImage, "png", outputFile);
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
 
     @Override
     public void apply() {

@@ -1,7 +1,7 @@
-package org.editor.tools.imagetool.filtercontrol.filter;
+package org.editor.tools.filtertool.filtercontrol.filter;
 
 import javafx.scene.paint.Color;
-import org.editor.tools.imagetool.filtercontrol.Filter;
+import org.editor.tools.filtertool.filtercontrol.Filter;
 
 public class InvertedFilter implements Filter {
     @Override

@@ -1,4 +1,4 @@
-package org.editor.tools.imagetool.filtercontrol;
+package org.editor.tools.filtertool.filtercontrol;
 
 import javafx.scene.paint.Color;
 

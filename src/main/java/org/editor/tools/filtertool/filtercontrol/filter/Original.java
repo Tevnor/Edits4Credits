@@ -1,6 +1,6 @@
-package org.editor.tools.imagetool.filtercontrol.filter;
+package org.editor.tools.filtertool.filtercontrol.filter;
 
-import org.editor.tools.imagetool.filtercontrol.Filter;
+import org.editor.tools.filtertool.filtercontrol.Filter;
 
 public class Original implements Filter {
     @Override

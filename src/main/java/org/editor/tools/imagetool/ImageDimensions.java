@@ -13,6 +13,7 @@ public class ImageDimensions {
     private double currentHeight;
     private Image originalImage;
     private Image filteredImage;
+    private Image previousImage;
 
     public ImageDimensions(Image originalImage, double xPosition, double yPosition, double currentWidth, double currentHeight){
         this.xPosition = xPosition;
@@ -20,6 +21,8 @@ public class ImageDimensions {
         this.currentWidth = currentWidth;
         this.currentHeight = currentHeight;
         this.originalImage = originalImage;
+        this.filteredImage = originalImage;
+        this.previousImage = originalImage;
     }
     public void setCurrentWidth(double newWidth){
         this.currentWidth = newWidth;
@@ -53,6 +56,12 @@ public class ImageDimensions {
     }
     public Image getFilteredImage(){
         return this.filteredImage;
+    }
+    public void setPreviousImage(Image image){
+        this.previousImage = image;
+    }
+    public Image getPreviousImage(){
+        return this.previousImage;
     }
 
     public double getScaledWidth(double scaleFactor) {

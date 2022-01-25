@@ -1,16 +1,21 @@
-package org.editor.tools.imagetool.filtercontrol;
+package org.editor.tools.imagetool;
 
 import javafx.scene.image.*;
-import org.editor.tools.imagetool.filtercontrol.filter.FilterType;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.editor.tools.filtertool.FilterOperation;
 
 import java.nio.IntBuffer;
-import java.util.List;
 
 public class ImageGrid {
+
+    private static final Logger IG_LOGGER = LogManager.getLogger(ImageGrid.class.getName());
+
     FilterOperation fon;
 
     // Image dimensions
-    private final int width, height;
+    private final int width;
+    private final int height;
     private final int blockWidth;
     private final int blockHeight;
     private final int panelWidth;
@@ -46,22 +51,24 @@ public class ImageGrid {
      * */
     public void setPixelArray() {
         this.pixelReader.getPixels(0, 0, width, height, writablePixelFormat, pixelArray, 0, width);
+        IG_LOGGER.debug("setPixelArray: " + pixelArray.length);
     }
 
     /**
      * Sequence for actual filter application
      * */
-    public Image processImage(List<FilterType> filterTypeList) {
-        fon = new FilterOperation(this, filterTypeList);
-        this.pixelArrayNew = fon.startFilter();
+    public void processPixels(int[] pixelArrayNew) {
+        this.pixelArrayNew = pixelArrayNew;
         writeNewPixelArray();
+    }
+
+    //TODO OLD
+    // Write new values to the writable image and set to image view
+    public WritableImage writeNewPixelArray() {
+        pixelWriter.setPixels(0, 0, width, height, writablePixelFormat, pixelArrayNew, 0, width);
         return writableImage;
     }
 
-    // Write new values to the writable image and set to image view
-    public void writeNewPixelArray() {
-        pixelWriter.setPixels(0, 0, width, height, writablePixelFormat, pixelArrayNew, 0, width);
-    }
 
     /**
      * Various getters
