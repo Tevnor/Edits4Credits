@@ -514,7 +514,7 @@ public class EditorController implements Initializable, ControlScreen {
     public void setImportedImage(Image importedImage) {
         gc = editorCanvasImage.getGraphicsContext2D();
 
-        double ratio = getImageAspectRatio(importedImage);
+        double ratio = editorImageObject.getImageAspectRatio(importedImage);
         Image resizedImage;
         int editorCanvasImageWidth = (int) editorCanvasImage.getWidth();
         int editorCanvasImageHeight = (int) editorCanvasImage.getHeight();
@@ -551,7 +551,7 @@ public class EditorController implements Initializable, ControlScreen {
     public void setImportOriginalImage(Image importedImage){
         gc = originalCanvas.getGraphicsContext2D();
 
-        double ratio = getImageAspectRatio(importedImage);
+        double ratio = originalImageObject.getImageAspectRatio(importedImage);
         Image resizedOriginalImage;
 
         // Instantiate resized image from imported image
@@ -583,9 +583,6 @@ public class EditorController implements Initializable, ControlScreen {
     // Scale the imported source image to the maximum canvas size
 
 
-    public double getImageAspectRatio(Image image){
-        return image.getWidth() / image.getHeight();
-    }
 
     public double getResizedImageHeight(double height, double ratio){
         return height / ratio;

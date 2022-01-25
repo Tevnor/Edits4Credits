@@ -81,4 +81,8 @@ public class ImageDimensions {
         return resizedImageView.snapshot(null, null);
     }
 
+    public double getImageAspectRatio(Image image){
+        return image.getWidth() / image.getHeight();
+    }
+
 }
