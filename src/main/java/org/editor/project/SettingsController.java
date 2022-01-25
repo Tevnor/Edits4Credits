@@ -69,8 +69,8 @@ public class SettingsController implements Initializable, ControlScreen {
 
     public void handleCreateProject(ActionEvent event)  {
         try {
-            double projectWidth = Double.parseDouble(widthInput.getText());
-            double projectHeight = Double.parseDouble(heightInput.getText());
+            int projectWidth = Integer.parseInt(widthInput.getText());
+            int projectHeight = Integer.parseInt(heightInput.getText());
             if(!radioBackground.isSelected()){
                 if(cpBackgroundColor.getValue() != null){
                     project = new Project(projectWidth, projectHeight, cpBackgroundColor.getValue());

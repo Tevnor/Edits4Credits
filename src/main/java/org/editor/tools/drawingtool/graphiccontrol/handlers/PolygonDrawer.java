@@ -39,7 +39,6 @@ public class PolygonDrawer implements DrawHandler {
         resetPoints();
 
     }
-
     private double[] getDims(double[] xPoints, double[] yPoints){
         double minX = Integer.MAX_VALUE;
         double maxX = -Integer.MAX_VALUE;

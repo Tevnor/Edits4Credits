@@ -1,5 +1,7 @@
 package org.screencontrol;
 
+import javafx.stage.Screen;
+
 public class Window {
     private final double screenWidth;
     private final double screenHeight;
@@ -15,4 +17,13 @@ public class Window {
     public double getScreenHeight() {
         return screenHeight;
     }
+    public double getScaleX(){
+        Screen screen = Screen.getPrimary();
+        return screen.getOutputScaleX();
+    }
+    public double getScaleY(){
+        Screen screen = Screen.getPrimary();
+        return screen.getOutputScaleY();
+    }
+
 }

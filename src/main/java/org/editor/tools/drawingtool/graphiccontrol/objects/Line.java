@@ -24,6 +24,7 @@ public class Line extends Shapes {
 
         javafx.scene.shape.Line line = new javafx.scene.shape.Line(xOne,yOne,xTwo,yTwo);
         line.setRotate(r.getAngle());
+        line.setStrokeWidth(getAttributes().getLineWidth());
         return line;
     }
 
@@ -64,7 +65,7 @@ public class Line extends Shapes {
         dpe = Math.abs(postRotate.subtract(projectionNormal).distance(getEnd()));     //distance projection to line end
 
         //check if (x,y) is on line with heed to line width
-        return projNormalAbs <= 5 && dps + dpe <= absStartEnd;
+        return projNormalAbs <= getAttributes().getLineWidth() + 5 && dps + dpe <= absStartEnd;
     }
     @Override
     public void draw(GraphicsContext gc) {

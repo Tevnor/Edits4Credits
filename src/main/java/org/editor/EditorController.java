@@ -10,6 +10,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
@@ -18,6 +19,7 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
+import javafx.scene.image.WritablePixelFormat;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
@@ -219,8 +221,8 @@ public class EditorController implements Initializable, ControlScreen {
         double viewCenterY = (((window.getScreenHeight() - menuBar.getPrefHeight()) / 2d) + menuBar.getPrefHeight());
         menuBar.setLayoutX(window.getScreenWidth()/2 - menuBar.getPrefWidth()/2);
         toolBar.setLayoutY(viewCenterY - (toolBar.getPrefHeight() / 2d));
-        double x = (window.getScreenWidth() - getToolBarWidth())/2 + toolBar.getPrefWidth() + (20/getScaleX()) - stack.getPrefWidth()/2;
-        double y = (window.getScreenHeight() - getMenuBarHeight())/2 + menuBar.getPrefHeight() + (20/getScaleY()) - stack.getPrefHeight()/2;
+        double x = (window.getScreenWidth() - getToolBarWidth())/2 + toolBar.getPrefWidth() + (20/window.getScaleX()) - stack.getPrefWidth()/2;
+        double y = (window.getScreenHeight() - getMenuBarHeight())/2 + menuBar.getPrefHeight() + (20/window.getScaleY()) - stack.getPrefHeight()/2;
         stack.setLayoutX(x);
         stack.setLayoutY(y);
         EC_LOGGER.debug("succesfully created stack (x layout: " + x + ", y layout: " + y + ")");
@@ -244,10 +246,10 @@ public class EditorController implements Initializable, ControlScreen {
         return !(project.getProjectAspectRatio() > 1);
     }
     public double getMenuBarHeight(){
-        return (menuBar.getPrefHeight() + 40/getScaleY());
+        return (menuBar.getPrefHeight() + 40/window.getScaleY());
     }
     public double getToolBarWidth(){
-        return (toolBar.getPrefWidth() + 40/getScaleX());
+        return (toolBar.getPrefWidth() + 40/window.getScaleX());
     }
     private void initBackground(){
         if(project.getBackground() instanceof ImageView){
@@ -314,66 +316,80 @@ public class EditorController implements Initializable, ControlScreen {
      *  Drawing
      **/
 
-    public void handleArc(ActionEvent e){
+    @FXML
+    private void handleArc(ActionEvent e){
         initShapeHandler();
         openDrawOptions(HandlerFactory.DrawHandler.ARC);
     }
-    public void handleMove(ActionEvent e){
+    @FXML
+    private void handleMove(ActionEvent e){
         initMoveHandler();
         mover = handlerFactory.getMove(dt);
         stack.addEventHandler(MouseEvent.ANY,mover);
     }
-    public void handleCircle(ActionEvent e){
+    @FXML
+    private void handleCircle(ActionEvent e){
         initShapeHandler();
         openDrawOptions(HandlerFactory.DrawHandler.CIRCLE);
     }
-    public void handleEllipses(ActionEvent e){
+    @FXML
+    private void handleEllipses(ActionEvent e){
         initShapeHandler();
         openDrawOptions(HandlerFactory.DrawHandler.ELLIPSES);
     }
-    public void handleEraser(ActionEvent e){
+    @FXML
+    private void handleEraser(ActionEvent e){
         initShapeHandler();
         dt.getDc().removeMarkingHandler(stack);
         openDrawOptions(HandlerFactory.DrawHandler.ERASER);
     }
-    public void handleRectangle(ActionEvent e){
+    @FXML
+    private void handleRectangle(ActionEvent e){
         initShapeHandler();
         openDrawOptions(HandlerFactory.DrawHandler.RECTANGLE);
     }
-    public void handleRoundedRectangle(ActionEvent e){
+    @FXML
+    private void handleRoundedRectangle(ActionEvent e){
         initShapeHandler();
         openDrawOptions(HandlerFactory.DrawHandler.ROUNDED_RECTANGLE);
     }
-    public void handleLine(ActionEvent e){
+    @FXML
+    private void handleLine(ActionEvent e){
         initShapeHandler();
         openDrawOptions(HandlerFactory.DrawHandler.LINE);
     }
-    public void handleText(ActionEvent e){
+    @FXML
+    private void handleText(ActionEvent e){
         initShapeHandler();
         openDrawOptions(HandlerFactory.DrawHandler.TEXT);
     }
-    public void handlePolygon(ActionEvent e){
+    @FXML
+    private void handlePolygon(ActionEvent e){
         initShapeHandler();
         openDrawOptions(HandlerFactory.DrawHandler.POLYGON);
     }
-    public void handlePath(ActionEvent e){
+    @FXML
+    private void handlePath(ActionEvent e){
         initShapeHandler();
         dt.getDc().removeMarkingHandler(stack);
         openDrawOptions(HandlerFactory.DrawHandler.PATH);
     }
-    public void handleDrawPolygon(ActionEvent e){
+    @FXML
+    private void handleDrawPolygon(ActionEvent e){
         if(drawer instanceof PolygonDrawer){
             ((PolygonDrawer) drawer).drawPolygon();
         }
     }
-
-    public void handleClear(ActionEvent e){
+    @FXML
+    private void handleClear(ActionEvent e){
         dt.clear();
     }
-    public void handleDrawUndo(ActionEvent e){
+    @FXML
+    private void handleDrawUndo(ActionEvent e){
         dt.backward();
     }
-    public void handleDrawRedo(ActionEvent e){
+    @FXML
+    private void handleDrawRedo(ActionEvent e){
         dt.forward();
     }
     private void openDrawOptions(HandlerFactory.DrawHandler drawHandler){
@@ -381,11 +397,14 @@ public class EditorController implements Initializable, ControlScreen {
         options.setSelShape(drawHandler);
         drawOptStage.show();
     }
-
     private void initShapeHandler(){
         importButton.setVisible(false);
+        dt.getDc().addMarkingHandler(stack);
         if(mover != null){
             stack.removeEventHandler(MouseEvent.ANY, mover);
+        }
+        if(drawer instanceof PolygonDrawer){
+            ((PolygonDrawer) drawer).resetPoints();
         }
         if(drawer != null){
             stack.removeEventHandler(MouseEvent.ANY, drawer);
@@ -516,6 +535,9 @@ public class EditorController implements Initializable, ControlScreen {
         StackPane.setAlignment(editorCanvasImage, Pos.CENTER);
         editorCanvasImage.toBack();
     }
+    public void setOriginalImageCanvas(){
+        this.originalCanvas = new Canvas(project.getProjectWidth(), project.getProjectHeight());
+    }
     public void setFilteredImage(Image image){
         this.filteredImage = image;
     }
@@ -536,12 +558,15 @@ public class EditorController implements Initializable, ControlScreen {
 
         // Instantiate resized image from imported image
         if (ratio >= 1){
-            resizedImage = scaleImage(importedImage, editorCanvasImageWidth, getResizedImageHeight(editorCanvasImageHeight, ratio), true, true);
+            resizedImage = scaleImage(importedImage, editorCanvasImageWidth, getResizedImageHeight(editorCanvasImageWidth, ratio), true, true);
             if(resizedImage.getHeight() > stack.getPrefHeight()){
-                resizedImage = scaleImage(importedImage, getResizedImageWidth(editorCanvasImageWidth, ratio), editorCanvasImageHeight, true, true);
+                resizedImage = scaleImage(importedImage, getResizedImageWidth(editorCanvasImageHeight, ratio), editorCanvasImageHeight, true, true);
             }
         } else {
-            resizedImage = scaleImage(importedImage, getResizedImageWidth(editorCanvasImageWidth, ratio), editorCanvasImageHeight, true, true);
+            resizedImage = scaleImage(importedImage, getResizedImageWidth(editorCanvasImageHeight, ratio), editorCanvasImageHeight, true, true);
+            if(resizedImage.getWidth() > stack.getPrefWidth()){
+                resizedImage = scaleImage(importedImage, editorCanvasImageWidth, getResizedImageHeight(editorCanvasImageWidth,ratio), true, true);
+            }
         }
 
         editorImageObject.setCurrentWidth(resizedImage.getWidth());
@@ -559,6 +584,31 @@ public class EditorController implements Initializable, ControlScreen {
 
         // Instantiate ImageTool Object
         initImageTool(resizedImage);
+    }
+    public void setImportOriginalImage(Image importedImage){
+        gc = originalCanvas.getGraphicsContext2D();
+
+        double ratio = getImageAspectRatio(importedImage);
+        Image resizedOriginalImage;
+
+        // Instantiate resized image from imported image
+        if (ratio >= 1){
+            resizedOriginalImage = scaleImage(importedImage, project.getProjectWidth(), getResizedImageHeight(project.getProjectWidth(), ratio), true, true);
+            if(resizedOriginalImage.getHeight() > project.getProjectHeight()) {
+                resizedOriginalImage = scaleImage(importedImage, getResizedImageWidth(project.getProjectHeight(), ratio), project.getProjectHeight(), true, true);
+            }
+        } else {
+            resizedOriginalImage = scaleImage(importedImage, getResizedImageWidth(project.getProjectHeight(), ratio), project.getProjectHeight(), true, true);
+            if(resizedOriginalImage.getWidth() > project.getProjectWidth()){
+                resizedOriginalImage = scaleImage(importedImage, project.getProjectWidth(),  getResizedImageHeight(project.getProjectWidth(), ratio), true, true);
+            }
+        }
+
+        originalImageObject.setCurrentWidth(resizedOriginalImage.getWidth());
+        originalImageObject.setCurrentHeight(resizedOriginalImage.getHeight());
+
+        // Draw resized image onto editorCanvasImage
+        gc.drawImage(resizedOriginalImage,0, 0, resizedOriginalImage.getWidth(), resizedOriginalImage.getHeight());
     }
 
     public void initImageTool(Image img) {
@@ -585,7 +635,7 @@ public class EditorController implements Initializable, ControlScreen {
     }
 
     public double getResizedImageHeight(double height, double ratio){
-        return height * ratio;
+        return height / ratio;
     }
     public double getResizedImageWidth(double width, double ratio){
         return width * ratio;
@@ -620,8 +670,6 @@ public class EditorController implements Initializable, ControlScreen {
 
         }
     }
-
-
     public void handleScaleImage(ActionEvent event){
         try {
             scaleOptLoader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/fxml/scaleOptions.fxml")));
@@ -660,25 +708,27 @@ public class EditorController implements Initializable, ControlScreen {
     }
 
     public void handleSaveFile(ActionEvent event) {
-        Stage fileWindow = new Stage();
+/*        Stage fileWindow = new Stage();
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save Image");
 
         File outputFile = fileChooser.showSaveDialog(fileWindow);
         if (outputFile != null) {
             try {
-                BufferedImage bufferedImage = SwingFXUtils.fromFXImage(createImageFromCanvas(originalCanvas), null);
+                BufferedImage bufferedImage = SwingFXUtils.fromFXImage(project.getFinalImage(dt.getPixelBufferOfDrawing(project)), null);
                 ImageIO.write(bufferedImage, "png", outputFile);
             } catch (IOException ex) {
+
             }
-        }
+        }*/
 
 
-        saveToFile(createImageFromCanvas(originalCanvas));
+        //saveToFile(createImageFromCanvas(originalCanvas));
+        saveToFile(project.getFinalImage(dt.getPixelBufferOfDrawing(project),getOriginalBuffer(originalCanvas)));
     }
     public static void saveToFile(Image writableImage) {
         try {
-            File outputFile = new File("savedImage.png");
+            File outputFile = new File("drawing.png");
             BufferedImage bufferedImage = SwingFXUtils.fromFXImage(writableImage, null);
             ImageIO.write(bufferedImage, "png", outputFile);
         } catch (IOException e) {
@@ -686,45 +736,16 @@ public class EditorController implements Initializable, ControlScreen {
         }
     }
 
-    private double getScaleX(){
-        Screen screen = Screen.getPrimary();
-        return screen.getOutputScaleX();
-    }
 
-    private double getScaleY(){
-        Screen screen = Screen.getPrimary();
-        return screen.getOutputScaleY();
-    }
 
-    public void setOriginalImageCanvas(){
-        this.originalCanvas = new Canvas(project.getProjectWidth(), project.getProjectHeight());
-    }
     public void createOriginalImage(Image image){
         this.originalImageObject = new OriginalImage(image, 0,0, image.getWidth(), image.getHeight());
     }
-
-    public void setImportOriginalImage(Image importedImage){
-        gc = originalCanvas.getGraphicsContext2D();
-
-        double ratio = getImageAspectRatio(importedImage);
-        Image resizedOriginalImage;
-
-        // Instantiate resized image from imported image
-        if (ratio >= 1){
-            resizedOriginalImage = scaleImage(importedImage, project.getProjectWidth(), getResizedImageHeight(project.getProjectHeight(), ratio), true, true);
-            if(resizedOriginalImage.getHeight() > stack.getPrefHeight()){
-                resizedOriginalImage = scaleImage(importedImage, getResizedImageWidth(project.getProjectWidth(), ratio), project.getProjectHeight(), true, true);
-            }
-        } else {
-            resizedOriginalImage = scaleImage(importedImage, getResizedImageWidth(project.getProjectWidth(), ratio), project.getProjectHeight(), true, true);
-        }
-
-        originalImageObject.setCurrentWidth(resizedOriginalImage.getWidth());
-        originalImageObject.setCurrentHeight(resizedOriginalImage.getHeight());
-
-        // Draw resized image onto editorCanvasImage
-        gc.drawImage(resizedOriginalImage,0, 0, resizedOriginalImage.getWidth(), resizedOriginalImage.getHeight());
+    public void createEditorImage(Image image){
+        this.editorImageObject = new EditorImage(image, 0,0, image.getWidth(), image.getHeight());
     }
+
+
     public double getOriginalAndEditorCanvasRatio(){
         double ratio = originalCanvas.getHeight()/ editorCanvasImage.getHeight();
         return ratio;
@@ -763,9 +784,16 @@ public class EditorController implements Initializable, ControlScreen {
     public OriginalImage getOriginalImageObject(){
         return this.originalImageObject;
     }
-    public void createEditorImage(Image image){
-        this.editorImageObject = new EditorImage(image, 0,0, image.getWidth(), image.getHeight());
-    }
 
+    public int[] getOriginalBuffer(Canvas canvas){
+        SnapshotParameters sp = new SnapshotParameters();
+        sp.setFill(Color.TRANSPARENT);
+        int[] export = new int[(int)(canvas.getWidth()*canvas.getHeight())];
+
+        canvas.snapshot(sp,null).getPixelReader()
+                .getPixels(0,0,(int)canvas.getWidth(),(int)canvas.getHeight(),
+                        WritablePixelFormat.getIntArgbInstance(), export, 0, (int)canvas.getWidth());
+        return export;
+    }
 }
 
