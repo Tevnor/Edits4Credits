@@ -521,14 +521,14 @@ public class EditorController implements Initializable, ControlScreen {
 
         // Instantiate resized image from imported image
         if (ratio >= 1){
-            resizedImage = editorImageObject.scaleImage(importedImage, editorCanvasImageWidth, getResizedImageHeight(editorCanvasImageWidth, ratio), true, true);
+            resizedImage = editorImageObject.scaleImage(importedImage, editorCanvasImageWidth, editorImageObject.getResizedImageHeight(editorCanvasImageWidth, ratio), true, true);
             if(resizedImage.getHeight() > stack.getPrefHeight()){
-                resizedImage = editorImageObject.scaleImage(importedImage, getResizedImageWidth(editorCanvasImageHeight, ratio), editorCanvasImageHeight, true, true);
+                resizedImage = editorImageObject.scaleImage(importedImage, editorImageObject.getResizedImageWidth(editorCanvasImageHeight, ratio), editorCanvasImageHeight, true, true);
             }
         } else {
-            resizedImage = editorImageObject.scaleImage(importedImage, getResizedImageWidth(editorCanvasImageHeight, ratio), editorCanvasImageHeight, true, true);
+            resizedImage = editorImageObject.scaleImage(importedImage, editorImageObject.getResizedImageWidth(editorCanvasImageHeight, ratio), editorCanvasImageHeight, true, true);
             if(resizedImage.getWidth() > stack.getPrefWidth()){
-                resizedImage = editorImageObject.scaleImage(importedImage, editorCanvasImageWidth, getResizedImageHeight(editorCanvasImageWidth,ratio), true, true);
+                resizedImage = editorImageObject.scaleImage(importedImage, editorCanvasImageWidth, editorImageObject.getResizedImageHeight(editorCanvasImageWidth,ratio), true, true);
             }
         }
 
@@ -556,14 +556,14 @@ public class EditorController implements Initializable, ControlScreen {
 
         // Instantiate resized image from imported image
         if (ratio >= 1){
-            resizedOriginalImage = originalImageObject.scaleImage(importedImage, project.getProjectWidth(), getResizedImageHeight(project.getProjectWidth(), ratio), true, true);
+            resizedOriginalImage = originalImageObject.scaleImage(importedImage, project.getProjectWidth(), originalImageObject.getResizedImageHeight(project.getProjectWidth(), ratio), true, true);
             if(resizedOriginalImage.getHeight() > project.getProjectHeight()) {
-                resizedOriginalImage = originalImageObject.scaleImage(importedImage, getResizedImageWidth(project.getProjectHeight(), ratio), project.getProjectHeight(), true, true);
+                resizedOriginalImage = originalImageObject.scaleImage(importedImage, originalImageObject.getResizedImageWidth(project.getProjectHeight(), ratio), project.getProjectHeight(), true, true);
             }
         } else {
-            resizedOriginalImage = originalImageObject.scaleImage(importedImage, getResizedImageWidth(project.getProjectHeight(), ratio), project.getProjectHeight(), true, true);
+            resizedOriginalImage = originalImageObject.scaleImage(importedImage, originalImageObject.getResizedImageWidth(project.getProjectHeight(), ratio), project.getProjectHeight(), true, true);
             if(resizedOriginalImage.getWidth() > project.getProjectWidth()){
-                resizedOriginalImage = originalImageObject.scaleImage(importedImage, project.getProjectWidth(),  getResizedImageHeight(project.getProjectWidth(), ratio), true, true);
+                resizedOriginalImage = originalImageObject.scaleImage(importedImage, project.getProjectWidth(),  originalImageObject.getResizedImageHeight(project.getProjectWidth(), ratio), true, true);
             }
         }
 
@@ -583,13 +583,6 @@ public class EditorController implements Initializable, ControlScreen {
     // Scale the imported source image to the maximum canvas size
 
 
-
-    public double getResizedImageHeight(double height, double ratio){
-        return height / ratio;
-    }
-    public double getResizedImageWidth(double width, double ratio){
-        return width * ratio;
-    }
 
     public void handleMoveImage(ActionEvent event) {
         try{
