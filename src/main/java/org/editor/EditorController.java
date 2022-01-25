@@ -147,7 +147,7 @@ public class EditorController implements Initializable, ControlScreen {
     private Boolean isFiltered = false;
     private ImageDimensions originalImageObject;
     private ImageDimensions editorImageObject;
-    private EditorControllerLayoutManager stackSize;
+    private EditorControllerLayoutManager layoutManager;
 
 
 
@@ -183,9 +183,9 @@ public class EditorController implements Initializable, ControlScreen {
     }
     // method to calculate stack pane size
     private void initStackPane() {
-            stackSize = new EditorControllerLayoutManager();
-            stack.setPrefWidth(stackSize.getStackWidth(this));
-            stack.setPrefHeight(stackSize.getStackHeight(this));
+            layoutManager = new EditorControllerLayoutManager();
+            stack.setPrefWidth(layoutManager.getStackWidth(this));
+            stack.setPrefHeight(layoutManager.getStackHeight(this));
     }
     public Window getWindow(){return this.window;}
     public Project getProject(){return this.project;}
@@ -478,18 +478,7 @@ public class EditorController implements Initializable, ControlScreen {
         orderStack();
     }
     public void importImageFromExplorer(){
-
-        // opens file explore to choose image to edit
-        FileChooser chooser = new FileChooser();
-        File f = chooser.showOpenDialog(null);
-
-        // saves file path from image to file object
-        imagePath = f;
-
-
-        //creates new image from the selected path
-
-        Image fileChooserImage = new Image(f.getPath());
+        Image fileChooserImage = layoutManager.getFileChooserImage();
         createEditorImage(fileChooserImage);
         createOriginalImage(fileChooserImage);
         setImageToCanvas(fileChooserImage);
@@ -551,7 +540,7 @@ public class EditorController implements Initializable, ControlScreen {
 
 
         //disables import button if image was imported
-        if (imagePath != null) {
+        if (importedImage != null) {
             importButton.setDisable(true);
             importButton.setVisible(false);
             //openFile.setDisable(true);

@@ -1,6 +1,10 @@
 package org.editor.layout;
 
+import javafx.scene.image.Image;
+import javafx.stage.FileChooser;
 import org.editor.EditorController;
+
+import java.io.File;
 
 public class EditorControllerLayoutManager {
 
@@ -75,5 +79,11 @@ public class EditorControllerLayoutManager {
     }
     public boolean useWidthOrHeight(EditorController editorController){
         return !(editorController.getProject().getProjectAspectRatio() > 1);
+    }
+    public Image getFileChooserImage(){
+        FileChooser chooser = new FileChooser();
+        File f = chooser.showOpenDialog(null);
+        Image fileChooserImage = new Image(f.getPath());
+        return fileChooserImage;
     }
 }
