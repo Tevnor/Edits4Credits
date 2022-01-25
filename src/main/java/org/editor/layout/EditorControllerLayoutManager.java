@@ -23,8 +23,7 @@ public class EditorControllerLayoutManager {
                 returnWidth = stackWidth;
                 stackHeight = Math.round(stackWidth * editorController.getProject().getProjectAspectRatio());
             }
-            //stack.setPrefHeight(stackHeight);
-            //stack.setPrefWidth(stackWidth);
+
         }
         // when the aspect ratio is smaller than 1 calculate based on height
         else {
@@ -37,8 +36,6 @@ public class EditorControllerLayoutManager {
                 stackWidth = Math.round(stackHeight * editorController.getProject().getProjectAspectRatio());
                 returnWidth = stackWidth;
             }
-            //stack.setPrefWidth(stackWidth);
-            //stack.setPrefHeight(stackHeight);
         }
         return returnWidth;
     }
@@ -61,8 +58,6 @@ public class EditorControllerLayoutManager {
                 returnHeight = stackHeight;
 
             }
-            //stack.setPrefHeight(stackHeight);
-            //stack.setPrefWidth(stackWidth);
         }
         // when the aspect ratio is smaller than 1 calculate based on height
         else {
@@ -75,8 +70,6 @@ public class EditorControllerLayoutManager {
                 stackWidth = Math.round(stackHeight * editorController.getProject().getProjectAspectRatio());
                 returnHeight = stackHeight;
             }
-            //stack.setPrefWidth(stackWidth);
-            //stack.setPrefHeight(stackHeight);
         }
         return returnHeight;
     }
