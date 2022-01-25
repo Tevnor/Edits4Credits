@@ -13,7 +13,7 @@ public class EditorControllerLayoutManager {
         int maxStackWidth = (int) (editorController.getWindow().getScreenWidth() - editorController.getToolBarWidth());
 
         // when the aspect ratio is greater than 1 calculate based on the width
-        if (editorController.useWidthOrHeight()) {
+        if (useWidthOrHeight(editorController)) {
             double stackHeight = Math.round(editorController.getWindow().getScreenHeight() - editorController.getMenuBarHeight());
             double stackWidth = Math.round(stackHeight * editorController.getProject().getProjectAspectRatio());
             returnWidth = stackWidth;
@@ -50,7 +50,7 @@ public class EditorControllerLayoutManager {
         int maxStackWidth = (int) (editorController.getWindow().getScreenWidth() - editorController.getToolBarWidth());
 
         // when the aspect ratio is greater than 1 calculate based on the width
-        if (editorController.useWidthOrHeight()) {
+        if (useWidthOrHeight(editorController)) {
             double stackHeight = Math.round(editorController.getWindow().getScreenHeight() - editorController.getMenuBarHeight());
             double stackWidth = Math.round(stackHeight * editorController.getProject().getProjectAspectRatio());
             returnHeight = stackHeight;
@@ -79,5 +79,8 @@ public class EditorControllerLayoutManager {
             //stack.setPrefHeight(stackHeight);
         }
         return returnHeight;
+    }
+    public boolean useWidthOrHeight(EditorController editorController){
+        return !(editorController.getProject().getProjectAspectRatio() > 1);
     }
 }

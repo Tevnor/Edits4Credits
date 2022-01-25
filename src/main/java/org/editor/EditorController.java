@@ -220,9 +220,6 @@ public class EditorController implements Initializable, ControlScreen {
         noiseController.setEditorController(this);
     }
     // Return false: use width, return true: use height
-    public boolean useWidthOrHeight(){
-        return !(project.getProjectAspectRatio() > 1);
-    }
     public double getMenuBarHeight(){
         return (menuBar.getPrefHeight() + 40/window.getScaleY());
     }
