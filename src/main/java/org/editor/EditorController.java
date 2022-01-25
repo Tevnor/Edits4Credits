@@ -31,7 +31,6 @@ import org.apache.logging.log4j.Logger;
 import org.editor.project.Project;
 import org.editor.tools.drawingtool.DrawOptionsController;
 import org.editor.tools.drawingtool.DrawingTool;
-import org.editor.tools.drawingtool.graphiccontrol.handlers.DrawHandler;
 import org.editor.tools.drawingtool.graphiccontrol.handlers.HandlerFactory;
 import org.editor.tools.drawingtool.graphiccontrol.handlers.PolygonDrawer;
 
@@ -115,7 +114,7 @@ public class EditorController implements Initializable, ControlScreen {
     private ScreensController screensController;
 
     private EventHandler<MouseEvent> mover;
-    private DrawHandler drawer;
+    private org.editor.tools.drawingtool.graphiccontrol.handlers.DrawHandler drawer;
     private DrawingTool dt;
     private HandlerFactory handlerFactory;
     private Parent drawOptRoot;
@@ -212,7 +211,7 @@ public class EditorController implements Initializable, ControlScreen {
     }
     private void initDrawTool() {
         this.dt = new DrawingTool(stack);
-        handlerFactory = new HandlerFactory(dt);
+        handlerFactory = new HandlerFactory();
         this.importButton.toFront();
     }
     //initializes controls and fits them to the screen
@@ -278,8 +277,8 @@ public class EditorController implements Initializable, ControlScreen {
         drawOptStage.setResizable(false);
         drawOptStage.initModality(Modality.APPLICATION_MODAL);
         drawOptStage.setOnHiding( w -> {
-            if(options.getTmpHandler() != HandlerFactory.Handler.MOVE){
-                drawer = handlerFactory.getHandler(options.getTmpHandler());
+            if(options.getTmpHandler() != HandlerFactory.DrawHandler.MOVE){
+                drawer = handlerFactory.getHandler(dt, options.getTmpHandler());
                 stack.addEventHandler(MouseEvent.ANY,drawer);
                 drawer.setAttributes(options.getAttributes());
             }
@@ -317,50 +316,50 @@ public class EditorController implements Initializable, ControlScreen {
 
     public void handleArc(ActionEvent e){
         initShapeHandler();
-        openDrawOptions(HandlerFactory.Handler.ARC);
+        openDrawOptions(HandlerFactory.DrawHandler.ARC);
     }
     public void handleMove(ActionEvent e){
         initMoveHandler();
-        mover = handlerFactory.getMove();
+        mover = handlerFactory.getMove(dt);
         stack.addEventHandler(MouseEvent.ANY,mover);
     }
     public void handleCircle(ActionEvent e){
         initShapeHandler();
-        openDrawOptions(HandlerFactory.Handler.CIRCLE);
+        openDrawOptions(HandlerFactory.DrawHandler.CIRCLE);
     }
     public void handleEllipses(ActionEvent e){
         initShapeHandler();
-        openDrawOptions(HandlerFactory.Handler.ELLIPSES);
+        openDrawOptions(HandlerFactory.DrawHandler.ELLIPSES);
     }
     public void handleEraser(ActionEvent e){
         initShapeHandler();
-        stack.removeEventHandler(MouseEvent.ANY, dt.getDc().getMarking());
-        openDrawOptions(HandlerFactory.Handler.ERASER);
+        dt.getDc().removeMarkingHandler(stack);
+        openDrawOptions(HandlerFactory.DrawHandler.ERASER);
     }
     public void handleRectangle(ActionEvent e){
         initShapeHandler();
-        openDrawOptions(HandlerFactory.Handler.RECTANGLE);
+        openDrawOptions(HandlerFactory.DrawHandler.RECTANGLE);
     }
     public void handleRoundedRectangle(ActionEvent e){
         initShapeHandler();
-        openDrawOptions(HandlerFactory.Handler.ROUNDED_RECTANGLE);
+        openDrawOptions(HandlerFactory.DrawHandler.ROUNDED_RECTANGLE);
     }
     public void handleLine(ActionEvent e){
         initShapeHandler();
-        openDrawOptions(HandlerFactory.Handler.LINE);
+        openDrawOptions(HandlerFactory.DrawHandler.LINE);
     }
     public void handleText(ActionEvent e){
         initShapeHandler();
-        openDrawOptions(HandlerFactory.Handler.TEXT);
+        openDrawOptions(HandlerFactory.DrawHandler.TEXT);
     }
     public void handlePolygon(ActionEvent e){
         initShapeHandler();
-        openDrawOptions(HandlerFactory.Handler.POLYGON);
+        openDrawOptions(HandlerFactory.DrawHandler.POLYGON);
     }
     public void handlePath(ActionEvent e){
         initShapeHandler();
-        stack.removeEventHandler(MouseEvent.ANY, dt.getDc().getMarking());
-        openDrawOptions(HandlerFactory.Handler.PATH);
+        dt.getDc().removeMarkingHandler(stack);
+        openDrawOptions(HandlerFactory.DrawHandler.PATH);
     }
     public void handleDrawPolygon(ActionEvent e){
         if(drawer instanceof PolygonDrawer){
@@ -377,9 +376,9 @@ public class EditorController implements Initializable, ControlScreen {
     public void handleDrawRedo(ActionEvent e){
         dt.forward();
     }
-    private void openDrawOptions(HandlerFactory.Handler handler){
+    private void openDrawOptions(HandlerFactory.DrawHandler drawHandler){
         drawOptStage.centerOnScreen();
-        options.setSelShape(handler);
+        options.setSelShape(drawHandler);
         drawOptStage.show();
     }
 
@@ -395,8 +394,7 @@ public class EditorController implements Initializable, ControlScreen {
     }
     private void initMoveHandler(){
         initShapeHandler();
-
-        stack.removeEventHandler(MouseEvent.ANY, dt.getDc().getMarking());
+        dt.getDc().removeMarkingHandler(stack);
         stack.setCursor(Cursor.OPEN_HAND);
     }
 

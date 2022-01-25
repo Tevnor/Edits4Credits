@@ -43,7 +43,7 @@ public class Text extends Shapes {
     @Override
     public void draw(GraphicsContext gc) {
         int[] before = getPixelsBefore(gc);
-        if(getDirectAttributes().isFill()){
+        if(attributes.isFill()){
             drawFill(gc);
         }else{
             drawStroke(gc);

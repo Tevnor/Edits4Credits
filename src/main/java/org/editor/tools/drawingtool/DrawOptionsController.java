@@ -80,10 +80,10 @@ public class DrawOptionsController implements Initializable {
 
     private Stage stage;
     private Point2D delta;
-    private Handler tmpHandler;
+    private DrawHandler tmpDrawHandler;
 
-    private void initSelShape(Handler handler){
-        switch (handler){
+    private void initSelShape(DrawHandler drawHandler){
+        switch (drawHandler){
             case ARC:
                 selectShapePane(arc);
                 break;
@@ -114,9 +114,9 @@ public class DrawOptionsController implements Initializable {
                 break;
         }
     }
-    public void setSelShape(Handler handler){
-        this.tmpHandler = handler;
-        initSelShape(handler);
+    public void setSelShape(DrawHandler drawHandler){
+        this.tmpDrawHandler = drawHandler;
+        initSelShape(drawHandler);
     }
     private void selectShapePane(TitledPane shapeOpt){
         shapes.setDisable(false);
@@ -134,7 +134,7 @@ public class DrawOptionsController implements Initializable {
         tabPane.getSelectionModel().select(general);
     }
     public void resetLayout(){
-        switch(tmpHandler) {
+        switch(tmpDrawHandler) {
             case ARC:
             case ROUNDED_RECTANGLE:
             case POLYGON:
@@ -276,7 +276,7 @@ public class DrawOptionsController implements Initializable {
         return opt;
     }
     private AbstractGeneral initAttributes(){
-        switch (tmpHandler){
+        switch (tmpDrawHandler){
             case ARC:
                 return getArcAttributes();
             case ROUNDED_RECTANGLE:
@@ -292,8 +292,8 @@ public class DrawOptionsController implements Initializable {
         }
     }
 
-    public Handler getTmpHandler(){
-        return tmpHandler;
+    public DrawHandler getTmpHandler(){
+        return tmpDrawHandler;
     }
     public AbstractGeneral getAttributes(){
         return addSelectedEffects(initAttributes());

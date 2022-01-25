@@ -22,15 +22,12 @@ public class FontMetrics {
         internal.setText(txt);
         return internal.getLayoutBounds().getWidth();
     }
-
     public double getLineHeight(){
         return lineHeight;
     }
-
     public double getAscent() {
         return ascent;
     }
-
     public double getDescent() {
         return descent;
     }

@@ -1,38 +1,41 @@
 package org.editor.tools.drawingtool.graphiccontrol;
 
 import javafx.geometry.Point2D;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Shape;
 import javafx.scene.transform.Rotate;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.editor.tools.drawingtool.graphiccontrol.attributes.TextAttributes;
 import org.editor.tools.drawingtool.graphiccontrol.objects.*;
 
 import java.util.List;
 
 public class MovingControl {
-
+    private static final Logger MC_LOGGER = LogManager.getLogger(MovingControl.class.getName());
 
     private Shapes preSelectedShape;
     private Shape movingShape;
     private Point2D offset, end;
     private int moveRef;
 
-    public MovingControl(){
-        this.preSelectedShape = null;
-        this.movingShape = null;
-    }
-
 
     public boolean overShape(Point2D point, DrawBoard db){
+        MC_LOGGER.debug("overShape() entered");
         boolean overShape = false;
         List<DrawOp> op = db.getOperations();
         double minX, maxX, minY, maxY;
         int i = op.size()-1;
 
-        if(db.getOperations().size() == 0){
+        if(point == null){
+            MC_LOGGER.warn("point passed to overShape() is null");
             return false;
         }
-
+        if(db.getOperations().size() == 0){
+            MC_LOGGER.debug("no shapes in history");
+            return false;
+        }
         while(!overShape){
             if(!(op.get(i) instanceof Clear)) {
                 Shapes shape = (Shapes) op.get(i);
@@ -74,7 +77,8 @@ public class MovingControl {
 
         return overShape;
     }
-    public boolean overTrueShape(Point2D point){
+    private boolean overTrueShape(Point2D point){
+        MC_LOGGER.debug("overTrueShape() entered");
         switch(preSelectedShape.getType()){
             case ARC:
                 return checkArc(point);
@@ -93,6 +97,7 @@ public class MovingControl {
             case ROUNDED_RECT:
                 return checkRoundRect(point);
         }
+        MC_LOGGER.warn("error in type of selected shape");
         return false;
     }
 
@@ -130,44 +135,64 @@ public class MovingControl {
     }
 
     public void setOffset(Point2D point){
-        this.offset = point.subtract(preSelectedShape.getMinX(), preSelectedShape.getMinY());
-        this.end = new Point2D(preSelectedShape.getMinX(), preSelectedShape.getMinY());
+        if(preSelectedShape != null){
+            this.offset = point.subtract(preSelectedShape.getMinX(), preSelectedShape.getMinY());
+            MC_LOGGER.debug("setOffset() set to x: " + offset.getX() + " y: " + offset.getY());
+            this.end = new Point2D(preSelectedShape.getMinX(), preSelectedShape.getMinY());
+        }
     }
 
     public void initMovingShape(){
-        movingShape = preSelectedShape.getShapeRepresentation();
-        movingShape.setFill(Color.TRANSPARENT);
-        movingShape.setStroke(Color.MAGENTA);
+        MC_LOGGER.debug("initMovingShape() entered");
+        if(preSelectedShape != null){
+            movingShape = preSelectedShape.getShapeRepresentation();
+            movingShape.setFill(Color.TRANSPARENT);
+            movingShape.setStroke(Color.MAGENTA);
+        }
     }
     public void positionMovingShape(Point2D p){
-
-        if(preSelectedShape instanceof Text){
-            movingShape.setTranslateY(p.getY() - offset.getY() - ((TextAttributes)(preSelectedShape.getAttributes())).getFm().getAscent());
-            movingShape.setTranslateX(p.getX() - offset.getX());
-        }else{
-            movingShape.setTranslateX(p.getX() - offset.getX());
-            movingShape.setTranslateY(p.getY() - offset.getY());
+        MC_LOGGER.debug("positionMovingShape() entered");
+        if(preSelectedShape != null) {
+            if (preSelectedShape instanceof Text) {
+                movingShape.setTranslateY(p.getY() - offset.getY() - ((TextAttributes) (preSelectedShape.getAttributes())).getFm().getAscent());
+                movingShape.setTranslateX(p.getX() - offset.getX());
+            } else {
+                movingShape.setTranslateX(p.getX() - offset.getX());
+                movingShape.setTranslateY(p.getY() - offset.getY());
+            }
+            end = p.subtract(offset);
         }
-        end = p.subtract(offset);
     }
 
-    public void reset(){
+    public void addMovingShape(StackPane s){
+        MC_LOGGER.debug("addMovingShape() entered");
+        if(movingShape != null){
+            s.getChildren().addAll(movingShape);
+        }
+    }
+    public void removeMovingShape(StackPane s){
+        MC_LOGGER.debug("removeMovingShape() entered");
+        if(movingShape != null){
+            s.getChildren().removeAll(movingShape);
+        }
+    }
+
+    public Shapes getPostSelectedShape() {
+        MC_LOGGER.debug("getPostSelectedShape() entered");
+            if(preSelectedShape != null) {
+            Shapes shape = preSelectedShape.reposition(end);
+            shape.setReference(moveRef);
+            this.moveRef = 0;
+            return shape;
+            }
+        return null;
+    }
+    public void resetMovingControl(){
         this.preSelectedShape = null;
         this.movingShape = null;
         this.offset = null;
         this.end = null;
-    }
-
-    public Shape getMovingShape() {
-        return movingShape;
-    }
-
-
-    public Shapes getPostSelectedShape() {
-        Shapes shape = preSelectedShape.reposition(end);
-        shape.setReference(moveRef);
-        this.moveRef = 0;
-        return shape;
+        MC_LOGGER.debug("reset() fulfilled");
     }
 }
 
