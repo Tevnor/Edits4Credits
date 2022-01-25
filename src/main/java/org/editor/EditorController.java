@@ -46,6 +46,7 @@ import java.util.Objects;
 import java.util.ResourceBundle;
 
 import org.editor.tools.filtertool.NoiseController;
+import org.editor.tools.imagetool.EditorImage;
 import org.editor.tools.imagetool.ImageTool;
 import org.editor.tools.imagetool.PositionOptionsController;
 import org.editor.tools.imagetool.ScaleOptionsController;
@@ -125,8 +126,6 @@ public class EditorController implements Initializable, ControlScreen {
     private Parent noiseOptRoot;
     private NoiseController noiseController;
     private Stage noiseOptStage = new Stage();
-    private Image resizedImage;
-    private Image originalImage;
     private Image filteredImage;
 
     private ImageTool imageTool;
@@ -135,10 +134,7 @@ public class EditorController implements Initializable, ControlScreen {
     private Parent moveOptRoot;
     private FXMLLoader moveOptLoader;
     private PositionOptionsController moveOptions;
-    private double xPosition = 0;
-    private double yPosition = 0;
-    private double currentImageHeight;
-    private double currentImageWidth;
+
 
     private GraphicsContext gc;
     private Parent scaleOptRoot;
@@ -148,6 +144,7 @@ public class EditorController implements Initializable, ControlScreen {
     private Canvas originalCanvas;
     private Boolean isFiltered = false;
     private OriginalImage originalImageObject;
+    private EditorImage editorImageObject;
 
 
 
@@ -501,13 +498,12 @@ public class EditorController implements Initializable, ControlScreen {
         //creates new image from the selected path
 
         Image fileChooserImage = new Image(f.getPath());
+        createEditorImage(fileChooserImage);
         createOriginalImage(fileChooserImage);
         setImageToCanvas(fileChooserImage);
         setImportOriginalImage(originalImageObject.getOriginalImage());
     }
     public void setImageToCanvas(Image image) {
-        setOriginalImage(image);
-
         // Pass image to setter method
         setEditorImageCanvas();
         setOriginalImageCanvas();
@@ -527,7 +523,7 @@ public class EditorController implements Initializable, ControlScreen {
     }
     public void drawFilteredImage(){
         gc = editorCanvasImage.getGraphicsContext2D();
-        gc.drawImage(filteredImage,xPosition, yPosition, currentImageWidth, currentImageHeight);
+        gc.drawImage(filteredImage,editorImageObject.getCurrentXPosition(), editorImageObject.getCurrentYPosition(), editorImageObject.getCurrentWidth(), editorImageObject.getCurrentHeight());
         //initImageTool(filteredImage);
     }
 
@@ -536,6 +532,7 @@ public class EditorController implements Initializable, ControlScreen {
         gc = editorCanvasImage.getGraphicsContext2D();
 
         double ratio = getImageAspectRatio(importedImage);
+        Image resizedImage;
         int editorCanvasImageWidth = (int) editorCanvasImage.getWidth();
         int editorCanvasImageHeight = (int) editorCanvasImage.getHeight();
 
@@ -549,8 +546,8 @@ public class EditorController implements Initializable, ControlScreen {
             resizedImage = scaleImage(importedImage, getResizedImageWidth(editorCanvasImageWidth, ratio), editorCanvasImageHeight, true, true);
         }
 
-        this.currentImageHeight = resizedImage.getHeight();
-        this.currentImageWidth = resizedImage.getWidth();
+        editorImageObject.setCurrentWidth(resizedImage.getWidth());
+        editorImageObject.setCurrentHeight(resizedImage.getHeight());
         // Draw resized image onto editorCanvasImage
         gc.drawImage(resizedImage,0, 0, resizedImage.getWidth(), resizedImage.getHeight());
 
@@ -613,12 +610,11 @@ public class EditorController implements Initializable, ControlScreen {
         }
 
     }
-    public void setChangedPosition(double xPosition, double yPosition, double currentImageWidth, double currentImageHeight){
-        this.xPosition = xPosition;
-        this.yPosition = yPosition;
+
+    public void drawChangedPosition(){
         GraphicsContext gc = editorCanvasImage.getGraphicsContext2D();
         gc.clearRect(0, 0, editorCanvasImage.getWidth(), editorCanvasImage.getHeight());
-        gc.drawImage(originalImage, xPosition, yPosition, currentImageWidth,currentImageHeight);
+        gc.drawImage(editorImageObject.getOriginalImage(), editorImageObject.getCurrentXPosition(), editorImageObject.getCurrentYPosition(), editorImageObject.getCurrentWidth(),editorImageObject.getCurrentHeight());
     }
 
 
@@ -636,42 +632,13 @@ public class EditorController implements Initializable, ControlScreen {
             exception.printStackTrace();
         }
     }
-    public double getScaledHeight(double scaleFactor) {
-        double scaledHeight = currentImageHeight * scaleFactor /100;
-        return scaledHeight;
+    public EditorImage getEditorImageObject(){
+        return this.editorImageObject;
     }
-    public double getScaledWidth(double scaleFactor) {
-        double scaledWidth = currentImageWidth * scaleFactor /100;
-        return scaledWidth;
-    }
-    public void drawScaledImage(Image sourceImage, double xPosition, double yPosition, double scaledWidth, double scaledHeight){
+    public void drawScaledImage(double scaledWidth, double scaledHeight){
         GraphicsContext gc = editorCanvasImage.getGraphicsContext2D();
         gc.clearRect(0, 0, editorCanvasImage.getWidth(), editorCanvasImage.getHeight());
-        gc.drawImage(sourceImage, xPosition, yPosition, scaledWidth, scaledHeight);
-    }
-    public Image getOriginalImage(){
-        return originalImage;
-    }
-    public double getXPosition(){
-        return xPosition;
-    }
-    public double getYPosition(){
-        return yPosition;
-    }
-    public void setCurrentImageHeight(double height){
-        this.currentImageHeight = height;
-    }
-    public void setCurrentImageWidth(double width) {
-        this.currentImageWidth = width;
-    }
-    public void setOriginalImage(Image image){
-        this.originalImage = image;
-    }
-    public double getCurrentImageWidth(){
-        return this.currentImageWidth;
-    }
-    public double getCurrentImageHeight(){
-        return this.currentImageHeight;
+        gc.drawImage(editorImageObject.getOriginalImage(), editorImageObject.getCurrentXPosition(), editorImageObject.getCurrentYPosition(), scaledWidth, scaledHeight);
     }
 
     /**
@@ -754,13 +721,11 @@ public class EditorController implements Initializable, ControlScreen {
         // Draw resized image onto editorCanvasImage
         gc.drawImage(resizedOriginalImage,0, 0, resizedOriginalImage.getWidth(), resizedOriginalImage.getHeight());
     }
-    public void setChangedOriginalPosition(double xPosition, double yPosition){
-
+    public double getOriginalAndEditorCanvasRatio(){
         double ratio = originalCanvas.getHeight()/ editorCanvasImage.getHeight();
-
-        originalImageObject.setCurrentXPosition(xPosition * ratio);
-        originalImageObject.setCurrentYPosition(yPosition * ratio);
-
+        return ratio;
+    }
+    public void drawChangedOriginalPosition(){
         GraphicsContext gc = originalCanvas.getGraphicsContext2D();
         gc.clearRect(0, 0, originalCanvas.getWidth(), originalCanvas.getHeight());
         if (isFiltered == false){
@@ -776,10 +741,15 @@ public class EditorController implements Initializable, ControlScreen {
     public void setIsFiltered(){
         this.isFiltered= true;
     }
-    public void drawScaledOriginalImage(Image sourceImage, double xPosition, double yPosition, double scaledWidth, double scaledHeight){
+    public void drawScaledOriginalImage(double newWidth, double newHeight){
         GraphicsContext gc = originalCanvas.getGraphicsContext2D();
         gc.clearRect(0, 0, originalCanvas.getWidth(), originalCanvas.getHeight());
-        gc.drawImage(sourceImage, xPosition, yPosition, scaledWidth, scaledHeight);
+        if(!isFiltered) {
+            gc.drawImage(originalImageObject.getOriginalImage(), originalImageObject.getCurrentXPosition(), originalImageObject.getCurrentYPosition(), newWidth, newHeight);
+        }
+        else if(isFiltered){
+            gc.drawImage(originalImageObject.getOriginalFilteredImage(), originalImageObject.getCurrentXPosition(), originalImageObject.getCurrentYPosition(), newWidth, newHeight);
+        }
     }
     public void drawFilteredOriginalImage(){
         gc = originalCanvas.getGraphicsContext2D();
@@ -788,6 +758,9 @@ public class EditorController implements Initializable, ControlScreen {
     }
     public OriginalImage getOriginalImageObject(){
         return this.originalImageObject;
+    }
+    public void createEditorImage(Image image){
+        this.editorImageObject = new EditorImage(image, 0,0, image.getWidth(), image.getHeight());
     }
 
 }

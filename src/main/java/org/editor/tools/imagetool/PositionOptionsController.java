@@ -3,6 +3,7 @@ package org.editor.tools.imagetool;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import org.editor.EditorController;
@@ -38,9 +39,16 @@ public class PositionOptionsController implements Initializable {
         else if (yPositionInput.getText() != null){
             yPosition = Double.parseDouble(yPositionInput.getText());
         }
-        editorController.setChangedPosition(xPosition, yPosition, editorController.getCurrentImageWidth(), editorController.getCurrentImageHeight());
-        editorController.setChangedOriginalPosition(xPosition,yPosition);
+        editorController.getEditorImageObject().setCurrentXPosition(xPosition);
+        editorController.getEditorImageObject().setCurrentYPosition(yPosition);
+        editorController.drawChangedPosition();
+
+        editorController.getOriginalImageObject().setCurrentXPosition(xPosition * editorController.getOriginalAndEditorCanvasRatio());
+        editorController.getOriginalImageObject().setCurrentYPosition(yPosition * editorController.getOriginalAndEditorCanvasRatio());
+        editorController.drawChangedOriginalPosition();
+
     }
+
 
     public void setEditorController(EditorController editorController) {
         this.editorController = editorController;
