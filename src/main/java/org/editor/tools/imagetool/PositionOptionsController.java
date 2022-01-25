@@ -21,8 +21,8 @@ public class PositionOptionsController implements Initializable {
     private Button applyPositionChange;
 
 
-    private double xPosition;
-    private double yPosition;
+    private double xPosition = 0;
+    private double yPosition = 0;
     private EditorController editorController;
 
     public void handleApplyPositionChange(ActionEvent event) {
@@ -41,12 +41,44 @@ public class PositionOptionsController implements Initializable {
         }
         editorController.getEditorImageObject().setCurrentXPosition(xPosition);
         editorController.getEditorImageObject().setCurrentYPosition(yPosition);
-        editorController.drawChangedPosition();
+        editorController.drawChangedPosition(xPosition, yPosition);
 
         editorController.getOriginalImageObject().setCurrentXPosition(xPosition * editorController.getOriginalAndEditorCanvasRatio());
         editorController.getOriginalImageObject().setCurrentYPosition(yPosition * editorController.getOriginalAndEditorCanvasRatio());
         editorController.drawChangedOriginalPosition();
 
+    }
+    public void handleXPositionInput(ActionEvent e){
+        if(!xPositionInput.getText().equals("")){
+            try {
+                if (xPositionInput.getText().equals("")){
+                    xPosition = 0;
+                }
+                else if(xPositionInput.getText() != null){
+                    xPosition = Double.parseDouble(xPositionInput.getText());
+                }
+                editorController.drawChangedPosition(xPosition, yPosition);
+
+            } catch (NumberFormatException exception){
+                exception.printStackTrace();
+            }
+        }
+    }
+    public void handleYPositionInput(ActionEvent e){
+        if(!xPositionInput.getText().equals("")){
+            try {
+                if (yPositionInput.getText().equals("")){
+                    yPosition = 0;
+                }
+                else if(yPositionInput.getText() != null){
+                    yPosition = Double.parseDouble(yPositionInput.getText());
+                }
+                editorController.drawChangedPosition(xPosition, yPosition);
+
+            } catch (NumberFormatException exception){
+                exception.printStackTrace();
+            }
+        }
     }
 
 

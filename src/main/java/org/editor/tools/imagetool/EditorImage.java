@@ -47,6 +47,9 @@ public class EditorImage {
     public void setFilteredImage(Image image){
         this.filteredImage = image;
     }
+    public Image getFilteredImage(){
+        return this.filteredImage;
+    }
     public double getScaledWidth(double scaleFactor) {
         double scaledWidth = currentWidth * scaleFactor /100;
         return scaledWidth;

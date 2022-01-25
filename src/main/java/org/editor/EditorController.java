@@ -609,10 +609,16 @@ public class EditorController implements Initializable, ControlScreen {
 
     }
 
-    public void drawChangedPosition(){
+    public void drawChangedPosition(double newXPosition, double newYPosition){
         GraphicsContext gc = editorCanvasImage.getGraphicsContext2D();
         gc.clearRect(0, 0, editorCanvasImage.getWidth(), editorCanvasImage.getHeight());
-        gc.drawImage(editorImageObject.getOriginalImage(), editorImageObject.getCurrentXPosition(), editorImageObject.getCurrentYPosition(), editorImageObject.getCurrentWidth(),editorImageObject.getCurrentHeight());
+        if(!isFiltered) {
+            gc.drawImage(editorImageObject.getOriginalImage(), newXPosition, newYPosition, editorImageObject.getCurrentWidth(), editorImageObject.getCurrentHeight());
+        }
+        else if (isFiltered){
+            gc.drawImage(editorImageObject.getFilteredImage(), newXPosition, newYPosition, editorImageObject.getCurrentWidth(), editorImageObject.getCurrentHeight());
+
+        }
     }
 
 
