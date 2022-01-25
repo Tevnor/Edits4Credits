@@ -10,6 +10,9 @@
         <File name="EditorLog" fileName="EditorLog.log" append="false">
             <PatternLayout pattern="[%t] %-5p %c{2} - %m%n"/>
         </File>
+        <File name="FileHandlingLog" fileName="FileHandlingLog.log" append="false">
+            <PatternLayout pattern="[%t] %-5p %c{2} - %m%n"/>
+        </File>
         <Console name="STDOUT" target="SYSTEM_OUT">
             <PatternLayout pattern="%d %-5p [%t] %C{2} (%F:%L) - %m%n"/>
         </Console>
@@ -18,6 +21,9 @@
 
         <!-- You my want to define class or package level per-logger rules -->
         <Logger name="org.editor.EditorController" level="debug">
+            <AppenderRef ref="EditorLog"/>
+        </Logger>
+        <Logger name="org.editor.ImportControl" level="debug">
             <AppenderRef ref="EditorLog"/>
         </Logger>
         <Logger name="org.editor.tools.drawingtool.DrawingTool" level="debug">

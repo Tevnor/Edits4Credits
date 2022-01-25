@@ -84,11 +84,11 @@ public class ImageDimensions {
     public double getImageAspectRatio(Image image){
         return image.getWidth() / image.getHeight();
     }
-    public double getResizedImageHeight(double height, double ratio){
-        return height / ratio;
+    public double getResizedImageHeight(double width, double ratio){
+        return width / ratio;
     }
-    public double getResizedImageWidth(double width, double ratio){
-        return width * ratio;
+    public double getResizedImageWidth(double height, double ratio){
+        return height * ratio;
     }
 
 }

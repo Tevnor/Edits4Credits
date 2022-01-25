@@ -1,10 +1,10 @@
 package org.editor.layout;
 
-import javafx.scene.image.Image;
-import javafx.stage.FileChooser;
+import javafx.geometry.Pos;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.control.Button;
+import javafx.scene.layout.StackPane;
 import org.editor.EditorController;
-
-import java.io.File;
 
 public class EditorControllerLayoutManager {
 
@@ -80,10 +80,15 @@ public class EditorControllerLayoutManager {
     public boolean useWidthOrHeight(EditorController editorController){
         return !(editorController.getProject().getProjectAspectRatio() > 1);
     }
-    public Image getFileChooserImage(){
-        FileChooser chooser = new FileChooser();
-        File f = chooser.showOpenDialog(null);
-        Image fileChooserImage = new Image(f.getPath());
-        return fileChooserImage;
+
+    public void disableButton(Button btn){
+        btn.setDisable(true);
+        btn.setVisible(false);
     }
+    public void setEditorCanvasLayout(Canvas canvas, StackPane stack){
+        stack.getChildren().add(canvas);
+        StackPane.setAlignment(canvas, Pos.CENTER);
+        canvas.toBack();
+    }
+
 }

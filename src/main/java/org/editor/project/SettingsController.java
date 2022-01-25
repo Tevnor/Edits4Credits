@@ -80,10 +80,9 @@ public class SettingsController implements Initializable, ControlScreen {
             }else{
                 project = new Project(projectWidth, projectHeight);
             }
-
+            createProject.setDisable(true);
             enterProject();
         } catch (NumberFormatException e) {
-            e.printStackTrace();
             logger.warn("tried to create project with no passed width and height");
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Warning!");

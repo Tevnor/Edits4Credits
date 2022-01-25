@@ -39,7 +39,6 @@ import org.editor.tools.drawingtool.graphiccontrol.handlers.PolygonDrawer;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -123,6 +122,7 @@ public class EditorController implements Initializable, ControlScreen {
     private DrawOptionsController options;
     private Stage drawOptStage = new Stage();
 
+    private ImportControl ic = new ImportControl();
     private Canvas editorCanvasImage;
     private Parent noiseOptRoot;
     private NoiseController noiseController;
@@ -399,11 +399,6 @@ public class EditorController implements Initializable, ControlScreen {
         noiseOptStage.show();
     }
 
-    public WritableImage createImageFromCanvas(Canvas canvas){
-        WritableImage filterImage = canvas.snapshot(null, null);
-        return filterImage;
-    }
-
     // Apply the checkerboard filter to the filterTool object that was instantiated at setImportedImage()
     public void handleApplyCheckerboard(ActionEvent event) {
         filterTypeEnumList = new ArrayList<>();
@@ -442,65 +437,12 @@ public class EditorController implements Initializable, ControlScreen {
 
     public void setImage() {
         gc.drawImage(filteredImage,0, 0, filteredImage.getWidth(), filteredImage.getHeight());
-        initImageTool(filteredImage);
+        ic.getImageTool(editorCanvas,filteredImage);
 
         filterTypeEnumList.clear();
     }
 
-    /*
-        Import images via drag and drop
-    */
-    @FXML
-    private void handleDragOver(DragEvent dragEvent) {
-        if (dragEvent.getDragboard().hasFiles()) {
-            dragEvent.acceptTransferModes(TransferMode.ANY);
-        }
-    }
-    /*@FXML
-    private void handleDragDropped(DragEvent dragEvent) {
-        try {
-            File f = dragEvent.getDragboard().getFiles().get(0);
-            imagePath = f;
-            Image droppedImage = new Image(new FileInputStream(f));
 
-            // Pass image to setter method
-            setImageToCanvas(droppedImage);
-        } catch (Exception e) {
-            e.printStackTrace();
-            e.getCause();
-        }
-    }
-    */
-
-    public void handleImportButton(ActionEvent event) throws IOException {
-        importImageFromExplorer();
-        orderStack();
-    }
-    public void importImageFromExplorer(){
-        Image fileChooserImage = layoutManager.getFileChooserImage();
-        createEditorImage(fileChooserImage);
-        createOriginalImage(fileChooserImage);
-        setImageToCanvas(fileChooserImage);
-        setImportOriginalImage(originalImageObject.getOriginalImage());
-    }
-    public void setImageToCanvas(Image image) {
-        // Pass image to setter method
-        setEditorImageCanvas();
-        setOriginalImageCanvas();
-        setImportedImage(image);
-    }
-
-    // create empty canvas for images with the size of the stack pane
-    public void setEditorImageCanvas(){
-        editorCanvasImage = new Canvas(stack.getPrefWidth(), stack.getPrefHeight());
-        stack.getChildren().add(editorCanvasImage);
-
-        StackPane.setAlignment(editorCanvasImage, Pos.CENTER);
-        editorCanvasImage.toBack();
-    }
-    public void setOriginalImageCanvas(){
-        this.originalCanvas = new Canvas(project.getProjectWidth(), project.getProjectHeight());
-    }
     public void setFilteredImage(Image image){
         this.filteredImage = image;
     }
@@ -508,76 +450,6 @@ public class EditorController implements Initializable, ControlScreen {
         gc = editorCanvasImage.getGraphicsContext2D();
         gc.drawImage(filteredImage, editorImageObject.getCurrentXPosition(), editorImageObject.getCurrentYPosition(), editorImageObject.getCurrentWidth(), editorImageObject.getCurrentHeight());
         //initImageTool(filteredImage);
-    }
-
-    // draw selected image to the image canvas
-    public void setImportedImage(Image importedImage) {
-        gc = editorCanvasImage.getGraphicsContext2D();
-
-        double ratio = editorImageObject.getImageAspectRatio(importedImage);
-        Image resizedImage;
-        int editorCanvasImageWidth = (int) editorCanvasImage.getWidth();
-        int editorCanvasImageHeight = (int) editorCanvasImage.getHeight();
-
-        // Instantiate resized image from imported image
-        if (ratio >= 1){
-            resizedImage = editorImageObject.scaleImage(importedImage, editorCanvasImageWidth, editorImageObject.getResizedImageHeight(editorCanvasImageWidth, ratio), true, true);
-            if(resizedImage.getHeight() > stack.getPrefHeight()){
-                resizedImage = editorImageObject.scaleImage(importedImage, editorImageObject.getResizedImageWidth(editorCanvasImageHeight, ratio), editorCanvasImageHeight, true, true);
-            }
-        } else {
-            resizedImage = editorImageObject.scaleImage(importedImage, editorImageObject.getResizedImageWidth(editorCanvasImageHeight, ratio), editorCanvasImageHeight, true, true);
-            if(resizedImage.getWidth() > stack.getPrefWidth()){
-                resizedImage = editorImageObject.scaleImage(importedImage, editorCanvasImageWidth, editorImageObject.getResizedImageHeight(editorCanvasImageWidth,ratio), true, true);
-            }
-        }
-
-        editorImageObject.setCurrentWidth(resizedImage.getWidth());
-        editorImageObject.setCurrentHeight(resizedImage.getHeight());
-        // Draw resized image onto editorCanvasImage
-        gc.drawImage(resizedImage,0, 0, resizedImage.getWidth(), resizedImage.getHeight());
-
-
-        //disables import button if image was imported
-        if (importedImage != null) {
-            importButton.setDisable(true);
-            importButton.setVisible(false);
-            //openFile.setDisable(true);
-        }
-
-        // Instantiate ImageTool Object
-        initImageTool(resizedImage);
-    }
-    public void setImportOriginalImage(Image importedImage){
-        gc = originalCanvas.getGraphicsContext2D();
-
-        double ratio = originalImageObject.getImageAspectRatio(importedImage);
-        Image resizedOriginalImage;
-
-        // Instantiate resized image from imported image
-        if (ratio >= 1){
-            resizedOriginalImage = originalImageObject.scaleImage(importedImage, project.getProjectWidth(), originalImageObject.getResizedImageHeight(project.getProjectWidth(), ratio), true, true);
-            if(resizedOriginalImage.getHeight() > project.getProjectHeight()) {
-                resizedOriginalImage = originalImageObject.scaleImage(importedImage, originalImageObject.getResizedImageWidth(project.getProjectHeight(), ratio), project.getProjectHeight(), true, true);
-            }
-        } else {
-            resizedOriginalImage = originalImageObject.scaleImage(importedImage, originalImageObject.getResizedImageWidth(project.getProjectHeight(), ratio), project.getProjectHeight(), true, true);
-            if(resizedOriginalImage.getWidth() > project.getProjectWidth()){
-                resizedOriginalImage = originalImageObject.scaleImage(importedImage, project.getProjectWidth(),  originalImageObject.getResizedImageHeight(project.getProjectWidth(), ratio), true, true);
-            }
-        }
-
-        originalImageObject.setCurrentWidth(resizedOriginalImage.getWidth());
-        originalImageObject.setCurrentHeight(resizedOriginalImage.getHeight());
-
-        // Draw resized image onto editorCanvasImage
-        gc.drawImage(resizedOriginalImage,0, 0, resizedOriginalImage.getWidth(), resizedOriginalImage.getHeight());
-    }
-
-    public void initImageTool(Image img) {
-        // Create pixel array from resized image to enhance performance of future references
-        this.imageTool = new ImageTool(img, editorCanvasImage, gc);
-        this.imageTool.createPixelArray();
     }
 
     // Scale the imported source image to the maximum canvas size
@@ -643,6 +515,23 @@ public class EditorController implements Initializable, ControlScreen {
         importImageFromExplorer();
         orderStack();
     }
+    public void handleImportButton(ActionEvent event) throws IOException {
+        importImageFromExplorer();
+        orderStack();
+    }
+    public void importImageFromExplorer(){
+        if(ic.setImageFromExplorer()){
+            editorImageObject = ic.getImageDimInstance();
+            originalImageObject = ic.getImageDimInstance();
+            editorCanvasImage = ic.getEditorImageCanvas(stack);
+            originalCanvas = ic.getOriginalImageCanvas(project);
+            ic.setImportedImgOnCanvas(editorCanvasImage,editorImageObject, false);
+            ic.setImportedImgOnCanvas(originalCanvas,originalImageObject, true);
+            layoutManager.disableButton(importButton);
+            layoutManager.setEditorCanvasLayout(editorCanvasImage,stack);
+            imageTool = ic.getImageTool(editorCanvasImage);
+        }
+    }
 
     public void handleDeleteFile(ActionEvent event) {
     }
@@ -651,42 +540,12 @@ public class EditorController implements Initializable, ControlScreen {
     }
 
     public void handleSaveFile(ActionEvent event) {
-/*        Stage fileWindow = new Stage();
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Save Image");
-
-        File outputFile = fileChooser.showSaveDialog(fileWindow);
-        if (outputFile != null) {
-            try {
-                BufferedImage bufferedImage = SwingFXUtils.fromFXImage(project.getFinalImage(dt.getPixelBufferOfDrawing(project)), null);
-                ImageIO.write(bufferedImage, "png", outputFile);
-            } catch (IOException ex) {
-
-            }
-        }*/
-
-
-        //saveToFile(createImageFromCanvas(originalCanvas));
-        saveToFile(project.getFinalImage(dt.getPixelBufferOfDrawing(project),getOriginalBuffer(originalCanvas)));
-    }
-    public static void saveToFile(Image writableImage) {
-        try {
-            File outputFile = new File("drawing.png");
-            BufferedImage bufferedImage = SwingFXUtils.fromFXImage(writableImage, null);
-            ImageIO.write(bufferedImage, "png", outputFile);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        ic.save(project,originalCanvas,dt.getPixelBufferOfDrawing(project));
     }
 
 
 
-    public void createOriginalImage(Image image){
-        this.originalImageObject = new ImageDimensions(image, 0,0, image.getWidth(), image.getHeight());
-    }
-    public void createEditorImage(Image image){
-        this.editorImageObject = new ImageDimensions(image, 0,0, image.getWidth(), image.getHeight());
-    }
+
 
 
     public double getOriginalAndEditorCanvasRatio(){
@@ -728,15 +587,6 @@ public class EditorController implements Initializable, ControlScreen {
         return this.originalImageObject;
     }
 
-    public int[] getOriginalBuffer(Canvas canvas){
-        SnapshotParameters sp = new SnapshotParameters();
-        sp.setFill(Color.TRANSPARENT);
-        int[] export = new int[(int)(canvas.getWidth()*canvas.getHeight())];
 
-        canvas.snapshot(sp,null).getPixelReader()
-                .getPixels(0,0,(int)canvas.getWidth(),(int)canvas.getHeight(),
-                        WritablePixelFormat.getIntArgbInstance(), export, 0, (int)canvas.getWidth());
-        return export;
-    }
 }
 
