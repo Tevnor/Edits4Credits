@@ -13,27 +13,41 @@ import java.util.concurrent.Executors;
 
 public class FilterOperation {
 
-    private final ImageGrid imageGrid;
     private final int runs;
+    private final int width;
+    private final int blockWidth;
+    private final int blockHeight;
+    private final int panelWidth;
+    private final int panelHeight;
     private final int[] pixelArray;
     private final int[] pixelArrayNew;
     private final List<FilterType> filterTypeList;
 
     private final double factor;
+    private final double factorX;
+    private final double factorY;
     private final boolean isComplement;
     private final boolean isSilhouette;
     /**
      * FILTER OPERATION
      * */
     public FilterOperation(ImageGrid imageGrid, FilterInputAttributes inputAttributes) {
-        this.imageGrid = imageGrid;
-        this.runs = imageGrid.getRuns();
+        this.runs = inputAttributes.getRuns();
         this.pixelArray = imageGrid.getPixelArray();
         this.pixelArrayNew = new int[pixelArray.length];
         this.filterTypeList = inputAttributes.getFilterTypeList();
         this.factor = inputAttributes.getFactor();
+        this.factorX = inputAttributes.getFactorX();
+        this.factorY = inputAttributes.getFactorY();
         this.isComplement = inputAttributes.isComplementToggle();
         this.isSilhouette = inputAttributes.isSilhouetteToggle();
+
+        this.width = imageGrid.getWidth();
+        int height = imageGrid.getHeight();
+        this.blockWidth = width / runs;
+        this.blockHeight = height / runs;
+        this.panelWidth = width / (runs * 2);
+        this.panelHeight = height / (runs * 2);
     }
 
     /**
@@ -50,7 +64,7 @@ public class FilterOperation {
             for (int blockCol = 0; blockCol < runs; blockCol++) {
                 Runnable blockRunnable = new BlockOperation(blockFinish, index);
                 blockRunnableList.add(blockRunnable);
-                index += imageGrid.getBlockWidth();
+                index += blockWidth;
             }
 
             for (Runnable r: blockRunnableList) {
@@ -62,7 +76,7 @@ public class FilterOperation {
                 eb.printStackTrace();
             }
             blockRunnableList.clear();
-            index = (blockRow + 1) * (imageGrid.getBlockHeight() * imageGrid.getWidth());
+            index = (blockRow + 1) * (blockHeight * width);
         }
         return pixelArrayNew;
     }
@@ -116,13 +130,13 @@ public class FilterOperation {
                     // Index stays the same
                     break;
                 case 1:
-                    index += imageGrid.getPanelWidth();
+                    index += panelWidth;
                     break;
                 case 2:
-                    index += (imageGrid.getPanelHeight()) * imageGrid.getWidth();
+                    index += (panelHeight * width);
                     break;
                 case 3:
-                    index += (imageGrid.getPanelWidth() + (imageGrid.getPanelHeight()) * imageGrid.getWidth());
+                    index += (panelWidth + (panelHeight) * width);
                     break;
                 default:
                     throw new IllegalStateException("Unexpected value: " + ordinal);
@@ -153,26 +167,30 @@ public class FilterOperation {
         public void startPanel() {
             int rowIndex = pixelIndex;
 
-            for (int row = 0; row < imageGrid.getPanelHeight(); row++) {
-                for (int col = 0; col < imageGrid.getPanelWidth(); col++) {
+            for (int row = 0; row < panelHeight; row++) {
+                for (int col = 0; col < panelWidth; col++) {
                     int argbOriginal = pixelArray[pixelIndex];
-                    int argb = filter.applyFilter(pixelArray[pixelIndex], factor);
+
+                    //TODO new
+                    double factorxy = factorX / factorY;
+
+                    int argb = filter.applyFilter(pixelArray[pixelIndex], factorxy);
 
                     if (isSilhouette) {
                         argb = (short) argb;
                         if (isComplement) {
                             argb = ~argb;
                         }
-                        int alpha = argb & 0xFF000000;
-                        if (alpha == 0){
-                            pixelArrayNew[pixelIndex] = argbOriginal;
+
+                        int alpha = (argb & 0xFF0000);
+                        if (alpha == 0) {
+                            argb = argbOriginal;
                         }
-                    } else {
-                        pixelArrayNew[pixelIndex] = argb;
                     }
+                    pixelArrayNew[pixelIndex] = argb;
                     pixelIndex++;
                 }
-                rowIndex += imageGrid.getWidth();
+                rowIndex += width;
                 pixelIndex = rowIndex;
             }
         }

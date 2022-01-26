@@ -11,6 +11,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -33,16 +34,14 @@ public class FilterOptionsController implements Initializable {
     private static final Logger FOC_LOGGER = LogManager.getLogger(FilterOptionsController.class.getName());
 
     @FXML
-    private VBox filterPickVBox;
+    private GridPane glitchGridPane;
     @FXML
-    private VBox factorVBox;
+    private GridPane checkerboardGridPane;
     @FXML
-    private VBox panelVBox;
-    @FXML
-    private VBox silhouetteVBox;
+    private GridPane intensityGridPane;
+
     @FXML
     private Label filterOptionsLabel;
-
     @FXML
     private Slider glitchSlider;
     @FXML
@@ -76,8 +75,6 @@ public class FilterOptionsController implements Initializable {
      * Init
      * */
     public void initFilterOptions(Image original, Image resized, List<FilterType> filterTypeList, String filterName, EditorController ec) {
-        setMenu(filterName);
-
         inputAttributes = new FilterInputAttributes();
         this.ec = ec;
         this.originalImageGrid = new ImageGrid(original);
@@ -88,7 +85,7 @@ public class FilterOptionsController implements Initializable {
         this.filterTypeList = maximizeList(filterTypeList);
         inputAttributes.setFilterTypeList(filterTypeList);
 
-        filterOptionsLabel.setText(filterName);
+        setMenu(filterName);
     }
 
     /**
@@ -147,8 +144,27 @@ public class FilterOptionsController implements Initializable {
         previewFilter();
     }
 
+    // Get x and y coordinates from input pane for glitch factors
+    public void handleCoordinates(MouseEvent mouseEvent) {
+        inputAttributes.setFactorX(mouseEvent.getX());
+        inputAttributes.setFactorY(mouseEvent.getY() * 1000);
+        previewFilter();
+    }
+
     public void changeSliderValue(MouseEvent mouseEvent) {
-        inputAttributes.setFactor(glitchSlider.getValue());
+        inputAttributes.setFactor(glitchSlider.getValue() / 10000);
+        previewFilter();
+    }
+
+    /**
+     * Checkerboard Input Options
+     * */
+    public void handlePanelIncrease(ActionEvent actionEvent) {
+        inputAttributes.increaseRuns();
+        previewFilter();
+    }
+    public void handlePanelDecrease(ActionEvent actionEvent) {
+        inputAttributes.decreaseRuns();
         previewFilter();
     }
 
@@ -189,17 +205,31 @@ public class FilterOptionsController implements Initializable {
         }
     }
 
+    /**
+     * Set filter menu according to selection
+     * */
     public void setMenu(String name) {
+        filterOptionsLabel.setText(name);
         if (name.equals("Checkerboard")) {
-            silhouetteVBox.setVisible(false);
-            factorVBox.setVisible(false);
-            panelVBox.setVisible(true);
-            filterPickVBox.setVisible(true);
+            checkerboardGridPane.setVisible(true);
+            glitchGridPane.setVisible(false);
+            intensityGridPane.setVisible(false);
+
+            inputAttributes.setFactorX(333);
+            inputAttributes.setFactorY(222 * 111);
+            inputAttributes.setRuns(1);
+        } else if (name.equals("Glitch Filter")) {
+            checkerboardGridPane.setVisible(false);
+            glitchGridPane.setVisible(true);
+            intensityGridPane.setVisible(false);
+
+            inputAttributes.setRuns(2);
         } else {
-            silhouetteVBox.setVisible(true);
-            factorVBox.setVisible(true);
-            panelVBox.setVisible(false);
-            filterPickVBox.setVisible(false);
+            checkerboardGridPane.setVisible(false);
+            glitchGridPane.setVisible(false);
+            intensityGridPane.setVisible(true);
+
+            inputAttributes.setRuns(2);
         }
     }
 }

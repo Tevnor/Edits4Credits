@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.MenuItem?>
@@ -10,6 +11,7 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
@@ -20,10 +22,9 @@
         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
     </columnConstraints>
     <rowConstraints>
+        <RowConstraints minHeight="10.0" percentHeight="20.0" prefHeight="30.0" vgrow="SOMETIMES" />
         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-        <RowConstraints minHeight="5.0" prefHeight="15.0" vgrow="SOMETIMES" />
-        <RowConstraints minHeight="5.0" prefHeight="15.0" vgrow="SOMETIMES" />
+        <RowConstraints minHeight="5.0" percentHeight="20.0" prefHeight="10.0" vgrow="SOMETIMES" />
     </rowConstraints>
     <children>
       <Label fx:id="filterOptionsLabel" alignment="CENTER" contentDisplay="CENTER" text="Glitch Filter" textAlignment="CENTER" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
@@ -31,119 +32,174 @@
             <Font name="Segoe UI Semibold" size="18.0" />
          </font>
       </Label>
-      <VBox fx:id="filterPickVBox" alignment="CENTER" layoutX="10.0" layoutY="118.0" prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="1">
+      <GridPane fx:id="glitchGridPane" gridLinesVisible="true" GridPane.rowIndex="1">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" percentHeight="50.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" percentHeight="50.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
          <children>
-            <SplitMenuButton mnemonicParsing="false" text="Filter 1">
-              <items>
-                <MenuItem mnemonicParsing="false" text="Original" />
-                <MenuItem mnemonicParsing="false" text="Glitch" />
-                  <MenuItem mnemonicParsing="false" text="Grayscale" />
-                  <MenuItem mnemonicParsing="false" text="Inverse" />
-                  <MenuItem mnemonicParsing="false" text="Noise" />
-              </items>
-            </SplitMenuButton>
-            <SplitMenuButton layoutX="64.0" layoutY="52.0" mnemonicParsing="false" text="Filter 2">
-               <items>
-                  <MenuItem mnemonicParsing="false" text="Original" />
-                  <MenuItem mnemonicParsing="false" text="Glitch" />
-                  <MenuItem mnemonicParsing="false" text="Grayscale" />
-                  <MenuItem mnemonicParsing="false" text="Inverse" />
-                  <MenuItem mnemonicParsing="false" text="Noise" />
-               </items>
-            </SplitMenuButton>
-            <SplitMenuButton layoutX="65.0" layoutY="64.0" mnemonicParsing="false" text="Filter 3">
-               <items>
-                  <MenuItem mnemonicParsing="false" text="Original" />
-                  <MenuItem mnemonicParsing="false" text="Glitch" />
-                  <MenuItem mnemonicParsing="false" text="Grayscale" />
-                  <MenuItem mnemonicParsing="false" text="Inverse" />
-                  <MenuItem mnemonicParsing="false" text="Noise" />
-               </items>
-            </SplitMenuButton>
-            <SplitMenuButton layoutX="65.0" layoutY="77.0" mnemonicParsing="false" text="Filter 4">
-               <items>
-                  <MenuItem mnemonicParsing="false" text="Original" />
-                  <MenuItem mnemonicParsing="false" text="Glitch" />
-                  <MenuItem mnemonicParsing="false" text="Grayscale" />
-                  <MenuItem mnemonicParsing="false" text="Inverse" />
-                  <MenuItem mnemonicParsing="false" text="Noise" />
-               </items>
-            </SplitMenuButton>
-         </children>
-      </VBox>
-      <VBox fx:id="factorVBox" alignment="CENTER" layoutX="10.0" layoutY="226.0" prefHeight="200.0" prefWidth="100.0" visible="false" GridPane.rowIndex="1">
-         <children>
-              <Slider fx:id="glitchSlider" blockIncrement="33.0" majorTickUnit="111.0" max="1000.0" minorTickCount="33" onDragDetected="#changeSliderValue" showTickMarks="true">
-               <padding>
-                  <Insets left="10.0" right="10.0" />
-               </padding>
-            </Slider>
-              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Factor" textAlignment="CENTER">
-                  <font>
-                      <Font name="Segoe UI Semilight" size="16.0" />
-                  </font>
-              </Text>
-         </children>
-      </VBox>
-      <VBox fx:id="panelVBox" alignment="CENTER" layoutX="10.0" layoutY="226.0" prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="2">
-         <children>
-            <Label text="Panel Amount">
-               <font>
-                  <Font name="Segoe UI" size="14.0" />
-               </font>
-               <VBox.margin>
-                  <Insets top="10.0" />
-               </VBox.margin>
-            </Label>
-            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
-               <children>
-                  <Button mnemonicParsing="false" text="+">
-                     <HBox.margin>
-                        <Insets right="15.0" />
-                     </HBox.margin>
-                     <padding>
-                        <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
-                     </padding>
-                  </Button>
-                  <Button mnemonicParsing="false" text="-">
-                     <HBox.margin>
-                        <Insets left="15.0" />
-                     </HBox.margin>
-                     <padding>
-                        <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
-                     </padding>
-                  </Button>
-               </children>
-            </HBox>
-         </children>
-      </VBox>
-        <VBox fx:id="silhouetteVBox" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" visible="false" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
-            <children>
-                <ToggleButton fx:id="silhouetteToggleButton" mnemonicParsing="false" onAction="#handleSilhouette" text="Silhouette">
-                    <VBox.margin>
-                        <Insets bottom="10.0" left="10.0" right="10.0" />
-                    </VBox.margin>
-                    <padding>
-                        <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
-                    </padding>
-                    <font>
-                        <Font name="Segoe UI Semilight" size="12.0" />
-                    </font>
-                </ToggleButton>
-                <ToggleButton fx:id="complementToggleButton" mnemonicParsing="false" onAction="#handleComplement" text="Complement">
-                    <padding>
-                        <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
-                    </padding>
-                    <font>
-                        <Font name="Segoe UI Semilight" size="12.0" />
-                    </font>
-               <VBox.margin>
+            <Pane fx:id="coordinatePane" onMouseReleased="#handleCoordinates" style="-fx-background-color: lightgrey;">
+               <opaqueInsets>
                   <Insets />
-               </VBox.margin>
-                </ToggleButton>
-            </children>
-        </VBox>
-        <HBox alignment="CENTER" GridPane.columnSpan="2147483647" GridPane.rowIndex="3">
+               </opaqueInsets>
+               <cursor>
+                  <Cursor fx:constant="CROSSHAIR" />
+               </cursor>
+               <GridPane.margin>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </GridPane.margin>
+            </Pane>
+              <VBox fx:id="silhouetteVBox" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                  <children>
+                      <ToggleButton fx:id="silhouetteToggleButton" mnemonicParsing="false" onAction="#handleSilhouette" text="Silhouette">
+                          <VBox.margin>
+                              <Insets bottom="10.0" left="10.0" right="10.0" />
+                          </VBox.margin>
+                          <padding>
+                              <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
+                          </padding>
+                          <font>
+                              <Font name="Segoe UI Semilight" size="12.0" />
+                          </font>
+                      </ToggleButton>
+                      <ToggleButton fx:id="complementToggleButton" mnemonicParsing="false" onAction="#handleComplement" text="Complement">
+                          <padding>
+                              <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
+                          </padding>
+                          <font>
+                              <Font name="Segoe UI Semilight" size="12.0" />
+                          </font>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                      </ToggleButton>
+                  </children>
+              </VBox>
+         </children>
+      </GridPane>
+      <GridPane fx:id="checkerboardGridPane" gridLinesVisible="true" GridPane.rowIndex="1">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" percentHeight="70.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <VBox fx:id="filterPickVBox" alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+               <children>
+                  <SplitMenuButton mnemonicParsing="false" text="Filter 1">
+                    <items>
+                      <MenuItem mnemonicParsing="false" text="Original" />
+                      <MenuItem mnemonicParsing="false" text="Glitch" />
+                        <MenuItem mnemonicParsing="false" text="Grayscale" />
+                        <MenuItem mnemonicParsing="false" text="Inverse" />
+                        <MenuItem mnemonicParsing="false" text="Noise" />
+                    </items>
+                     <VBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </VBox.margin>
+                  </SplitMenuButton>
+                  <SplitMenuButton layoutX="64.0" layoutY="52.0" mnemonicParsing="false" text="Filter 2">
+                     <items>
+                        <MenuItem mnemonicParsing="false" text="Original" />
+                        <MenuItem mnemonicParsing="false" text="Glitch" />
+                        <MenuItem mnemonicParsing="false" text="Grayscale" />
+                        <MenuItem mnemonicParsing="false" text="Inverse" />
+                        <MenuItem mnemonicParsing="false" text="Noise" />
+                     </items>
+                     <VBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </VBox.margin>
+                  </SplitMenuButton>
+                  <SplitMenuButton layoutX="65.0" layoutY="64.0" mnemonicParsing="false" text="Filter 3">
+                     <items>
+                        <MenuItem mnemonicParsing="false" text="Original" />
+                        <MenuItem mnemonicParsing="false" text="Glitch" />
+                        <MenuItem mnemonicParsing="false" text="Grayscale" />
+                        <MenuItem mnemonicParsing="false" text="Inverse" />
+                        <MenuItem mnemonicParsing="false" text="Noise" />
+                     </items>
+                     <VBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </VBox.margin>
+                  </SplitMenuButton>
+                  <SplitMenuButton layoutX="65.0" layoutY="77.0" mnemonicParsing="false" text="Filter 4">
+                     <items>
+                        <MenuItem mnemonicParsing="false" text="Original" />
+                        <MenuItem mnemonicParsing="false" text="Glitch" />
+                        <MenuItem mnemonicParsing="false" text="Grayscale" />
+                        <MenuItem mnemonicParsing="false" text="Inverse" />
+                        <MenuItem mnemonicParsing="false" text="Noise" />
+                     </items>
+                     <VBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </VBox.margin>
+                  </SplitMenuButton>
+               </children>
+            </VBox>
+            <VBox fx:id="panelVBox" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="1">
+               <children>
+                  <Label text="Panel Amount">
+                     <font>
+                        <Font name="Segoe UI" size="14.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets top="10.0" />
+                     </VBox.margin>
+                  </Label>
+                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <Button fx:id="panelIncreaseButton" mnemonicParsing="false" onAction="#handlePanelIncrease" text="+">
+                           <HBox.margin>
+                              <Insets right="15.0" />
+                           </HBox.margin>
+                           <padding>
+                              <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
+                           </padding>
+                        </Button>
+                        <Button fx:id="panelDecreaseButton" mnemonicParsing="false" onAction="#handlePanelDecrease" text="-">
+                           <HBox.margin>
+                              <Insets left="15.0" />
+                           </HBox.margin>
+                           <padding>
+                              <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
+                           </padding>
+                        </Button>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+      </GridPane>
+      <GridPane fx:id="intensityGridPane" GridPane.rowIndex="1">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" percentHeight="50.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" percentHeight="50.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <VBox fx:id="factorVBox" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="1">
+               <children>
+                    <Slider fx:id="glitchSlider" blockIncrement="33.0" majorTickUnit="111.0" max="1000.0" minorTickCount="33" onDragDetected="#changeSliderValue" showTickMarks="true">
+                     <padding>
+                        <Insets left="10.0" right="10.0" />
+                     </padding>
+                  </Slider>
+                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Intensity" textAlignment="CENTER">
+                        <font>
+                            <Font name="Segoe UI Semilight" size="16.0" />
+                        </font>
+                    </Text>
+               </children>
+            </VBox>
+         </children>
+      </GridPane>
+        <HBox alignment="CENTER" GridPane.columnSpan="2147483647" GridPane.rowIndex="2">
             <Button fx:id="applyFilterButton" alignment="CENTER" mnemonicParsing="false" onAction="#handleApplyFilter" text="Apply">
                 <padding>
                     <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />

@@ -11,10 +11,12 @@ public class FilterInputAttributes {
      * */
 //    private boolean original = false;
     private double factor = 0;
+    private double factorX = 0;
+    private double factorY = 0;
     private boolean complementToggle = false;
     private boolean silhouetteToggle = false;
     private List<FilterType> filterTypeList;
-    private int runs = 1;
+    private int runs = 2;
 //    private FilterType filterType = FilterType.ORIGINAL;
     private FilterApplicationType appType = FilterApplicationType.STANDARD;
 
@@ -30,16 +32,26 @@ public class FilterInputAttributes {
         this.appType = appType;
     }
 
-//    public void setOriginal(boolean original) {
-//        this.original = original;
-//    }
-
     public double getFactor() {
         return factor;
     }
 
     public void setFactor(double factor) {
         this.factor = factor;
+    }
+
+    public double getFactorX() {
+        return factorX;
+    }
+    public void setFactorX(double factorX) {
+        this.factorX = factorX;
+    }
+
+    public double getFactorY() {
+        return factorY;
+    }
+    public void setFactorY(double factorY) {
+        this.factorY = factorY;
     }
 
     public boolean isComplementToggle() {
@@ -74,4 +86,19 @@ public class FilterInputAttributes {
         this.runs = runs;
     }
 
+    public void increaseRuns() {
+        if (runs >= 8) {
+            runs = 8;
+        } else {
+            runs *= 2;
+        }
+    }
+
+    public void decreaseRuns() {
+        if(runs <= 2) {
+            runs = 2;
+        } else {
+            runs /= 2;
+        }
+    }
 }
