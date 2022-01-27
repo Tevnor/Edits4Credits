@@ -3,10 +3,9 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.Slider?>
-<?import javafx.scene.control.SplitMenuButton?>
 <?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -17,7 +16,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<GridPane fx:id="glitchGridPane" gridLinesVisible="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.editor.tools.filtertool.FilterOptionsController">
+<GridPane fx:id="filterGridPane" gridLinesVisible="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.editor.tools.filtertool.FilterOptionsController">
     <columnConstraints>
         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
     </columnConstraints>
@@ -32,7 +31,7 @@
             <Font name="Segoe UI Semibold" size="18.0" />
          </font>
       </Label>
-      <GridPane fx:id="glitchGridPane" gridLinesVisible="true" GridPane.rowIndex="1">
+      <GridPane fx:id="glitchGridPane" gridLinesVisible="true" visible="false" GridPane.rowIndex="1">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
         </columnConstraints>
@@ -86,58 +85,31 @@
         </columnConstraints>
         <rowConstraints>
           <RowConstraints minHeight="10.0" percentHeight="70.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints />
         </rowConstraints>
          <children>
             <VBox fx:id="filterPickVBox" alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
                <children>
-                  <SplitMenuButton mnemonicParsing="false" text="Filter 1">
-                    <items>
-                      <MenuItem mnemonicParsing="false" text="Original" />
-                      <MenuItem mnemonicParsing="false" text="Glitch" />
-                        <MenuItem mnemonicParsing="false" text="Grayscale" />
-                        <MenuItem mnemonicParsing="false" text="Inverse" />
-                        <MenuItem mnemonicParsing="false" text="Noise" />
-                    </items>
+                  <ChoiceBox fx:id="filterTypeChoiceBox1" prefWidth="150.0">
                      <VBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </VBox.margin>
-                  </SplitMenuButton>
-                  <SplitMenuButton layoutX="64.0" layoutY="52.0" mnemonicParsing="false" text="Filter 2">
-                     <items>
-                        <MenuItem mnemonicParsing="false" text="Original" />
-                        <MenuItem mnemonicParsing="false" text="Glitch" />
-                        <MenuItem mnemonicParsing="false" text="Grayscale" />
-                        <MenuItem mnemonicParsing="false" text="Inverse" />
-                        <MenuItem mnemonicParsing="false" text="Noise" />
-                     </items>
+                  </ChoiceBox>
+                  <ChoiceBox fx:id="filterTypeChoiceBox2" layoutX="35.0" layoutY="152.0" prefWidth="150.0">
                      <VBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </VBox.margin>
-                  </SplitMenuButton>
-                  <SplitMenuButton layoutX="65.0" layoutY="64.0" mnemonicParsing="false" text="Filter 3">
-                     <items>
-                        <MenuItem mnemonicParsing="false" text="Original" />
-                        <MenuItem mnemonicParsing="false" text="Glitch" />
-                        <MenuItem mnemonicParsing="false" text="Grayscale" />
-                        <MenuItem mnemonicParsing="false" text="Inverse" />
-                        <MenuItem mnemonicParsing="false" text="Noise" />
-                     </items>
+                  </ChoiceBox>
+                  <ChoiceBox fx:id="filterTypeChoiceBox3" layoutX="35.0" layoutY="175.0" prefWidth="150.0">
                      <VBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </VBox.margin>
-                  </SplitMenuButton>
-                  <SplitMenuButton layoutX="65.0" layoutY="77.0" mnemonicParsing="false" text="Filter 4">
-                     <items>
-                        <MenuItem mnemonicParsing="false" text="Original" />
-                        <MenuItem mnemonicParsing="false" text="Glitch" />
-                        <MenuItem mnemonicParsing="false" text="Grayscale" />
-                        <MenuItem mnemonicParsing="false" text="Inverse" />
-                        <MenuItem mnemonicParsing="false" text="Noise" />
-                     </items>
+                  </ChoiceBox>
+                  <ChoiceBox fx:id="filterTypeChoiceBox4" layoutX="35.0" layoutY="200.0" prefWidth="150.0">
                      <VBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </VBox.margin>
-                  </SplitMenuButton>
+                  </ChoiceBox>
                </children>
             </VBox>
             <VBox fx:id="panelVBox" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="1">
@@ -174,7 +146,7 @@
             </VBox>
          </children>
       </GridPane>
-      <GridPane fx:id="intensityGridPane" GridPane.rowIndex="1">
+      <GridPane fx:id="intensityGridPane" visible="false" GridPane.rowIndex="1">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
         </columnConstraints>

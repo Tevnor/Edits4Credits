@@ -1,5 +1,6 @@
 package org.editor;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -38,6 +39,7 @@ import java.util.ResourceBundle;
 
 import org.editor.tools.filtertool.FilterOptionsController;
 import org.editor.tools.filtertool.NoiseController;
+import org.editor.tools.filtertool.filtercontrol.FilterApplicationType;
 import org.editor.tools.filtertool.filtercontrol.filter.FilterType;
 import org.editor.tools.imagetool.ImageDimensions;
 import org.editor.tools.imagetool.ImageTool;
@@ -46,6 +48,10 @@ import org.editor.tools.imagetool.ScaleOptionsController;
 import org.screencontrol.ControlScreen;
 import org.screencontrol.ScreensController;
 import org.screencontrol.Window;
+
+import static org.editor.tools.filtertool.filtercontrol.FilterApplicationType.CHECKERBOARD;
+import static org.editor.tools.filtertool.filtercontrol.FilterApplicationType.STANDARD;
+import static org.editor.tools.filtertool.filtercontrol.filter.FilterType.*;
 
 public class EditorController implements Initializable, ControlScreen {
 
@@ -143,8 +149,8 @@ public class EditorController implements Initializable, ControlScreen {
     private Parent filterOptRoot;
     private FilterOptionsController filterOptionsController;
     private Stage filterOptStage = new Stage();
-    private List<FilterType> filterTypeList;
-
+//    private List<FilterType> filterTypeList;
+    private FilterType filterType;
 
 
     @Override
@@ -403,12 +409,10 @@ public class EditorController implements Initializable, ControlScreen {
             e.printStackTrace();
         }
         filterOptStage = new Stage();
-        Scene glitchOptScene = new Scene(filterOptRoot);
-        glitchOptScene.setFill(Color.TRANSPARENT);
-        filterOptStage.setScene(glitchOptScene);
+        Scene filterOptScene = new Scene(filterOptRoot);
+        filterOptScene.setFill(Color.TRANSPARENT);
+        filterOptStage.setScene(filterOptScene);
         filterOptStage.centerOnScreen();
-        filterOptStage.initStyle(StageStyle.UNDECORATED);
-        filterOptStage.initStyle(StageStyle.TRANSPARENT);
     }
 
     public void handleAddNoise(ActionEvent event) {
@@ -416,86 +420,37 @@ public class EditorController implements Initializable, ControlScreen {
         noiseOptStage.show();
     }
 
-    //TODO duplicate code snippets
 
-    // Apply the checkerboard filter to the filterTool object that was instantiated at setImportedImage()
+    // Checkerboard mode
     public void handleApplyCheckerboard(ActionEvent event) {
-        filterTypeList = new ArrayList<>();
-        filterTypeList.add(FilterType.ORIGINAL);
-        filterTypeList.add(FilterType.GLITCH);
-        filterTypeList.add(FilterType.INVERTED);
-        filterTypeList.add(FilterType.GRAYSCALE);
-
-        try {
-            filterOptionsController.initFilterOptions(
-                    originalImageObject.getFilteredImage(),
-                    editorImageObject.getFilteredImage(),
-                    filterTypeList,
-                    "Checkerboard",
-                    this);
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-            EC_LOGGER.debug("Images not loaded");
-            // Maybe add finally to prompt users to import image
-        }
-        filterOptStage.centerOnScreen();
-        filterOptStage.show();
+        openFilterOptions(CHECKERBOARD, null);
     }
 
+    // Singular filter
     public void handleAddGlitch(ActionEvent event) {
-        filterTypeList = new ArrayList<>();
-        filterTypeList.add(FilterType.GLITCH);
-        try {
-            filterOptionsController.initFilterOptions(
-                    originalImageObject.getFilteredImage(),
-                    editorImageObject.getFilteredImage(),
-                    filterTypeList,
-                    "Glitch Filter",
-                    this);
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-            EC_LOGGER.debug("Images not loaded");
-            // Maybe add finally to prompt users to import image
-        }
-
-        filterOptStage.centerOnScreen();
-        filterOptStage.show();
+        openFilterOptions(STANDARD, GLITCH);
     }
     public void handleAddInverse(ActionEvent event) {
-        filterTypeList = new ArrayList<>();
-        filterTypeList.add(FilterType.INVERTED);
-        try {
-            filterOptionsController.initFilterOptions(
-                    originalImageObject.getFilteredImage(),
-                    editorImageObject.getFilteredImage(),
-                    filterTypeList,
-                    "Inverse Filter",
-                    this);
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-            EC_LOGGER.debug("Images not loaded");
-            // Maybe add finally to prompt users to import image
-        }
-        filterOptStage.centerOnScreen();
-        filterOptStage.show();
+        openFilterOptions(STANDARD, INVERTED);
     }
     public void handleAddGrayscale(ActionEvent event) {
-        filterTypeList = new ArrayList<>();
-        filterTypeList.add(FilterType.GRAYSCALE);
+        openFilterOptions(STANDARD, GRAYSCALE);
+    }
+
+    private void openFilterOptions(FilterApplicationType appType,  FilterType filterType) {
         try {
             filterOptionsController.initFilterOptions(
                     originalImageObject.getFilteredImage(),
                     editorImageObject.getFilteredImage(),
-                    filterTypeList,
-                    "Grayscale Filter",
+                    appType,
+                    filterType,
                     this);
+            filterOptStage.show();
         } catch (NullPointerException e) {
             e.printStackTrace();
             EC_LOGGER.debug("Images not loaded");
             // Maybe add finally to prompt users to import image
         }
-        filterOptStage.centerOnScreen();
-        filterOptStage.show();
     }
 
     /**
@@ -559,7 +514,6 @@ public class EditorController implements Initializable, ControlScreen {
 
     public void handleMoveImage(ActionEvent event) {
         try{
-
             moveOptLoader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/fxml/moveOptions.fxml")));
             moveOptRoot = moveOptLoader.load();
             Stage moveOptStage = new Stage();
@@ -568,11 +522,9 @@ public class EditorController implements Initializable, ControlScreen {
             moveOptStage.show();
             moveOptions = moveOptLoader.getController();
             moveOptions.setEditorController(this);
-
         } catch (IOException exception) {
             exception.printStackTrace();
         }
-
     }
 
     public void drawChangedPosition(double newXPosition, double newYPosition){

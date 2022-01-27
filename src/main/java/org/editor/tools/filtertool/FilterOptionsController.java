@@ -3,66 +3,81 @@ package org.editor.tools.filtertool;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.Slider;
-import javafx.scene.control.ToggleButton;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.editor.EditorController;
-import org.editor.tools.filtertool.filtercontrol.Filter;
+import org.editor.tools.filtertool.filtercontrol.FilterApplicationType;
 import org.editor.tools.filtertool.filtercontrol.FilterInputAttributes;
 import org.editor.tools.filtertool.filtercontrol.filter.FilterType;
 import org.editor.tools.imagetool.ImageGrid;
-import org.editor.tools.imagetool.ImageTool;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
+
+import static org.editor.tools.filtertool.filtercontrol.FilterApplicationType.CHECKERBOARD;
 
 public class FilterOptionsController implements Initializable {
 
     private static final Logger FOC_LOGGER = LogManager.getLogger(FilterOptionsController.class.getName());
 
     @FXML
-    private GridPane glitchGridPane;
+    private GridPane filterGridPane;
+
+    /**
+     * General Nodes
+     * */
+    @FXML
+    private Label filterOptionsLabel;
+    @FXML
+    private Button applyFilterButton;
+    @FXML
+    private Button cancelFilterButton;
+    @FXML
+    private GridPane intensityGridPane;
+    private Stage stage;
+
+    /**
+     * Checkerboard Nodes
+     * */
     @FXML
     private GridPane checkerboardGridPane;
     @FXML
-    private GridPane intensityGridPane;
-
+    private ChoiceBox<FilterType> filterTypeChoiceBox1;
     @FXML
-    private Label filterOptionsLabel;
+    private ChoiceBox<FilterType> filterTypeChoiceBox2;
+    @FXML
+    private ChoiceBox<FilterType> filterTypeChoiceBox3;
+    @FXML
+    private ChoiceBox<FilterType> filterTypeChoiceBox4;
+
+    /**
+     * Glitch Nodes
+     * */
+    @FXML
+    private GridPane glitchGridPane;
     @FXML
     private Slider glitchSlider;
     @FXML
     private ToggleButton complementToggleButton;
     @FXML
     private ToggleButton silhouetteToggleButton;
-    @FXML
-    private Button applyFilterButton;
-    @FXML
-    private Button cancelFilterButton;
 
-    private Stage stage;
-
+    /**
+     * Global Variables
+     * */
     private EditorController ec;
-    private ImageTool imageTool;
+//    private ImageTool imageTool;
 
     private ImageGrid originalImageGrid;
     private ImageGrid resizedImageGrid;
 
     private FilterOperation filterOperation;
-
+    private FilterType filterType;
     private List<FilterType> filterTypeList;
     private FilterInputAttributes inputAttributes;
 
@@ -74,7 +89,7 @@ public class FilterOptionsController implements Initializable {
     /**
      * Init
      * */
-    public void initFilterOptions(Image original, Image resized, List<FilterType> filterTypeList, String filterName, EditorController ec) {
+    public void initFilterOptions(Image original, Image resized, FilterApplicationType appType, FilterType filterType, EditorController ec) {
         inputAttributes = new FilterInputAttributes();
         this.ec = ec;
         this.originalImageGrid = new ImageGrid(original);
@@ -82,16 +97,15 @@ public class FilterOptionsController implements Initializable {
         originalImageGrid.setPixelArray();
         resizedImageGrid.setPixelArray();
 
-        this.filterTypeList = maximizeList(filterTypeList);
-        inputAttributes.setFilterTypeList(filterTypeList);
+        filterTypeList = new ArrayList<>();
+        this.filterType = filterType;
 
-        setMenu(filterName);
+        setMenu(appType, filterType);
     }
 
     /**
      * Apply filter on original and resized image
      * */
-
     public void applyFilter() {
         // On resized
         filterOperation = new FilterOperation(resizedImageGrid, inputAttributes);
@@ -111,7 +125,6 @@ public class FilterOptionsController implements Initializable {
         // Draw both to their respective canvas
         ec.drawFilteredImages();
     }
-
     /**
      * Show preview of filter
      * */
@@ -124,7 +137,7 @@ public class FilterOptionsController implements Initializable {
         ec.drawPreviewImage(pi);
     }
 
-    public void handleApplyFilter(ActionEvent actionEvent) {
+    public void handleApplyFilter() {
 //        inputAttributes.setOriginal(true);
         applyFilter();
         stage = (Stage) applyFilterButton.getScene().getWindow();
@@ -134,12 +147,11 @@ public class FilterOptionsController implements Initializable {
     /**
      * Filter Input Options
      * */
-    public void handleSilhouette(ActionEvent actionEvent) {
+    public void handleSilhouette() {
         inputAttributes.setSilhouetteToggle(silhouetteToggleButton.isSelected());
         previewFilter();
     }
-
-    public void handleComplement(ActionEvent actionEvent) {
+    public void handleComplement() {
         inputAttributes.setComplementToggle(complementToggleButton.isSelected());
         previewFilter();
     }
@@ -150,8 +162,7 @@ public class FilterOptionsController implements Initializable {
         inputAttributes.setFactorY(mouseEvent.getY() * 1000);
         previewFilter();
     }
-
-    public void changeSliderValue(MouseEvent mouseEvent) {
+    public void changeSliderValue() {
         inputAttributes.setFactor(glitchSlider.getValue() / 10000);
         previewFilter();
     }
@@ -159,11 +170,33 @@ public class FilterOptionsController implements Initializable {
     /**
      * Checkerboard Input Options
      * */
-    public void handlePanelIncrease(ActionEvent actionEvent) {
+    public void getFirstFilter(ActionEvent actionEvent) {
+        setCheckerBoard(filterTypeChoiceBox1, 0);
+    }
+    public void getSecondFilter(ActionEvent actionEvent) {
+        setCheckerBoard(filterTypeChoiceBox2, 1);
+    }
+    public void getThirdFilter(ActionEvent actionEvent) {
+        setCheckerBoard(filterTypeChoiceBox3, 2);
+    }
+    public void getFourthFilter(ActionEvent actionEvent) {
+        setCheckerBoard(filterTypeChoiceBox4, 3);
+    }
+    private void setCheckerBoard(ChoiceBox<FilterType> filterTypeChoice, int index) {
+        if (null != filterTypeList.get(index)) {
+            filterTypeList.remove(index);
+        }
+        filterTypeList.add(index, filterTypeChoice.getValue());
+        inputAttributes.setFilterTypeList(filterTypeList);
+
+        previewFilter();
+    }
+
+    public void handlePanelIncrease() {
         inputAttributes.increaseRuns();
         previewFilter();
     }
-    public void handlePanelDecrease(ActionEvent actionEvent) {
+    public void handlePanelDecrease() {
         inputAttributes.decreaseRuns();
         previewFilter();
     }
@@ -171,65 +204,103 @@ public class FilterOptionsController implements Initializable {
     /**
      * Cancel
      * */
-    public void handleCancelFilter(ActionEvent actionEvent) {
+    public void handleCancelFilter() {
         // Reset to last image state
         ec.drawPreviousImage();
-
         // Close pop-up
         stage = (Stage) cancelFilterButton.getScene().getWindow();
         stage.close();
     }
 
     /**
-     * Maximize filter list for panel quarters
+     * Set filter menu according to selection
      * */
-    public List<FilterType> maximizeList(List<FilterType> filterTypeList) {
-        FilterType filterTypeEnumOne;
-        FilterType filterTypeEnumTwo;
+    public void setMenu(FilterApplicationType appType, FilterType filterType) {
+        checkerboardGridPane.setVisible(false);
+        glitchGridPane.setVisible(false);
+        intensityGridPane.setVisible(false);
 
-        switch (filterTypeList.size()) {
-            case 1:
-                filterTypeEnumOne = filterTypeList.get(0);
-                filterTypeList.add(filterTypeEnumOne);
-                filterTypeList.add(filterTypeEnumOne);
-                filterTypeList.add(filterTypeEnumOne);
-                return filterTypeList;
-            case 2:
-                filterTypeEnumOne = filterTypeList.get(0);
-                filterTypeEnumTwo = filterTypeList.get(1);
-                filterTypeList.add(filterTypeEnumTwo);
-                filterTypeList.add(filterTypeEnumOne);
-                return filterTypeList;
-            default:
-                return filterTypeList;
+        if (appType == CHECKERBOARD) {
+            filterOptionsLabel.setText(appType.toString());
+            initCheckerBoard();
+        } else {
+            filterOptionsLabel.setText(filterType.toString());
+            switch (filterType) {
+                case GLITCH:
+                    initGlitchFilter();
+                    break;
+                case NOISE:
+                    //TODO
+                    initStandardFilter();
+                    break;
+                default:
+                    initStandardFilter();
+            }
         }
     }
 
-    /**
-     * Set filter menu according to selection
-     * */
-    public void setMenu(String name) {
-        filterOptionsLabel.setText(name);
-        if (name.equals("Checkerboard")) {
-            checkerboardGridPane.setVisible(true);
-            glitchGridPane.setVisible(false);
-            intensityGridPane.setVisible(false);
+//    @FXML
+    private void initCheckerBoard() {
+        // Visual
+        checkerboardGridPane.setVisible(true);
 
-            inputAttributes.setFactorX(333);
-            inputAttributes.setFactorY(222 * 111);
-            inputAttributes.setRuns(1);
-        } else if (name.equals("Glitch Filter")) {
-            checkerboardGridPane.setVisible(false);
-            glitchGridPane.setVisible(true);
-            intensityGridPane.setVisible(false);
+        // Functional
+        inputAttributes.setFactorX(333);
+        inputAttributes.setFactorY(222 * 111);
+        inputAttributes.setRuns(1);
 
-            inputAttributes.setRuns(2);
-        } else {
-            checkerboardGridPane.setVisible(false);
-            glitchGridPane.setVisible(false);
-            intensityGridPane.setVisible(true);
+        filterTypeList.add(FilterType.ORIGINAL);
+        filterTypeList.add(FilterType.ORIGINAL);
+        filterTypeList.add(FilterType.ORIGINAL);
+        filterTypeList.add(FilterType.ORIGINAL);
 
-            inputAttributes.setRuns(2);
+        if (filterTypeChoiceBox1.getItems().isEmpty()) {
+            filterTypeChoiceBox1.setValue(FilterType.ORIGINAL);
+            filterTypeChoiceBox2.setValue(FilterType.ORIGINAL);
+            filterTypeChoiceBox3.setValue(FilterType.ORIGINAL);
+            filterTypeChoiceBox4.setValue(FilterType.ORIGINAL);
+
+            filterTypeChoiceBox1.getItems().addAll(FilterType.TYPE_TO_FILTER_ENUM_MAP.keySet());
+            filterTypeChoiceBox2.getItems().addAll(FilterType.TYPE_TO_FILTER_ENUM_MAP.keySet());
+            filterTypeChoiceBox3.getItems().addAll(FilterType.TYPE_TO_FILTER_ENUM_MAP.keySet());
+            filterTypeChoiceBox4.getItems().addAll(FilterType.TYPE_TO_FILTER_ENUM_MAP.keySet());
+
+            filterTypeChoiceBox1.setOnAction(this::getFirstFilter);
+            filterTypeChoiceBox2.setOnAction(this::getSecondFilter);
+            filterTypeChoiceBox3.setOnAction(this::getThirdFilter);
+            filterTypeChoiceBox4.setOnAction(this::getFourthFilter);
         }
+    }
+    private void initGlitchFilter() {
+        // Visual
+        glitchGridPane.setVisible(true);
+
+        // Functional
+        filterTypeList.add(filterType);
+        filterTypeList = maximizeList(filterTypeList);
+        inputAttributes.setFilterTypeList(filterTypeList);
+        inputAttributes.setRuns(2);
+    }
+    private void initStandardFilter() {
+        // Visual
+        intensityGridPane.setVisible(true);
+
+        // Functional
+        filterTypeList.add(filterType);
+        filterTypeList = maximizeList(filterTypeList);
+        inputAttributes.setFilterTypeList(filterTypeList);
+        inputAttributes.setRuns(2);
+    }
+
+    /**
+     * Maximize filter list for panel quarters
+     * */
+    public List<FilterType> maximizeList(List<FilterType> filterTypeList) {
+        FilterType filterTypeOne= filterTypeList.get(0);
+        filterTypeList.add(filterTypeOne);
+        filterTypeList.add(filterTypeOne);
+        filterTypeList.add(filterTypeOne);
+
+        return filterTypeList;
     }
 }

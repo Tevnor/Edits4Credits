@@ -22,4 +22,8 @@ public enum FilterType {
     ));
 
     public static final Map<FilterType, Filter> TYPE_TO_FILTER_ENUM_MAP = Collections.unmodifiableMap(typeFilterEnumMap);
+
+//    FilterType(String filterName) {
+//        this.f
+//    }
 }
