@@ -17,13 +17,13 @@ import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
-import org.editor.tools.drawingtool.graphiccontrol.attributes.*;
+import org.editor.tools.drawingtool.attributes.*;
 
 import java.net.URL;
 import java.util.Arrays;
 import java.util.ResourceBundle;
 
-import static org.editor.tools.drawingtool.graphiccontrol.handlers.HandlerFactory.*;
+import static org.editor.tools.drawingtool.handlers.HandlerFactory.*;
 
 
 public class DrawOptionsController implements Initializable {

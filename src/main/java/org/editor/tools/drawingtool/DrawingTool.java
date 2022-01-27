@@ -3,14 +3,11 @@ package org.editor.tools.drawingtool;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.PixelReader;
 import javafx.scene.image.WritableImage;
 import javafx.scene.image.WritablePixelFormat;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Transform;
@@ -18,8 +15,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.editor.project.Project;
 import org.editor.tools.EditingTools;
-import org.editor.tools.drawingtool.graphiccontrol.DrawBoard;
-import org.editor.tools.drawingtool.graphiccontrol.DrawingControl;
 
 
 public class DrawingTool implements EditingTools {

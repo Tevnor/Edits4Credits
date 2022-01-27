@@ -29,19 +29,19 @@
         <Logger name="org.editor.tools.drawingtool.DrawingTool" level="debug">
             <AppenderRef ref="DrawLog"/>
         </Logger>
-        <Logger name="org.editor.tools.drawingtool.graphiccontrol.DrawBoard" level="debug">
+        <Logger name="org.editor.tools.drawingtool.DrawBoard" level="debug">
             <AppenderRef ref="DrawLog"/>
         </Logger>
-        <Logger name="org.editor.tools.drawingtool.graphiccontrol.ShapePixelMap" level="debug">
+        <Logger name="org.editor.tools.drawingtool.ShapePixelMap" level="debug">
             <AppenderRef ref="DrawLog"/>
         </Logger>
-        <Logger name="org.editor.tools.drawingtool.graphiccontrol.MovingControl" level="debug">
+        <Logger name="org.editor.tools.drawingtool.MovingControl" level="debug">
             <AppenderRef ref="DrawLog"/>
         </Logger>
-        <Logger name="org.editor.tools.drawingtool.graphiccontrol.DrawingControl" level="debug">
+        <Logger name="org.editor.tools.drawingtool.DrawingControl" level="debug">
             <AppenderRef ref="DrawLog"/>
         </Logger>
-        <Logger name="org.editor.tools.drawingtool.graphiccontrol.handlers.HandlerFactory" level="debug">
+        <Logger name="org.editor.tools.drawingtool.handlers.HandlerFactory" level="debug">
             <AppenderRef ref="DrawLog"/>
         </Logger>
         <Root level="info">

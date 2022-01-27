@@ -11,8 +11,8 @@ module gui {
     requires java.desktop;
 
     opens org to javafx.fxml;
-    exports org.editor.tools.drawingtool.graphiccontrol.attributes;
-    exports org.editor.tools.drawingtool.graphiccontrol.handlers;
+    exports org.editor.tools.drawingtool.attributes;
+    exports org.editor.tools.drawingtool.handlers;
     exports org.editor.tools.drawingtool;
     exports org.screencontrol;
     opens org.screencontrol to javafx.fxml;

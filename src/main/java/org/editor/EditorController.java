@@ -27,8 +27,8 @@ import org.editor.layout.EditorControllerLayoutManager;
 import org.editor.project.Project;
 import org.editor.tools.drawingtool.DrawOptionsController;
 import org.editor.tools.drawingtool.DrawingTool;
-import org.editor.tools.drawingtool.graphiccontrol.handlers.HandlerFactory;
-import org.editor.tools.drawingtool.graphiccontrol.handlers.PolygonDrawer;
+import org.editor.tools.drawingtool.handlers.HandlerFactory;
+import org.editor.tools.drawingtool.handlers.PolygonDrawer;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -105,7 +105,7 @@ public class EditorController implements Initializable, ControlScreen {
     private ScreensController screensController;
 
     private EventHandler<MouseEvent> mover;
-    private org.editor.tools.drawingtool.graphiccontrol.handlers.DrawHandler drawer;
+    private org.editor.tools.drawingtool.handlers.DrawHandler drawer;
     private DrawingTool dt;
     private HandlerFactory handlerFactory;
     private Parent drawOptRoot;

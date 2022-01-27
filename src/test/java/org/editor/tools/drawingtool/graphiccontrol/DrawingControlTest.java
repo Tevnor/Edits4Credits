@@ -2,6 +2,7 @@ package org.editor.tools.drawingtool.graphiccontrol;
 
 import javafx.geometry.Point2D;
 import junit.framework.TestCase;
+import org.editor.tools.drawingtool.DrawingControl;
 import org.junit.Assert;
 
 import java.util.Arrays;
