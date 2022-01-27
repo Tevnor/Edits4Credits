@@ -498,12 +498,6 @@ public class EditorController implements Initializable, ControlScreen {
         filterOptStage.show();
     }
 
-    /**
-     * Image Object
-     * */
-    public void setFilteredImage(Image image){
-        this.filteredImage = image;
-    }
 
     //TODO new
     public void setFilteredImages(Image originalImage, Image editorImage) {
@@ -513,7 +507,7 @@ public class EditorController implements Initializable, ControlScreen {
     }
     public void drawFilteredImage(){
         gc = editorCanvasImage.getGraphicsContext2D();
-        gc.drawImage(filteredImage, editorImageObject.getCurrentXPosition(), editorImageObject.getCurrentYPosition(), editorImageObject.getCurrentWidth(), editorImageObject.getCurrentHeight());
+        gc.drawImage(editorImageObject.getFilteredImage(), editorImageObject.getCurrentXPosition(), editorImageObject.getCurrentYPosition(), editorImageObject.getCurrentWidth(), editorImageObject.getCurrentHeight());
         //initImageTool(filteredImage);
     }
 
