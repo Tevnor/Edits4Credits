@@ -33,15 +33,8 @@ public class ScaleOptionsController implements Initializable {
         editorController.getEditorImageObject().setCurrentWidth(newWidth);
         editorController.getEditorImageObject().setCurrentHeight(newHeight);
 
-
-        if(!editorController.getIsFiltered()){
-            editorController.drawScaledImage(newWidth, newHeight);
-            editorController.drawScaledOriginalImage(newOriginalWidth, newOriginalHeight);
-        }
-        else if(editorController.getIsFiltered()){
-            editorController.drawScaledImage(newWidth, newHeight);
-            editorController.drawScaledOriginalImage(newOriginalWidth, newOriginalHeight);
-        }
+        editorController.drawScaledImage(newWidth, newHeight);
+        editorController.drawScaledOriginalImage(newOriginalWidth, newOriginalHeight);
 
         editorController.getOriginalImageObject().setCurrentWidth(newOriginalWidth);
         editorController.getOriginalImageObject().setCurrentHeight(newOriginalHeight);
@@ -56,12 +49,9 @@ public class ScaleOptionsController implements Initializable {
                 scaleFactor = Double.parseDouble(scaleFactorInput.getText());
                 double newWidth = editorController.getEditorImageObject().getScaledWidth(scaleFactor);
                 double newHeight = editorController.getEditorImageObject().getScaledHeight(scaleFactor);
-                if(!editorController.getIsFiltered()) {
-                    editorController.drawScaledImage(newWidth, newHeight);
-                }
-                else if(editorController.getIsFiltered()) {
-                    editorController.drawScaledImage(newWidth, newHeight);
-                }
+
+                editorController.drawScaledImage(newWidth, newHeight);
+
 
                 } catch (NumberFormatException exception){
                 exception.printStackTrace();

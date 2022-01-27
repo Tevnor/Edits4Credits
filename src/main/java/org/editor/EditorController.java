@@ -138,7 +138,7 @@ public class EditorController implements Initializable, ControlScreen {
     private ScaleOptionsController scaleOptions;
 
     private Canvas originalCanvas;
-    private Boolean isFiltered = false;
+    //private Boolean isFiltered = false;
     private ImageDimensions originalImageObject;
     private ImageDimensions editorImageObject;
     private EditorControllerLayoutManager layoutManager;
@@ -453,12 +453,6 @@ public class EditorController implements Initializable, ControlScreen {
         }
     }
 
-    /**
-     * Image Object
-     * */
-    public void setFilteredImage(Image image){
-        this.filteredImage = image;
-    }
 
     //TODO new
     public void setFilteredImages(Image originalImage, Image editorImage) {
@@ -468,7 +462,7 @@ public class EditorController implements Initializable, ControlScreen {
     }
     public void drawFilteredImage(){
         gc = editorCanvasImage.getGraphicsContext2D();
-        gc.drawImage(filteredImage, editorImageObject.getCurrentXPosition(), editorImageObject.getCurrentYPosition(), editorImageObject.getCurrentWidth(), editorImageObject.getCurrentHeight());
+        gc.drawImage(editorImageObject.getFilteredImage(), editorImageObject.getCurrentXPosition(), editorImageObject.getCurrentYPosition(), editorImageObject.getCurrentWidth(), editorImageObject.getCurrentHeight());
         //initImageTool(filteredImage);
     }
 
@@ -530,13 +524,7 @@ public class EditorController implements Initializable, ControlScreen {
     public void drawChangedPosition(double newXPosition, double newYPosition){
         GraphicsContext gc = editorCanvasImage.getGraphicsContext2D();
         gc.clearRect(0, 0, editorCanvasImage.getWidth(), editorCanvasImage.getHeight());
-        if(!isFiltered) {
-            gc.drawImage(editorImageObject.getOriginalImage(), newXPosition, newYPosition, editorImageObject.getCurrentWidth(), editorImageObject.getCurrentHeight());
-        }
-        else if (isFiltered){
-            gc.drawImage(editorImageObject.getFilteredImage(), newXPosition, newYPosition, editorImageObject.getCurrentWidth(), editorImageObject.getCurrentHeight());
-
-        }
+        gc.drawImage(editorImageObject.getFilteredImage(), newXPosition, newYPosition, editorImageObject.getCurrentWidth(), editorImageObject.getCurrentHeight());
     }
     public void handleScaleImage(ActionEvent event){
         try {
@@ -555,10 +543,10 @@ public class EditorController implements Initializable, ControlScreen {
     public ImageDimensions getEditorImageObject(){
         return this.editorImageObject;
     }
-    public void drawScaledImage(double scaledWidth, double scaledHeight){
+    public void drawScaledImage(double scaledWidth, double scaledHeight) {
         GraphicsContext gc = editorCanvasImage.getGraphicsContext2D();
         gc.clearRect(0, 0, editorCanvasImage.getWidth(), editorCanvasImage.getHeight());
-        gc.drawImage(editorImageObject.getOriginalImage(), editorImageObject.getCurrentXPosition(), editorImageObject.getCurrentYPosition(), scaledWidth, scaledHeight);
+        gc.drawImage(editorImageObject.getFilteredImage(), editorImageObject.getCurrentXPosition(), editorImageObject.getCurrentYPosition(), scaledWidth, scaledHeight);
     }
 
     /**
@@ -604,28 +592,12 @@ public class EditorController implements Initializable, ControlScreen {
     public void drawChangedOriginalPosition(){
         GraphicsContext gc = originalCanvas.getGraphicsContext2D();
         gc.clearRect(0, 0, originalCanvas.getWidth(), originalCanvas.getHeight());
-        if (isFiltered == false){
-            gc.drawImage(originalImageObject.getOriginalImage(), originalImageObject.getCurrentXPosition(), originalImageObject.getCurrentYPosition(), originalImageObject.getCurrentWidth(),originalImageObject.getCurrentHeight());
-        }
-        else if (isFiltered){
-            gc.drawImage(originalImageObject.getFilteredImage(), originalImageObject.getCurrentXPosition(), originalImageObject.getCurrentYPosition(), originalImageObject.getCurrentWidth(),originalImageObject.getCurrentHeight());
-        }
-    }
-    public boolean getIsFiltered(){
-        return this.isFiltered;
-    }
-    public void setIsFiltered(){
-        this.isFiltered= true;
+        gc.drawImage(originalImageObject.getFilteredImage(), originalImageObject.getCurrentXPosition(), originalImageObject.getCurrentYPosition(), originalImageObject.getCurrentWidth(),originalImageObject.getCurrentHeight());
     }
     public void drawScaledOriginalImage(double newWidth, double newHeight){
         GraphicsContext gc = originalCanvas.getGraphicsContext2D();
         gc.clearRect(0, 0, originalCanvas.getWidth(), originalCanvas.getHeight());
-        if(!isFiltered) {
-            gc.drawImage(originalImageObject.getOriginalImage(), originalImageObject.getCurrentXPosition(), originalImageObject.getCurrentYPosition(), newWidth, newHeight);
-        }
-        else if(isFiltered){
-            gc.drawImage(originalImageObject.getFilteredImage(), originalImageObject.getCurrentXPosition(), originalImageObject.getCurrentYPosition(), newWidth, newHeight);
-        }
+        gc.drawImage(originalImageObject.getFilteredImage(), originalImageObject.getCurrentXPosition(), originalImageObject.getCurrentYPosition(), newWidth, newHeight);
     }
     public void drawFilteredOriginalImage(){
         gc = originalCanvas.getGraphicsContext2D();

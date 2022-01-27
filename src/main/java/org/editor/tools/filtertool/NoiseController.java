@@ -24,7 +24,6 @@ public class NoiseController {
     private WritableImage filteredImage;
     private WritableImage filteredOriginalImage;
     private EditorController editorController;
-    private Canvas editorImageCanvas;
 
     public void handleApplyNoiseOnlyOnImage(ActionEvent event) {
         noiseStrength = noiseSlider.getValue();
@@ -32,12 +31,12 @@ public class NoiseController {
         filteredImage = addNoiseToImage(editorController.getOriginalImageObject().createWritableOriginalImage(), noiseStrength);
         filteredOriginalImage = addNoiseToImage(editorController.getOriginalImageObject().createWritableOriginalImage(), noiseStrength);
 
-        editorController.setFilteredImage(filteredImage);
+        editorController.getEditorImageObject().setFilteredImage(filteredImage);
         editorController.drawFilteredImage();
 
         editorController.getOriginalImageObject().setFilteredImage(filteredOriginalImage);
         editorController.drawFilteredOriginalImage();
-        editorController.setIsFiltered();
+
     }
 
     public void setEditorController(EditorController editorController) {
