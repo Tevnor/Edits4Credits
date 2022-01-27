@@ -59,4 +59,22 @@ public class ImageDimensionsTest {
 
     }
 
+    @Test
+    public void getResizedImageWidthTest(){
+        tester = new ImageDimensions(testImage, 0,0, 1920, 1080);
+
+        assertEquals("Resized height didn't match", (int) 750, (int) tester.getResizedImageWidth(1500,0.5));
+        assertEquals("Resized height didn't match", (int) 3715, (int) tester.getResizedImageWidth(2477,1.5));
+        assertEquals("Resized height didn't match", (int) 0, (int) tester.getResizedImageWidth(3000,0));
+        assertEquals("Resized height didn't match", (int) 0, (int) tester.getResizedImageWidth(0,1));
+
+        assertFalse("Returns wrong resized height", (int) tester.getResizedImageWidth(1500,0.5) != 750);
+        assertFalse("Returns wrong resized height", (int) tester.getResizedImageWidth(2477,1.5) != 3715);
+        assertFalse("Returns wrong resized height", (int) tester.getResizedImageWidth(3000,0) != 0);
+        assertFalse("Returns wrong resized height", (int) tester.getResizedImageWidth(0,1) != 0);
+
+        assertNotNull("Returns no height", tester.getResizedImageWidth(1000,1));
+
+    }
+
 }
