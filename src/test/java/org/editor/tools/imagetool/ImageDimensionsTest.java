@@ -2,11 +2,12 @@ package org.editor.tools.imagetool;
 
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.image.Image;
+import org.junit.Rule;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class ImageDimensionsTest {
+public class ImageDimensionsTest<JavaFXThreadingRule> {
     private ImageDimensions tester;
     private Image testImage;
     private Image testImageZwei;
@@ -76,5 +77,49 @@ public class ImageDimensionsTest {
         assertNotNull("Returns no height", tester.getResizedImageWidth(1000,1));
 
     }
+
+    @Test
+    public void getScaledHeightTest() {
+        tester = new ImageDimensions(testImage, 0, 0, 1920, 1080);
+
+        assertEquals("Resized height didn't match", (int) 810, (int) tester.getScaledHeight(75));
+        assertEquals("Resized height didn't match", (int) 1620, (int) tester.getScaledHeight(150));
+        assertEquals("Resized height didn't match", (int) 0, (int) tester.getScaledHeight(0));
+
+        assertFalse("Returns wrong resized height", (int) tester.getScaledHeight(75) != 810);
+        assertFalse("Returns wrong resized height", (int) tester.getScaledHeight(150) != 1620);
+        assertFalse("Returns wrong resized height", (int) tester.getScaledHeight(0) != 0);
+
+        assertNotNull("Returns no height", tester.getScaledHeight(200));
+    }
+
+    @Test
+    public void getScaledWidthTest() {
+        tester = new ImageDimensions(testImage, 0, 0, 1920, 1080);
+
+        assertEquals("Resized height didn't match", (int) 1440, (int) tester.getScaledWidth(75));
+        assertEquals("Resized height didn't match", (int) 2880, (int) tester.getScaledWidth(150));
+        assertEquals("Resized height didn't match", (int) 0, (int) tester.getScaledWidth(0));
+
+        assertFalse("Returns wrong resized height", (int) tester.getScaledWidth(75) != 1440);
+        assertFalse("Returns wrong resized height", (int) tester.getScaledWidth(150) != 2880);
+        assertFalse("Returns wrong resized height", (int) tester.getScaledWidth(0) != 0);
+
+        assertNotNull("Returns no height", tester.getScaledWidth(200));
+    }
+
+
+
+    /*
+    @Test
+    public void scaleImageTest(){
+        testImage = new Image("https://www.chip.de/ii/4/7/2/8/5/5/4/f8c3bf084e08658b.jpg");
+        tester = new ImageDimensions(testImage, 0, 0, 1920, 1080);
+
+        assertEquals("Resized height didn't match", (int) 3000, (int) tester.scaleImage(testImage, 2000, 3000, true, true).getHeight());
+
+    }
+    */
+
 
 }
