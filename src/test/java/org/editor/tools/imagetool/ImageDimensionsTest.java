@@ -15,6 +15,33 @@ public class ImageDimensionsTest<JavaFXThreadingRule> {
     private Image emptyImage;
     JFXPanel jfxPanel = new JFXPanel();
 
+    @Test
+    public void imageDimensionsConstructorTest(){
+        tester = new ImageDimensions(testImage, 0,0, 1920, 1080);
+
+        assertTrue("Original image is not correct", tester.getOriginalImage() == testImage);
+        assertTrue("Filtered image is not correct", tester.getFilteredImage() == testImage);
+        assertTrue("X Position is not correct", tester.getCurrentXPosition() == 0);
+        assertTrue("Y Position is not correct", tester.getCurrentXPosition() == 0);
+        assertTrue("Width is not correct", tester.getCurrentWidth() == 1920);
+        assertTrue("Height is not correct", tester.getCurrentHeight() == 1080);
+
+        assertFalse("Original image is not correct", tester.getOriginalImage() != testImage);
+        assertFalse("Filtered image is not correct", tester.getFilteredImage() != testImage);
+        assertFalse("X Position is not correct", tester.getCurrentXPosition() != 0);
+        assertFalse("Y Position is not correct", tester.getCurrentXPosition() != 0);
+        assertFalse("Width is not correct", tester.getCurrentWidth() != 1920);
+        assertFalse("Height is not correct", tester.getCurrentHeight() != 1080);
+
+        assertNull("Original image is empty", tester.getOriginalImage());
+        assertNull("Filtered image is empty", tester.getFilteredImage());
+
+        testImage = new Image("https://www.chip.de/ii/4/7/2/8/5/5/4/f8c3bf084e08658b.jpg");
+        tester.setFilteredImage(testImage);
+
+        assertNotNull("Filtered image is empty", tester.getFilteredImage());
+
+    }
 
     @Test
     public void getImageAspectRatioTest(){
