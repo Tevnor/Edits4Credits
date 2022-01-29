@@ -75,10 +75,10 @@ public class SettingsController implements Initializable, ControlScreen {
             if(projectName.getText() == null || projectName.getText().trim().equals("")){
                 throw new InvalidNameException();
             }
-            if(!radioBackground.isSelected()){
-                project = new Project(projectName.getText().trim(), projectWidth, projectHeight, false ,cpBackgroundColor.getValue());
-            }else{
+            if(radioBackground.isSelected()){
                 project = new Project(projectName.getText().trim(), projectWidth, projectHeight, true ,cpBackgroundColor.getValue());
+            }else{
+                project = new Project(projectName.getText().trim(), projectWidth, projectHeight, false ,cpBackgroundColor.getValue());
             }
             createProject.setDisable(true);
             enterProject();
@@ -99,6 +99,7 @@ public class SettingsController implements Initializable, ControlScreen {
             });
         } catch (Exception e){
             logger.error(e.getCause());
+            e.printStackTrace();
         }
 
     }
@@ -113,7 +114,7 @@ public class SettingsController implements Initializable, ControlScreen {
 
     public void handleOpenGallery(ActionEvent event) {
         screensController.setScreen(ScreenName.GALLERY);
-        GalleryController gc = screensController.getLoader().getController();
+        GalleryController gc = (GalleryController)screensController.getController(ScreenName.GALLERY);
         gc.init();
     }
 
@@ -122,7 +123,7 @@ public class SettingsController implements Initializable, ControlScreen {
     }
 
     public void setEditorPresets(){
-        EditorController ec = screensController.getLoader().getController();
+        EditorController ec = (EditorController)screensController.getController(ScreenName.EDITOR);
         ec.setProject(project);
         ec.initEC();
     }

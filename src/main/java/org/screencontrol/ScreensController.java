@@ -23,8 +23,10 @@ import java.util.Objects;
 public class ScreensController extends StackPane {
 
     private final HashMap<ScreenName, Node> screenToNodeMap = new HashMap<>();
+    private final HashMap<ScreenName,ControlScreen> screenToController = new HashMap<>();
     private Window window;
     private FXMLLoader loader;
+
 
     public ScreensController() {
         super();
@@ -64,6 +66,7 @@ public class ScreensController extends StackPane {
             ControlScreen controlScreen = loader.getController();
             controlScreen.setScreenParent(this);
             controlScreen.setWindow(getWindow());
+            screenToController.put(name,controlScreen);
 
             // add scene excluding background
             AnchorPane ap = (AnchorPane) loadScreen;
@@ -80,6 +83,9 @@ public class ScreensController extends StackPane {
     @FXML
     public FXMLLoader getLoader() {
         return loader;
+    }
+    public ControlScreen getController(ScreenName name){
+        return screenToController.get(name);
     }
 
     public void setCenter(ScreenName name) {
