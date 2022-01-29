@@ -4,6 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -26,6 +27,7 @@ public class SettingsController implements Initializable, ControlScreen {
     private ScreensController screensController;
     private Window window;
     private Project project;
+    private Image base;
 
     @FXML
     private TextField projectName;
@@ -115,16 +117,26 @@ public class SettingsController implements Initializable, ControlScreen {
     public void handleOpenGallery(ActionEvent event) {
         screensController.setScreen(ScreenName.GALLERY);
         GalleryController gc = (GalleryController)screensController.getController(ScreenName.GALLERY);
-        gc.init();
+        gc.init(false);
     }
 
     public void handleLogOut(ActionEvent event) {
         //TODO
     }
 
+    public void setBaseImage(Image img){
+        base = img;
+        widthInput.setText(Integer.toString((int)img.getWidth()));
+        heightInput.setText(Integer.toString((int)img.getHeight()));
+        widthInput.setDisable(true);
+        heightInput.setDisable(true);
+    }
     public void setEditorPresets(){
         EditorController ec = (EditorController)screensController.getController(ScreenName.EDITOR);
         ec.setProject(project);
         ec.initEC();
+        if(base != null){
+            ec.setImportedImage(base);
+        }
     }
 }

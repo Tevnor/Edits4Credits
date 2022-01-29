@@ -33,12 +33,44 @@ public class ImportControl {
 
     private Image importedImg;
     private Image fitToEditor;
+    private boolean isSet = false;
 
-    /*
-        import image
-    */
+    /*  file manipulation   */
+    private FileChooser getChooser(String name, boolean isOpen){
+        FileChooser save = new FileChooser();
+        if(isOpen){
+            FileChooser.ExtensionFilter all = new FileChooser.ExtensionFilter("Image Types","*.jpg","*.jpeg","*.gif","*.png","*.tif");
+            save.getExtensionFilters().add(all);
+        }else{
+            FileChooser.ExtensionFilter jpg = new FileChooser.ExtensionFilter("JPG","*.jpg");
+            FileChooser.ExtensionFilter jpeg = new FileChooser.ExtensionFilter("JPEG","*.jpeg");
+            FileChooser.ExtensionFilter gif = new FileChooser.ExtensionFilter("GIF","*.gif");
+            FileChooser.ExtensionFilter png = new FileChooser.ExtensionFilter("PNG","*.png");
+            FileChooser.ExtensionFilter tif = new FileChooser.ExtensionFilter("TIF","*.tif");
+            save.getExtensionFilters().addAll(jpg,jpeg,gif,png,tif);
+        }
+        if(name != null){
+            save.setInitialFileName(name);
+        }
+        save.setInitialDirectory(new File(galleryPath));
+        save.setTitle("Choose image");
+        return save;
+    }
+    private void createGalleryDir(){
+        File gallery = new File(galleryPath);
+        if(!gallery.exists()){
+            gallery.mkdir();
+        }
+    }
+    protected void reset(){
+        importedImg = null;
+        fitToEditor = null;
+        isSet = false;
+    }
+
+    /*  import image    */
     private Image getFileChooserImage(){
-        FileChooser chooser = getChooser(null);
+        FileChooser chooser = getChooser(null, true);
         File f = chooser.showOpenDialog(null);
         try{
             return new Image(f.getPath());
@@ -47,9 +79,10 @@ public class ImportControl {
         }
         return null;
     }
-    public boolean setImageFromExplorer(){
+    protected boolean setImageFromExplorer(){
         importedImg = getFileChooserImage();
-        if(importedImg != null){
+        if(importedImg != null && !isSet){
+            isSet = true;
             return true;
         }else{
             Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -64,10 +97,40 @@ public class ImportControl {
         }
 
     }
+    protected boolean setImageFromGallery(Image image){
+        if(image != null && !isSet){
+            importedImg = image;
+            isSet = true;
+            return true;
+        }
+        return false;
+    }
 
-    /*
-    initilizing main canvases and images
-    */
+    /*  saving  */
+    public void save(Project project, Canvas finishedOriginal, int[] drawingBuffer, boolean toGallery){
+        saveToFile(getFinalImage(project,drawingBuffer,getOriginalBuffer(finishedOriginal)),project);
+    }
+    private void saveToFile(Image writableImage, Project project) {
+        createGalleryDir();
+        FileChooser chooser = getChooser(project.getProjectName(), false);
+        File file = chooser.showSaveDialog(null);
+
+        try {
+            writeImage(writableImage,file);
+        } catch (IOException exception) {
+            IC_LOGGER.error("Could not save image!: " + exception.getMessage());
+            Alert cannotSave = new Alert(Alert.AlertType.ERROR);
+            cannotSave.setHeaderText("Could not save image at chosen location. Please try again!");
+            cannotSave.show();
+        }
+    }
+    private void writeImage(Image img, File file) throws IOException {
+        BufferedImage outImg = SwingFXUtils.fromFXImage(img, null);
+        String ext = FilenameUtils.getExtension(file.toString());
+        ImageIO.write(outImg,ext,file);
+    }
+
+    /*  initializing main canvases and images    */
     public ImageDimensions getImageDimInstance(){
         return new ImageDimensions(importedImg,0,0,importedImg.getWidth(),importedImg.getHeight());
     }
@@ -130,27 +193,7 @@ public class ImportControl {
         return imgTool;
     }
 
-    /*
-        saving
-    */
-    public void save(Project project, Canvas finishedOriginal, int[] drawingBuffer){
-        saveToFile(getFinalImage(project,drawingBuffer,getOriginalBuffer(finishedOriginal)),project);
-    }
-    private void saveToFile(Image writableImage, Project project) {
-        createGalleryDir();
-        FileChooser chooser = getChooser(project.getProjectName());
-        File file = chooser.showSaveDialog(null);
-
-        try {
-            writeImage(writableImage,file);
-        } catch (IOException exception) {
-            IC_LOGGER.error("Could not save image!: " + exception.getMessage());
-            Alert cannotSave = new Alert(Alert.AlertType.ERROR);
-            cannotSave.setHeaderText("Could not save image at chosen location. Please try again!");
-            cannotSave.show();
-        }
-    }
-
+    /*  pixel manipulation  */
     private WritableImage getFinalImage(Project project, int[] drawingBuffer, int[] imageBuffer){
         int projectWidth = (int)project.getProjectWidth(), projectHeight = (int)project.getProjectHeight(),
             length = projectWidth * projectHeight;
@@ -215,29 +258,6 @@ public class ImportControl {
         return (alpha << 24) | (red << 16) | (green << 8) | blue;
     }
 
-    public FileChooser getChooser(String name){
-        FileChooser.ExtensionFilter jpeg = new FileChooser.ExtensionFilter("JPEG","*.jpeg");
-        FileChooser.ExtensionFilter gif = new FileChooser.ExtensionFilter("GIF","*.gif");
-        FileChooser.ExtensionFilter png = new FileChooser.ExtensionFilter("PNG","*.png");
-        FileChooser.ExtensionFilter tif = new FileChooser.ExtensionFilter("TIF","*.tif");
-        FileChooser save = new FileChooser();
-        save.getExtensionFilters().addAll(jpeg,gif,png,tif);
-        if(name != null){
-            save.setInitialFileName(name);
-        }
-        save.setInitialDirectory(new File(galleryPath));
-        save.setTitle("Choose image");
-        return save;
-    }
-    private void createGalleryDir(){
-        File gallery = new File(galleryPath);
-        if(!gallery.exists()){
-            gallery.mkdir();
-        }
-    }
-    private void writeImage(Image img, File file) throws IOException {
-        BufferedImage outImg = SwingFXUtils.fromFXImage(img, null);
-        String ext = FilenameUtils.getExtension(file.toString());
-        ImageIO.write(outImg,ext,file);
-    }
+
+
 }

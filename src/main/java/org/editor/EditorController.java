@@ -1,6 +1,5 @@
 package org.editor;
 
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -32,8 +31,6 @@ import org.editor.tools.drawingtool.handlers.HandlerFactory;
 import org.editor.tools.drawingtool.handlers.PolygonDrawer;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
@@ -45,7 +42,9 @@ import org.editor.tools.imagetool.ImageDimensions;
 import org.editor.tools.imagetool.ImageTool;
 import org.editor.tools.imagetool.PositionOptionsController;
 import org.editor.tools.imagetool.ScaleOptionsController;
+import org.marketplace.gallery.GalleryController;
 import org.screencontrol.ControlScreen;
+import org.screencontrol.ScreenName;
 import org.screencontrol.ScreensController;
 import org.screencontrol.Window;
 
@@ -63,8 +62,6 @@ public class EditorController implements Initializable, ControlScreen {
     private MenuItem menuItemPoly, menuItemRect;
     @FXML
     private Button importButton;
-    @FXML
-    private Canvas editorCanvas;
     @FXML
     private javafx.scene.control.MenuItem addNoise;
     @FXML
@@ -123,7 +120,6 @@ public class EditorController implements Initializable, ControlScreen {
     private Parent noiseOptRoot;
     private NoiseController noiseController;
     private Stage noiseOptStage = new Stage();
-    private Image filteredImage;
     private ImageTool imageTool;
 
 
@@ -274,6 +270,30 @@ public class EditorController implements Initializable, ControlScreen {
             exception.printStackTrace();
         }
     }
+    private void initImage(){
+        EC_LOGGER.debug("entered initImage()");
+        editorImageObject = ic.getImageDimInstance();
+        originalImageObject = ic.getImageDimInstance();
+        editorCanvasImage = ic.getEditorImageCanvas(stack);
+        originalCanvas = ic.getOriginalImageCanvas(project);
+        ic.setImportedImgOnCanvas(editorCanvasImage,editorImageObject, false);
+        ic.setImportedImgOnCanvas(originalCanvas,originalImageObject, true);
+        layoutManager.changeDisableBtn(importButton);
+        layoutManager.addToStack(editorCanvasImage,stack);
+        imageTool = ic.getImageTool(editorCanvasImage);
+    }
+    private void delete(){
+        EC_LOGGER.debug("entered delete()");
+        layoutManager.removeFromStack(editorCanvasImage, stack);
+        editorImageObject = null;
+        originalImageObject = null;
+        editorCanvasImage = null;
+        originalCanvas = null;
+        layoutManager.changeDisableBtn(importButton);
+        imageTool = null;
+        ic.reset();
+        orderStack();
+    }
 
     /**
      *  Organizer
@@ -420,7 +440,6 @@ public class EditorController implements Initializable, ControlScreen {
         noiseOptStage.show();
     }
 
-
     // Checkerboard mode
     public void handleApplyCheckerboard(ActionEvent event) {
         openFilterOptions(CHECKERBOARD, null);
@@ -452,8 +471,6 @@ public class EditorController implements Initializable, ControlScreen {
             // Maybe add finally to prompt users to import image
         }
     }
-
-
     //TODO new
     public void setFilteredImages(Image originalImage, Image editorImage) {
         originalImageObject.setFilteredImage(originalImage);
@@ -504,8 +521,6 @@ public class EditorController implements Initializable, ControlScreen {
 
     // Scale the imported source image to the maximum canvas size
 
-
-
     public void handleMoveImage(ActionEvent event) {
         try{
             moveOptLoader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/fxml/moveOptions.fxml")));
@@ -552,36 +567,35 @@ public class EditorController implements Initializable, ControlScreen {
     /**
      * File
      * */
-    public void handleOpenFile(ActionEvent event) {
-        importImageFromExplorer();
-        orderStack();
-    }
-    public void handleImportButton(ActionEvent event) throws IOException {
-        importImageFromExplorer();
-        orderStack();
-    }
-    public void importImageFromExplorer(){
+    @FXML
+    private void importImageFromExplorer(){
         if(ic.setImageFromExplorer()){
-            editorImageObject = ic.getImageDimInstance();
-            originalImageObject = ic.getImageDimInstance();
-            editorCanvasImage = ic.getEditorImageCanvas(stack);
-            originalCanvas = ic.getOriginalImageCanvas(project);
-            ic.setImportedImgOnCanvas(editorCanvasImage,editorImageObject, false);
-            ic.setImportedImgOnCanvas(originalCanvas,originalImageObject, true);
-            layoutManager.disableButton(importButton);
-            layoutManager.setEditorCanvasLayout(editorCanvasImage,stack);
-            imageTool = ic.getImageTool(editorCanvasImage);
+            initImage();
         }
+        orderStack();
     }
-
-    public void handleDeleteFile(ActionEvent event) {
+    public void setImportedImage(Image img){
+        if(ic.setImageFromGallery(img)){
+            initImage();
+        }
+        orderStack();
     }
-
-    public void handleFileSettings(ActionEvent event) {
+    @FXML
+    private void handleSaveGallery() {
+        ic.save(project,originalCanvas,dt.getPixelBufferOfDrawing(project),true);
     }
-
-    public void handleSaveFile(ActionEvent event) {
-        ic.save(project,originalCanvas,dt.getPixelBufferOfDrawing(project));
+    @FXML
+    private void handleSaveExtern() {
+        ic.save(project,originalCanvas,dt.getPixelBufferOfDrawing(project),false);
+    }
+    @FXML
+    private void handleDeleteFile() {
+        delete();
+    }
+    @FXML
+    private void handleGallery() {
+        ((GalleryController)screensController.getController(ScreenName.GALLERY)).init(true);
+        screensController.setScreen(ScreenName.GALLERY);
     }
 
 

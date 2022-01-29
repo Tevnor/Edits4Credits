@@ -70,10 +70,14 @@
               <menus>
                 <Menu mnemonicParsing="false" text="File">
                   <items>
-                    <MenuItem fx:id="openFile" mnemonicParsing="false" onAction="#handleOpenFile" text="Open File" />
+                    <MenuItem fx:id="openFile" mnemonicParsing="false" onAction="#importImageFromExplorer" text="Open File" />
+                        <Menu mnemonicParsing="false" text="Save">
+                           <items>
+                              <MenuItem fx:id="saveGallery" mnemonicParsing="false" onAction="#handleSaveGallery" text="to Gallery" />
+                              <MenuItem fx:id="saveExtern" mnemonicParsing="false" onAction="#handleSaveExtern" text="to Extern" />
+                           </items>
+                        </Menu>
                         <MenuItem fx:id="deleteFile" mnemonicParsing="false" onAction="#handleDeleteFile" text="Delete File" />
-                        <MenuItem fx:id="openFileSettings" mnemonicParsing="false" onAction="#handleFileSettings" text="File Settings" />
-                        <MenuItem fx:id="saveImage" mnemonicParsing="false" onAction="#handleSaveFile" text="Save Image" />
                   </items>
                 </Menu>
                   <Menu mnemonicParsing="false" text="Image">
@@ -94,7 +98,7 @@
                 </Menu>
                   <Menu mnemonicParsing="false" text="Gallery">
                     <items>
-                      <MenuItem mnemonicParsing="false" text="Action 1" />
+                      <MenuItem mnemonicParsing="false" onAction="#handleGallery" text="Open" />
                     </items>
                   </Menu>
                 <Menu mnemonicParsing="false" text="Help">
@@ -106,7 +110,7 @@
             </MenuBar>
             <StackPane fx:id="stack" alignment="TOP_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity">
                <children>
-                  <Button fx:id="importButton" mnemonicParsing="false" onAction="#handleImportButton" text="Import Image" textAlignment="CENTER" StackPane.alignment="CENTER" />
+                  <Button fx:id="importButton" mnemonicParsing="false" onAction="#importImageFromExplorer" text="Import Image" textAlignment="CENTER" StackPane.alignment="CENTER" />
                </children>
             </StackPane>
          </children>

@@ -1,6 +1,7 @@
 package org.editor.layout;
 
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
@@ -81,14 +82,17 @@ public class EditorControllerLayoutManager {
         return !(editorController.getProject().getProjectAspectRatio() > 1);
     }
 
-    public void disableButton(Button btn){
-        btn.setDisable(true);
-        btn.setVisible(false);
+    public void changeDisableBtn(Button btn){
+        btn.setDisable(!btn.isDisable());
+        btn.setVisible(!btn.isVisible());
     }
-    public void setEditorCanvasLayout(Canvas canvas, StackPane stack){
-        stack.getChildren().add(canvas);
-        StackPane.setAlignment(canvas, Pos.CENTER);
-        canvas.toBack();
+    public void addToStack(Node n, StackPane stack){
+        stack.getChildren().add(n);
+        StackPane.setAlignment(n, Pos.CENTER);
+        n.toBack();
+    }
+    public void removeFromStack(Node n, StackPane stack){
+        stack.getChildren().removeAll(n);
     }
 
 
