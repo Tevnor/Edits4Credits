@@ -163,6 +163,7 @@ public class LogInController implements Initializable, ControlScreen {
         loader = screensController.getLoader();
         screensController.loadScreen(ScreenName.PROJECT_SETTINGS);
         screensController.loadScreen(ScreenName.EDITOR);
+        screensController.loadScreen(ScreenName.GALLERY);
         screensController.setScreen(ScreenName.MODE_SELECTION);
 
         ImageView iv = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/e4c-bg.png")), window.getScreenWidth(), window.getScreenHeight(), false, true));

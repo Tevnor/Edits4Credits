@@ -10,6 +10,7 @@ import javafx.scene.paint.Color;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.editor.EditorController;
+import org.marketplace.gallery.GalleryController;
 import org.screencontrol.ControlScreen;
 import org.screencontrol.ScreenName;
 import org.screencontrol.ScreensController;
@@ -20,7 +21,7 @@ import java.util.Arrays;
 import java.util.ResourceBundle;
 
 public class SettingsController implements Initializable, ControlScreen {
-    private static final Logger logger = LogManager.getLogger(SettingsController.class.getName());
+    private static final Logger logger = LogManager.getLogger(SettingsController.class);
 
     private ScreensController screensController;
     private Window window;
@@ -71,22 +72,26 @@ public class SettingsController implements Initializable, ControlScreen {
         try {
             int projectWidth = Integer.parseInt(widthInput.getText());
             int projectHeight = Integer.parseInt(heightInput.getText());
+            if(projectName.getText() == null || projectName.getText().trim().equals("")){
+                throw new InvalidNameException();
+            }
             if(!radioBackground.isSelected()){
-                if(cpBackgroundColor.getValue() != null){
-                    project = new Project(projectWidth, projectHeight, cpBackgroundColor.getValue());
-                }else{
-                    project = new Project(projectWidth, projectHeight);
-                }
+                project = new Project(projectName.getText().trim(), projectWidth, projectHeight, false ,cpBackgroundColor.getValue());
             }else{
-                project = new Project(projectWidth, projectHeight);
+                project = new Project(projectName.getText().trim(), projectWidth, projectHeight, true ,cpBackgroundColor.getValue());
             }
             createProject.setDisable(true);
             enterProject();
-        } catch (NumberFormatException e) {
-            logger.warn("tried to create project with no passed width and height");
+        } catch (NumberFormatException | InvalidNameException e) {
+            if(e instanceof NumberFormatException){
+                logger.warn("tried to create project with invalid dimensions");
+            }else{
+                logger.warn("tried to create project with invalid name");
+            }
+
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Warning!");
-            alert.setHeaderText("Please enter valid values for project width and height");
+            alert.setHeaderText("Please enter valid values for project width, height and name");
             alert.showAndWait().ifPresent(rs -> {
                 if (rs == ButtonType.OK) {
                     logger.warn("pressed ok");
@@ -107,7 +112,9 @@ public class SettingsController implements Initializable, ControlScreen {
     }
 
     public void handleOpenGallery(ActionEvent event) {
-        //TODO
+        screensController.setScreen(ScreenName.GALLERY);
+        GalleryController gc = screensController.getLoader().getController();
+        gc.init();
     }
 
     public void handleLogOut(ActionEvent event) {

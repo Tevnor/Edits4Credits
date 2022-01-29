@@ -44,6 +44,9 @@
         <Logger name="org.editor.tools.drawingtool.handlers.HandlerFactory" level="debug">
             <AppenderRef ref="DrawLog"/>
         </Logger>
+        <Logger name="org.marketplace.gallery.GalleryController" level="debug">
+            <AppenderRef ref="EditorLog"/>
+        </Logger>
         <Root level="info">
             <AppenderRef ref="STDOUT"/>
         </Root>

@@ -25,5 +25,7 @@ public class Window {
         Screen screen = Screen.getPrimary();
         return screen.getOutputScaleY();
     }
-
+    public double getScreenRatio(){
+        return screenWidth/screenHeight;
+    }
 }
