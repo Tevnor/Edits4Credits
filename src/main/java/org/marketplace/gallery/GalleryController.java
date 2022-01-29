@@ -70,14 +70,14 @@ public class GalleryController implements Initializable, ControlScreen {
     private Image selImg = null;
 
     @FXML
-    private void handleForwards(ActionEvent e){
+    private void handleForwards(){
         if(!atEnd){
             page++;
             populateDisplays(isTmp);
         }
     }
     @FXML
-    private void handleBackwards(ActionEvent e){
+    private void handleBackwards(){
         if(page > 0){
             page--;
             populateDisplays(isTmp);
@@ -94,7 +94,7 @@ public class GalleryController implements Initializable, ControlScreen {
 
         if(directory != null){
             page = 0;
-            imgs.clear();
+            tmp.clear();
             loadImagesDir(directory,true, true);
             populateDisplays(isTmp);
             GC_LOGGER.debug("succesfully loaded new imgs");
@@ -109,7 +109,7 @@ public class GalleryController implements Initializable, ControlScreen {
 
         if(files != null && files.size() > 0){
             page = 0;
-            imgs.clear();
+            tmp.clear();
             loadImages(files.toArray(new File[files.size()]),true, true);
             populateDisplays(isTmp);
             GC_LOGGER.debug("succesfully loaded new imgs");
