@@ -1,5 +1,6 @@
 package org.editor.tools.drawingtool;
 
+import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.shape.Shape;
@@ -46,6 +47,8 @@ public class DrawBoard {
      */
     public DrawBoard(GraphicsContext gc) {
         this.gc = gc;
+        cTmp = new Canvas(gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
+        gcTmp = cTmp.getGraphicsContext2D();
         pw = gc.getPixelWriter();
         DB_LOGGER.info("successfully created draw board");
     }
@@ -101,13 +104,13 @@ public class DrawBoard {
             if (op.getOpType() == DrawOp.OpType.DRAW) {
                 DB_LOGGER.debug("redo/DRAW entered");
                 op.setVisible(true);
-                op.draw(gc);
+                op.draw(gc,gcTmp);
             } else if (op.getOpType() == DrawOp.OpType.MOVE) {
                 DB_LOGGER.debug("redo/MOVE entered");
                 op.setVisible(true);
                 writeSnapshot(operations.get(op.getMoveReference()).getPixelsBelow());
                 operations.get(op.getMoveReference()).setVisible(false);
-                op.draw(gc);
+                op.draw(gc,gcTmp);
             }
 
         }
@@ -160,7 +163,7 @@ public class DrawBoard {
     private void addToOperations(DrawOp op) {
         historyIndex++;
         operations.add(op);
-        op.draw(gc);
+        op.draw(gc,gcTmp);
     }
 
     /**
@@ -172,7 +175,7 @@ public class DrawBoard {
             writeSnapshot(op.getPixelsBelow());
         } else if (op.getOpType() == DrawOp.OpType.MOVE) {
             writeSnapshot(op.getPixelsBelow());
-            operations.get(op.getMoveReference()).draw(gc);
+            operations.get(op.getMoveReference()).draw(gc,gcTmp);
             operations.get(op.getMoveReference()).setVisible(true);
             getShapesOver(op.getMoveReference()).forEach(t -> t.drawAfterMove(gc));
         }
@@ -257,6 +260,16 @@ public class DrawBoard {
             base.addLockPixels(base.getIntersect(under.getPixelsBelow()));
         }
         base.replace(under.getPixelsBelow());
+    }
+
+
+    private Canvas cTmp;
+    private GraphicsContext gcTmp;
+    Canvas getTemp(){
+        return cTmp;
+    }
+    GraphicsContext getGcTmp(){
+        return gcTmp;
     }
 
 }

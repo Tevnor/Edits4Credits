@@ -41,14 +41,16 @@ public class Text extends Shapes {
     }
 
     @Override
-    public void draw(GraphicsContext gc) {
+    protected void draw(GraphicsContext gc, GraphicsContext tmp) {
         int[] before = getPixelsBefore(gc);
         if(attributes.isFill()){
             drawFill(gc);
+            drawFill(tmp);
         }else{
             drawStroke(gc);
+            drawStroke(tmp);
         }
-        writePixelsBelow(gc, before);
+        writePixelsBelow(tmp, before);
     }
 
     @Override

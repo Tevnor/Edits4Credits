@@ -29,14 +29,16 @@ public class Rectangle extends Shapes {
         gc.fillRect(getMinX(), getMinY(), getWidth(), getHeight());
     }
     @Override
-    public void draw(GraphicsContext gc) {
+    protected void draw(GraphicsContext gc, GraphicsContext tmp) {
         int[] before = getPixelsBefore(gc);
-        if(getDirectAttributes().isFill()){
+        if(getAttributes().isFill()){
             drawFill(gc);
+            drawFill(tmp);
         }else{
             drawStroke(gc);
+            drawStroke(tmp);
         }
-        writePixelsBelow(gc, before);
+        writePixelsBelow(tmp, before);
     }
     @Override
     public void drawAfterMove(GraphicsContext gc) {

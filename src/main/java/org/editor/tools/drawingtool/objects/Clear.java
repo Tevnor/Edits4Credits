@@ -8,10 +8,11 @@ public class Clear extends DrawOp {
     public Clear(){}
 
     @Override
-    public void draw(GraphicsContext gc) {
+    public void draw(GraphicsContext gc, GraphicsContext tmp) {
         int[] before = getPixelsBefore(gc);
         gc.clearRect(0,0,gc.getCanvas().getWidth(),gc.getCanvas().getHeight());
-        writePixelsBelow(gc,before);
+        tmp.clearRect(0,0,tmp.getCanvas().getWidth(),tmp.getCanvas().getHeight());
+        writePixelsBelowClear(gc,before);
     }
 
     @Override

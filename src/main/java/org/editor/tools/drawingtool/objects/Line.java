@@ -68,12 +68,16 @@ public class Line extends Shapes {
         return projNormalAbs <= getAttributes().getLineWidth() + 5 && dps + dpe <= absStartEnd;
     }
     @Override
-    public void draw(GraphicsContext gc) {
+    public void draw(GraphicsContext gc, GraphicsContext tmp) {
         int[] before = getPixelsBefore(gc);
+        drawStroke(gc);
+        drawStroke(tmp);
+        writePixelsBelow(tmp, before);
+    }
+    private void drawStroke(GraphicsContext gc){
         gc.setStroke(getDirectAttributes().getColor());
         setAttributesOfGc(gc);
         gc.strokeLine(xOne, yOne, xTwo, yTwo);
-        writePixelsBelow(gc, before);
     }
     @Override
     public void drawAfterMove(GraphicsContext gc) {

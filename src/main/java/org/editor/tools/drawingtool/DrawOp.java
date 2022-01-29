@@ -22,15 +22,26 @@ public abstract class DrawOp {
     private boolean visible = true;
     private int moveReference = -1;
 
-    protected abstract void draw(GraphicsContext gc);
+    protected abstract void draw(GraphicsContext main, GraphicsContext temp);
     protected abstract void drawAfterMove(GraphicsContext gc);
 
     protected int[] getPixelsBefore(GraphicsContext gc){
         return getPixelsOfCanvas(gc);
     }
-    protected void writePixelsBelow(GraphicsContext gc, int[] before){
+    protected void writePixelsBelow(GraphicsContext gc, int[] snap){
+        Canvas c = new Canvas(gc.getCanvas().getWidth(),gc.getCanvas().getHeight());
+        int[] before = getPixelsBefore(c.getGraphicsContext2D());
         int[] after = getPixelsOfCanvas(gc);
-
+        for(int i = 0; i < after.length; i++){
+            if(after[i] != before[i]) {
+                pixelsBelow.put(i, snap[i]);
+            }
+        }
+        gc.clearRect(0,0,gc.getCanvas().getWidth(),gc.getCanvas().getHeight());
+        DO_LOGGER.debug("written pixels below");
+    }
+    protected void writePixelsBelowClear(GraphicsContext gc, int[] before){
+        int[] after = getPixelsOfCanvas(gc);
         for(int i = 0; i < after.length; i++){
             if(after[i] != before[i]) {
                 pixelsBelow.put(i, before[i]);

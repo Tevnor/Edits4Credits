@@ -61,14 +61,16 @@ public class Polygon extends Shapes {
     }
 
     @Override
-    public void draw(GraphicsContext gc) {
+    protected void draw(GraphicsContext gc, GraphicsContext tmp) {
         int[] before = getPixelsBefore(gc);
         if(attributes.isFill()){
             drawFill(gc);
+            drawFill(tmp);
         }else{
             drawStroke(gc);
+            drawStroke(tmp);
         }
-        writePixelsBelow(gc, before);
+        writePixelsBelow(tmp, before);
     }
     @Override
     public void drawAfterMove(GraphicsContext gc) {
@@ -90,15 +92,16 @@ public class Polygon extends Shapes {
     }
     @Override
     public Shapes reposition(Point2D point) {
+        //TODO moving bug
         Point2D repos = point.subtract(new Point2D(getMinX(),getMinY()));
         double[] reposDims = getReposDims(repos);
         double[] reposX = new double[xPoints.length], reposY = new double[yPoints.length];
 
         for(int i = 0;i < xPoints.length; i++){
-            reposX[i] = xPoints[i] - repos.getX();
+            reposX[i] = xPoints[i] + repos.getX();
         }
         for(int i = 0;i < yPoints.length; i++){
-            reposY[i] = yPoints[i] - repos.getY();
+            reposY[i] = yPoints[i] + repos.getY();
         }
         Polygon p = new Polygon(reposDims, reposX, reposY, nPoints,
                 new PolygonAttributes(attributes, attributes.isPolyClose()));
@@ -107,8 +110,8 @@ public class Polygon extends Shapes {
     }
     private double[] getReposDims(Point2D point){
         double[] reposDims = Arrays.copyOf(dims,dims.length);
-        reposDims[0] -= point.getX();
-        reposDims[1] -= point.getY();
+        reposDims[0] = point.getX();
+        reposDims[1] = point.getY();
         return reposDims;
     }
     @Override
