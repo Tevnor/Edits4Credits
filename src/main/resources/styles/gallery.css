@@ -1,0 +1,30 @@
+.menu-bar {
+    -fx-background-radius: 0 0 10 10;
+}
+.menu-bar, .menu-item, .context-menu, .button, .case{
+    -fx-background-color: #282828;
+}
+
+.menu {
+    -fx-label-padding: 1px;
+}
+
+.menu .label, .menu-item .label, .button{
+    -fx-font-family: "Segoe UI Semibold";
+    -fx-text-fill: #eeeeee;
+}
+.button{
+    -fx-font-size: 20px;
+}
+.menu:hover, .menu:focused, .menu:pressed, .menu-item:focused, -context-item:focused, .context-menu .menu-item .label:focused{
+    -fx-background-color: rgba(0, 0, 0, 0.8);
+}
+.menu:showing{
+    -fx-background-color: rgba(0, 0, 0, 0.4);
+}
+.case{
+    -fx-background-radius: 10px;
+}
+.curtain{
+    -fx-background-color: black;
+}

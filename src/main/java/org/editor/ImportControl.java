@@ -18,14 +18,18 @@ import org.apache.logging.log4j.Logger;
 import org.editor.project.Project;
 import org.editor.tools.imagetool.ImageDimensions;
 import org.editor.tools.imagetool.ImageTool;
+import org.apache.commons.io.FilenameUtils;
+import org.marketplace.gallery.GalleryController;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.stream.IntStream;
 
 public class ImportControl {
-    private static final Logger IC_LOGGER = LogManager.getLogger(ImportControl.class.getName());
+    private static final Logger IC_LOGGER = LogManager.getLogger(ImportControl.class);
+    private static final String galleryPath = GalleryController.galleryPath;
 
     private Image importedImg;
     private Image fitToEditor;
@@ -34,7 +38,7 @@ public class ImportControl {
         import image
     */
     private Image getFileChooserImage(){
-        FileChooser chooser = new FileChooser();
+        FileChooser chooser = getChooser(null);
         File f = chooser.showOpenDialog(null);
         try{
             return new Image(f.getPath());
@@ -130,34 +134,50 @@ public class ImportControl {
         saving
     */
     public void save(Project project, Canvas finishedOriginal, int[] drawingBuffer){
-        saveToFile(getFinalImage(project,drawingBuffer,getOriginalBuffer(finishedOriginal)));
+        saveToFile(getFinalImage(project,drawingBuffer,getOriginalBuffer(finishedOriginal)),project);
     }
-    private void saveToFile(Image writableImage) {
+    private void saveToFile(Image writableImage, Project project) {
+        createGalleryDir();
+        FileChooser chooser = getChooser(project.getProjectName());
+        File file = chooser.showSaveDialog(null);
+
         try {
-            File outputFile = new File("drawing.png");
-            BufferedImage bufferedImage = SwingFXUtils.fromFXImage(writableImage, null);
-            ImageIO.write(bufferedImage, "png", outputFile);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            writeImage(writableImage,file);
+        } catch (IOException exception) {
+            IC_LOGGER.error("Could not save image!: " + exception.getMessage());
+            Alert cannotSave = new Alert(Alert.AlertType.ERROR);
+            cannotSave.setHeaderText("Could not save image at chosen location. Please try again!");
+            cannotSave.show();
         }
     }
-    public WritableImage getFinalImage(Project project, int[] drawingBuffer, int[] imageBuffer){
-        int projectWidth = (int)project.getProjectWidth(), projectHeight = (int)project.getProjectHeight();
+
+    private WritableImage getFinalImage(Project project, int[] drawingBuffer, int[] imageBuffer){
+        int projectWidth = (int)project.getProjectWidth(), projectHeight = (int)project.getProjectHeight(),
+            length = projectWidth * projectHeight;
         WritableImage export = new WritableImage(projectWidth,projectHeight);
         PixelWriter pw = export.getPixelWriter();
-        if(!project.isTransparent()) {
-            for (int i = 0; i < projectHeight * projectWidth; i++) {
-                pw.setColor(i % projectWidth, i / projectWidth, project.getBackgroundColor());
+        IntStream range = IntStream.range(0,length).parallel();
+        if(project.isTransparent()) {
+            if(imageBuffer == null){
+                range.forEach(i -> pw.setArgb(i % projectWidth, i / projectWidth, drawingBuffer[i]));
+            }else{
+                range.forEach(i -> pw.setArgb(i % projectWidth, i / projectWidth, srcOverArgb(drawingBuffer[i], imageBuffer[i])));
             }
-        }
-        for(int i  = 0; i < drawingBuffer.length ; i++){
-            if(imageBuffer[i] != 0 || drawingBuffer[i] != 0){
-                pw.setArgb(i % projectWidth, i / projectWidth, srcOverArgb(drawingBuffer[i], imageBuffer[i]));
+        }else{
+            if(imageBuffer == null){
+                range.forEach(i -> pw.setArgb(i % projectWidth, i / projectWidth,
+                        srcOverArgb(drawingBuffer[i], convertColor(project.getBackgroundColor()))));
+            }else{
+                range.forEach(i -> pw.setArgb(i % projectWidth, i / projectWidth,
+                        srcOverArgb(drawingBuffer[i], srcOverArgb(imageBuffer[i],convertColor(project.getBackgroundColor())))));
             }
         }
         return export;
     }
     private int[] getOriginalBuffer(Canvas canvas){
+        if(canvas == null){
+            return null;
+        }
         SnapshotParameters sp = new SnapshotParameters();
         sp.setFill(Color.TRANSPARENT);
         int[] export = new int[(int)(canvas.getWidth()*canvas.getHeight())];
@@ -185,5 +205,39 @@ public class ImportControl {
         int alpha_final = (int)(alpha_f * 255);
         //bitwise addition into INT_ARGB format
         return (alpha_final << 24) | ((red_final << 16) & 0xffffff) | ((green_final << 8) & 0xffff) | (blue_final  & 0xff);
+    }
+    private int convertColor(Color color){
+        int alpha = (int)Math.round(color.getOpacity() * 255);
+        int red = (int)Math.round(color.getRed() * 255);
+        int green = (int)Math.round(color.getGreen() * 255);
+        int blue = (int)Math.round(color.getBlue() * 255);
+
+        return (alpha << 24) | (red << 16) | (green << 8) | blue;
+    }
+
+    public FileChooser getChooser(String name){
+        FileChooser.ExtensionFilter jpeg = new FileChooser.ExtensionFilter("JPEG","*.jpeg");
+        FileChooser.ExtensionFilter gif = new FileChooser.ExtensionFilter("GIF","*.gif");
+        FileChooser.ExtensionFilter png = new FileChooser.ExtensionFilter("PNG","*.png");
+        FileChooser.ExtensionFilter tif = new FileChooser.ExtensionFilter("TIF","*.tif");
+        FileChooser save = new FileChooser();
+        save.getExtensionFilters().addAll(jpeg,gif,png,tif);
+        if(name != null){
+            save.setInitialFileName(name);
+        }
+        save.setInitialDirectory(new File(galleryPath));
+        save.setTitle("Choose image");
+        return save;
+    }
+    private void createGalleryDir(){
+        File gallery = new File(galleryPath);
+        if(!gallery.exists()){
+            gallery.mkdir();
+        }
+    }
+    private void writeImage(Image img, File file) throws IOException {
+        BufferedImage outImg = SwingFXUtils.fromFXImage(img, null);
+        String ext = FilenameUtils.getExtension(file.toString());
+        ImageIO.write(outImg,ext,file);
     }
 }

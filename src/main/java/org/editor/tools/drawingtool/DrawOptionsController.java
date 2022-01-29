@@ -314,11 +314,10 @@ public class DrawOptionsController implements Initializable {
     }
 
     private void initComboBoxes(){
-        ComboBox[] blurTypes = new ComboBox[]{ cbDropBlurType, cbInnerBlurType};
-        Arrays.stream(blurTypes).forEach(b ->{
-            b.getItems().addAll(BlurType.values());
-            b.setValue(BlurType.THREE_PASS_BOX);
-        });
+        cbDropBlurType.getItems().addAll(BlurType.values());
+        cbDropBlurType.setValue(BlurType.THREE_PASS_BOX);
+        cbInnerBlurType.getItems().addAll(BlurType.values());
+        cbInnerBlurType.setValue(BlurType.THREE_PASS_BOX);
         cbBlendMode.getItems().addAll(BlendMode.values());
         cbBlendMode.setValue(BlendMode.SRC_OVER);
         cbArcType.getItems().addAll(ArcType.values());

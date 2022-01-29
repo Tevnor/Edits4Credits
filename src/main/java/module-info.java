@@ -6,7 +6,7 @@ module gui {
     requires javafx.fxml;
     requires javafx.swing;
     requires javafx.graphics;
-
+    requires org.apache.commons.io;
     requires org.apache.logging.log4j;
     requires java.desktop;
 
@@ -15,6 +15,8 @@ module gui {
     exports org.editor.tools.drawingtool.handlers;
     exports org.editor.tools.drawingtool;
     exports org.screencontrol;
+    exports org.marketplace.gallery;
+    opens org.marketplace.gallery to javafx.fxml;
     opens org.screencontrol to javafx.fxml;
     exports org.launcher;
     opens org.launcher to javafx.fxml;
