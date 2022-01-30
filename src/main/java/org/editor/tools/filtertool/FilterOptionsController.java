@@ -21,16 +21,13 @@ import java.util.*;
 
 import static org.editor.tools.filtertool.filtercontrol.FilterApplicationType.CHECKERBOARD;
 
+/**
+ * Pop-up window for users to set filter input settings.
+ */
 public class FilterOptionsController implements Initializable {
 
     private static final Logger FOC_LOGGER = LogManager.getLogger(FilterOptionsController.class.getName());
 
-    @FXML
-    private GridPane filterGridPane;
-
-    /**
-     * General Nodes
-     * */
     @FXML
     private Label filterOptionsLabel;
     @FXML
@@ -67,15 +64,9 @@ public class FilterOptionsController implements Initializable {
     @FXML
     private ToggleButton silhouetteToggleButton;
 
-    /**
-     * Global Variables
-     * */
     private EditorController ec;
-//    private ImageTool imageTool;
-
     private ImageGrid originalImageGrid;
     private ImageGrid resizedImageGrid;
-
     private FilterOperation filterOperation;
     private FilterType filterType;
     private List<FilterType> filterTypeList;
@@ -87,8 +78,18 @@ public class FilterOptionsController implements Initializable {
     }
 
     /**
-     * Init
-     * */
+     * Upon opening a filter menu, the FilterOptionsController instantiates two ImageGrid objects,
+     * one for the original image dimensions and another for the resized dimensions.
+     *
+     * The view of the pop-up menu gets set according to the selected filter.
+     *
+     *
+     * @param original   the original image
+     * @param resized    the resized image
+     * @param appType    the application type of the selected filter
+     * @param filterType the type of the selected filter
+     * @param ec         the object of the EditorController
+     */
     public void initFilterOptions(Image original, Image resized, FilterApplicationType appType, FilterType filterType, EditorController ec) {
         inputAttributes = new FilterInputAttributes();
         this.ec = ec;
@@ -104,8 +105,10 @@ public class FilterOptionsController implements Initializable {
     }
 
     /**
-     * Apply filter on original and resized image
-     * */
+     * Applies filter to the ImageGrid arrays of the original and resized images.
+     * Updates the ImageDimensions objects through the EditorController method.
+     * Calls on another EditorController method to draw the new images to their respective canvases.
+     */
     public void applyFilter() {
         // On resized
         filterOperation = new FilterOperation(resizedImageGrid, inputAttributes);
@@ -125,9 +128,10 @@ public class FilterOptionsController implements Initializable {
         // Draw both to their respective canvas
         ec.drawFilteredImages();
     }
+
     /**
-     * Show preview of filter
-     * */
+     * Draws a preview of a filter's effect before altering the actual ImageDimensions objects.
+     */
     public void previewFilter() {
         filterOperation = new FilterOperation(resizedImageGrid, inputAttributes);
         int[] pixelArrayNew = filterOperation.startFilter();
@@ -137,51 +141,95 @@ public class FilterOptionsController implements Initializable {
         ec.drawPreviewImage(pi);
     }
 
+    /**
+     * Handles apply filter selection.
+     */
     public void handleApplyFilter() {
-//        inputAttributes.setOriginal(true);
         applyFilter();
         stage = (Stage) applyFilterButton.getScene().getWindow();
         stage.close();
     }
 
     /**
-     * Filter Input Options
-     * */
+     * Toggles the glitch filter's silhouette effect on/off.
+     * Shows a preview.
+     */
     public void handleSilhouette() {
         inputAttributes.setSilhouetteToggle(silhouetteToggleButton.isSelected());
         previewFilter();
     }
+
+    /**
+     * Toggles the glitch filter's complement effect on/off
+     */
     public void handleComplement() {
         inputAttributes.setComplementToggle(complementToggleButton.isSelected());
         previewFilter();
     }
 
-    // Get x and y coordinates from input pane for glitch factors
+    /**
+     * Takes in the mouse's x,y coordinates of the glitch filter's input window and pass them to FilterAttributes object.
+     * Shows a preview.
+     *
+     * @param mouseEvent the mouse event
+     */
+// Get x and y coordinates from input pane for glitch factors
     public void handleCoordinates(MouseEvent mouseEvent) {
         inputAttributes.setFactorX(mouseEvent.getX());
         inputAttributes.setFactorY(mouseEvent.getY() * 1000);
         previewFilter();
     }
+
+    /**
+     * Reads the value of the slider and updates the value in the FilterAttributes object.
+     * Shows a preview.
+     */
     public void changeSliderValue() {
         inputAttributes.setFactor(glitchSlider.getValue() / 10000);
         previewFilter();
     }
 
     /**
-     * Checkerboard Input Options
-     * */
+     * Gets first user selected filter.
+     * Shows a preview of top-left panel.
+     *
+     * @param actionEvent the action event
+     */
     public void getFirstFilter(ActionEvent actionEvent) {
         setCheckerBoard(filterTypeChoiceBox1, 0);
     }
+
+    /**
+     * Gets second user selected filter.
+     * Shows a preview of top-right panel.
+     *
+     * @param actionEvent the action event
+     */
     public void getSecondFilter(ActionEvent actionEvent) {
         setCheckerBoard(filterTypeChoiceBox2, 1);
     }
+
+    /**
+     * Gets third user selected filter.
+     * Shows a preview of bottom-left panel.
+     *
+     * @param actionEvent the action event
+     */
     public void getThirdFilter(ActionEvent actionEvent) {
         setCheckerBoard(filterTypeChoiceBox3, 2);
     }
+
+    /**
+     * Gets fourth user selected filter.
+     * Shows a preview of bottom-right panel.
+     *
+     * @param actionEvent the action event
+     */
     public void getFourthFilter(ActionEvent actionEvent) {
         setCheckerBoard(filterTypeChoiceBox4, 3);
     }
+
+
     private void setCheckerBoard(ChoiceBox<FilterType> filterTypeChoice, int index) {
         if (null != filterTypeList.get(index)) {
             filterTypeList.remove(index);
@@ -192,29 +240,38 @@ public class FilterOptionsController implements Initializable {
         previewFilter();
     }
 
+    /**
+     * Handle panel increase.
+     */
     public void handlePanelIncrease() {
         inputAttributes.increaseRuns();
         previewFilter();
     }
+
+    /**
+     * Handle panel decrease.
+     */
     public void handlePanelDecrease() {
         inputAttributes.decreaseRuns();
         previewFilter();
     }
 
     /**
-     * Cancel
-     * */
+     * Cancel out of the filter menu and revert to the image's previous state.
+     */
     public void handleCancelFilter() {
-        // Reset to last image state
         ec.drawPreviousImage();
-        // Close pop-up
+
         stage = (Stage) cancelFilterButton.getScene().getWindow();
         stage.close();
     }
 
     /**
      * Set filter menu according to selection
-     * */
+     *
+     * @param appType the application type
+     * @param filterType the filter type
+     */
     public void setMenu(FilterApplicationType appType, FilterType filterType) {
         checkerboardGridPane.setVisible(false);
         glitchGridPane.setVisible(false);
@@ -239,7 +296,11 @@ public class FilterOptionsController implements Initializable {
         }
     }
 
-//    @FXML
+    /**
+     * Makes checkerboard filter menu visible.
+     * Loads the available filter options into the choice boxes.
+     *
+     * */
     private void initCheckerBoard() {
         // Visual
         checkerboardGridPane.setVisible(true);
@@ -294,7 +355,10 @@ public class FilterOptionsController implements Initializable {
 
     /**
      * Maximize filter list for panel quarters
-     * */
+     *
+     * @param filterTypeList the filter type list
+     * @return the list
+     */
     public List<FilterType> maximizeList(List<FilterType> filterTypeList) {
         FilterType filterTypeOne= filterTypeList.get(0);
         filterTypeList.add(filterTypeOne);

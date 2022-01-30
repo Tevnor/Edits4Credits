@@ -11,6 +11,12 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * The actual filter operations on a pixel level.
+ * Mapping of filter selections to their respective functionalities.
+ * Calculation of panel size, position, and array index hops to enable concurrency by geometric partition.
+ *
+ */
 public class FilterOperation {
 
     private final int runs;
@@ -28,9 +34,13 @@ public class FilterOperation {
     private final double factorY;
     private final boolean isComplement;
     private final boolean isSilhouette;
+
     /**
-     * FILTER OPERATION
-     * */
+     * Instantiates a new Filter operation.
+     *
+     * @param imageGrid       the image grid
+     * @param inputAttributes the input attributes
+     */
     public FilterOperation(ImageGrid imageGrid, FilterInputAttributes inputAttributes) {
         this.runs = inputAttributes.getRuns();
         this.pixelArray = imageGrid.getPixelArray();
@@ -51,8 +61,11 @@ public class FilterOperation {
     }
 
     /**
-     * Start Filter factory for multi-threading
-     * */
+     * Start the filter process by dividing the grid into the chosen number of partitions.
+     * Set up and manage multi-threading functionalities via ExecutorServices, Runnable Lists, and CountDownLatches.
+     *
+     * @return the integer array containing the new argb values
+     */
     public int[] startFilter() {
         int index = 0;
 
@@ -82,12 +95,21 @@ public class FilterOperation {
     }
 
     /**
-     * BLOCK OPERATION
-     * */
+     * Operations within each mid-level partition/block are managed here.
+     * Further multi-threading management is set up to facilitate dynamic, fine-grained concurrency.
+     *
+     * Dimensions and index positions of the low-level are set according to the amount of partitions to be made.
+     */
     class BlockOperation implements Runnable {
         private final int index;
         private final CountDownLatch blockFinish;
 
+        /**
+         * Instantiates a new Block operation.
+         *
+         * @param blockFinish the block finish
+         * @param index       the index
+         */
         BlockOperation(CountDownLatch blockFinish, int index) {
             this.index = index;
             this.blockFinish = blockFinish;
@@ -99,6 +121,11 @@ public class FilterOperation {
             blockFinish.countDown();
         }
 
+        /**
+         * Start the sequence to subdivide each partition/block into four panels, each with their own thread.
+         * Map the user selected filters to their functions with the FILTER_TO_ENUM_MAP.
+         *
+         */
         public void startBlock() {
             CountDownLatch panelFinish = new CountDownLatch(4);
             ExecutorService panelExecs = Executors.newFixedThreadPool(4);
@@ -124,6 +151,13 @@ public class FilterOperation {
             panelRunnableList.clear();
         }
 
+        /**
+         * Gets panel starting index.
+         *
+         * @param index   the starting index of the governing block
+         * @param ordinal the ordinal of the panel
+         * @return the panel starting index
+         */
         public int getPanelStartingIndex(int index, int ordinal) {
             switch (ordinal) {
                 case 0:
@@ -146,13 +180,20 @@ public class FilterOperation {
     }
 
     /**
-     * PANEL OPERATION
-     * */
+     * The bottom-level filter operations where the filters' respective functions alter the integer argb values of the image's pixels.
+     */
     class PanelOperation implements Runnable {
         private int pixelIndex;
         private final Filter filter;
         private final CountDownLatch panelFinish;
 
+        /**
+         * Instantiates a new Panel operation.
+         *
+         * @param pixelIndex  the pixel index
+         * @param filter      the filter
+         * @param panelFinish the panel finish
+         */
         public PanelOperation(int pixelIndex, Filter filter, CountDownLatch panelFinish) {
             this.pixelIndex = pixelIndex;
             this.filter = filter;
@@ -164,6 +205,13 @@ public class FilterOperation {
             panelFinish.countDown();
         }
 
+        /**
+         * Integer values in the array are overwritten.
+         * Filter's method is called with the user specified input factors.
+         *
+         * If silhouette is toggled on, integer values are cast to shorts, effectively manipulating some pixels into falling into their alpha channel's zero range, thus being set invisible.
+         * If complement is toggled on, all these pixel values are shifted bitwise to create a negative.
+         */
         public void startPanel() {
             int rowIndex = pixelIndex;
 

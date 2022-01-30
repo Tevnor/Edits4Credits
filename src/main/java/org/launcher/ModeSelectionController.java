@@ -20,6 +20,12 @@ import org.screencontrol.Window;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/**
+ * The first full screen view.
+ * Select between the two main modes
+ * a) Editor
+ * b) Gallery
+ */
 public class ModeSelectionController implements Initializable, ControlScreen {
 
     ScreensController screensController;
@@ -50,9 +56,15 @@ public class ModeSelectionController implements Initializable, ControlScreen {
     public void initialize(URL url, ResourceBundle resourceBundle) {
     }
 
+    /**
+     * Set the welcome text to greet the logged in user.
+     *
+     * @param user the logged in user
+     */
     public void initUserData(User user) {
         usernameLabel.setText(user.getUsername());
     }
+
     public void setScreenParent(ScreensController screenParent) {
         screensController = screenParent;
     }
@@ -61,12 +73,19 @@ public class ModeSelectionController implements Initializable, ControlScreen {
         this.screenWidth = window.getScreenWidth();
         this.screenHeight = window.getScreenHeight();
     }
+
+    /**
+     * Sets root anchor pane.
+     */
     public void setRootAnchorPane() {
         this.rootAnchorPane = new AnchorPane();
         rootAnchorPane.setPrefWidth(screenWidth);
         rootAnchorPane.setPrefHeight(screenHeight);
     }
 
+    /**
+     * Initially hides certain elements from view to be revealed during entering.
+     */
     public void hideElements() {
         screensController.getParent().getChildrenUnmodifiable().get(0).setOpacity(0);
         editorButton.setOpacity(0);
@@ -85,6 +104,11 @@ public class ModeSelectionController implements Initializable, ControlScreen {
         screensController.setScreen(ScreenName.PROJECT_SETTINGS);
     }
 
+    /**
+     * Open the gallery.
+     *
+     * @param ae the ae
+     */
     public void openMarketplace(ActionEvent ae) {
 
     }
@@ -93,7 +117,9 @@ public class ModeSelectionController implements Initializable, ControlScreen {
      * Animations
      */
 
-    // Animation trigger sequence
+    /**
+     * Start the timed animation opening sequence
+     */
     public void startAnimations() {
         // Slide two main mode panes outwards
         startTranslation(editorPane, -300);
@@ -116,7 +142,12 @@ public class ModeSelectionController implements Initializable, ControlScreen {
         startFade(marketplacePane, 200, 0, 0.9);
     }
 
-    // Slide node in X/Y direction
+    /**
+     * Translate node in X direction
+     *
+     * @param node      the selected node
+     * @param direction the translation distance in pixels (negative values -> left, positive values -> right)
+     */
     public void startTranslation(Node node, double direction) {
         KeyValue keyValue = new KeyValue(node.translateXProperty(), direction);
         KeyFrame keyFrame = new KeyFrame(Duration.seconds(1.3), keyValue);
@@ -128,7 +159,15 @@ public class ModeSelectionController implements Initializable, ControlScreen {
         timeline.play();
     }
 
-    // Fade node in/out
+    /**
+     * Fade elements into the screen
+     *
+     * @param node  the selected node
+     * @param dur   the duration the fade is supposed to take in milliseconds
+     * @param del   the delay the fade is supposed the wait for in milliseconds
+     * @param value the value to which the fade is supposed to set the final opacity (0.0-1.0)
+     */
+// Fade node in/out
     public void startFade(Node node, double dur, double del, double value) {
         Duration fadeDuration = new Duration(dur);
         Duration fadeDelay = new Duration(del);

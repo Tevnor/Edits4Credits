@@ -6,6 +6,9 @@ import java.util.Collections;
 import java.util.EnumMap;
 import java.util.Map;
 
+/**
+ * Match filter names to their functionality
+ */
 public enum FilterType {
     ORIGINAL,
     GLITCH,
@@ -13,6 +16,9 @@ public enum FilterType {
     INVERTED,
     NOISE;
 
+    /**
+     * Original & private map that won't be accessed directly.
+     * */
     private static final EnumMap<FilterType, Filter> typeFilterEnumMap = new EnumMap<>(Map.of(
             ORIGINAL, new Original(),
             GLITCH, new GlitchFilter(),
@@ -21,9 +27,10 @@ public enum FilterType {
             NOISE, new NoiseFilter()
     ));
 
+    /**
+     * Static, public, and safely accessible, unmodifiable Map derived from typeFilterEnumMap.
+     * Methods may access this map to instantiate filter object via the filter's name.
+     */
     public static final Map<FilterType, Filter> TYPE_TO_FILTER_ENUM_MAP = Collections.unmodifiableMap(typeFilterEnumMap);
 
-//    FilterType(String filterName) {
-//        this.f
-//    }
 }

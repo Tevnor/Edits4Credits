@@ -9,7 +9,6 @@ public class FilterInputAttributes {
     /**
      * Default values
      * */
-//    private boolean original = false;
     private double factor = 0;
     private double factorX = 0;
     private double factorY = 0;
@@ -17,7 +16,6 @@ public class FilterInputAttributes {
     private boolean silhouetteToggle = false;
     private List<FilterType> filterTypeList;
     private int runs = 2;
-//    private FilterType filterType = FilterType.ORIGINAL;
     private FilterApplicationType appType = FilterApplicationType.STANDARD;
 
     /**
