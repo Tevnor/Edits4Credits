@@ -39,12 +39,6 @@ public class DrawingTool implements EditingTools {
         db = new DrawBoard(gcShapes);
         this.stack = stack;
 
-/*      stack.getChildren().add(canvasShapes);
-        stack.getChildren().add(canvasBrush);
-
-        StackPane.setAlignment(canvasShapes, Pos.CENTER);
-        StackPane.setAlignment(canvasBrush, Pos.CENTER);*/
-
         stack.getChildren().addAll(blend);
         StackPane.setAlignment(blend,Pos.CENTER);
 

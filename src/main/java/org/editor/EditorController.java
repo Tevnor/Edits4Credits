@@ -314,79 +314,79 @@ public class EditorController implements Initializable, ControlScreen {
      **/
 
     @FXML
-    private void handleArc(ActionEvent e){
+    private void handleArc(){
         initShapeHandler();
         openDrawOptions(HandlerFactory.DrawHandler.ARC);
     }
     @FXML
-    private void handleMove(ActionEvent e){
+    private void handleMove(){
         initMoveHandler();
         mover = handlerFactory.getMove(dt);
         stack.addEventHandler(MouseEvent.ANY,mover);
     }
     @FXML
-    private void handleCircle(ActionEvent e){
+    private void handleCircle(){
         initShapeHandler();
         openDrawOptions(HandlerFactory.DrawHandler.CIRCLE);
     }
     @FXML
-    private void handleEllipses(ActionEvent e){
+    private void handleEllipses(){
         initShapeHandler();
         openDrawOptions(HandlerFactory.DrawHandler.ELLIPSES);
     }
     @FXML
-    private void handleEraser(ActionEvent e){
+    private void handleEraser(){
         initShapeHandler();
         dt.getDc().removeMarkingHandler(stack);
         openDrawOptions(HandlerFactory.DrawHandler.ERASER);
     }
     @FXML
-    private void handleRectangle(ActionEvent e){
+    private void handleRectangle(){
         initShapeHandler();
         openDrawOptions(HandlerFactory.DrawHandler.RECTANGLE);
     }
     @FXML
-    private void handleRoundedRectangle(ActionEvent e){
+    private void handleRoundedRectangle(){
         initShapeHandler();
         openDrawOptions(HandlerFactory.DrawHandler.ROUNDED_RECTANGLE);
     }
     @FXML
-    private void handleLine(ActionEvent e){
+    private void handleLine(){
         initShapeHandler();
         openDrawOptions(HandlerFactory.DrawHandler.LINE);
     }
     @FXML
-    private void handleText(ActionEvent e){
+    private void handleText(){
         initShapeHandler();
         openDrawOptions(HandlerFactory.DrawHandler.TEXT);
     }
     @FXML
-    private void handlePolygon(ActionEvent e){
+    private void handlePolygon(){
         initShapeHandler();
         openDrawOptions(HandlerFactory.DrawHandler.POLYGON);
     }
     @FXML
-    private void handlePath(ActionEvent e){
+    private void handlePath(){
         initShapeHandler();
         dt.getDc().removeMarkingHandler(stack);
         openDrawOptions(HandlerFactory.DrawHandler.PATH);
     }
     @FXML
-    private void handleDrawPolygon(ActionEvent e){
+    private void handleDrawPolygon(){
         if(drawer instanceof PolygonDrawer){
             ((PolygonDrawer) drawer).drawPolygon();
         }
     }
     @FXML
-    private void handleClear(ActionEvent e){
+    private void handleClear(){
         dt.clear();
     }
     @FXML
-    private void handleDrawUndo(ActionEvent e){
+    private void handleDrawUndo(){
         dt.backward();
     }
     @FXML
-    private void handleDrawRedo(ActionEvent e){
+    private void handleDrawRedo(){
         dt.forward();
     }
     private void openDrawOptions(HandlerFactory.DrawHandler drawHandler){

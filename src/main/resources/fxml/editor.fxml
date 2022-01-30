@@ -23,17 +23,45 @@
       </ImageView>
       <Pane fx:id="editorElementsPane" stylesheets="@../styles/editor_style.css">
          <children>
-            <ToolBar fx:id="toolBar" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefHeight="542.0" prefWidth="56.0">
+            <ToolBar fx:id="toolBar" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefHeight="604.0" prefWidth="56.0">
               <items>
-                  <ToggleButton fx:id="arcBtn" mnemonicParsing="false" onAction="#handleArc" prefHeight="45.0" prefWidth="45.0" text="Arc">
+                  <ToggleButton fx:id="arcBtn" mnemonicParsing="false" onAction="#handleArc" prefHeight="45.0" prefWidth="45.0">
+                      <graphic>
+                          <ImageView fitHeight="30" fitWidth="30" preserveRatio="true">
+                              <Image url="@../images/icon/arc_50x50.png" />
+                          </ImageView>
+                      </graphic>
                      <toggleGroup>
                         <ToggleGroup fx:id="shapeGroup" />
                      </toggleGroup>
                   </ToggleButton>
-                  <ToggleButton fx:id="circleBtn" mnemonicParsing="false" onAction="#handleCircle" prefHeight="45.0" prefWidth="45.0" text="Circle" toggleGroup="$shapeGroup" />
-                  <ToggleButton fx:id="ellipseBtn" mnemonicParsing="false" onAction="#handleEllipses" prefHeight="45.0" prefWidth="45.0" text="Ellipse" toggleGroup="$shapeGroup" />
-                  <ToggleButton fx:id="lineBtn" mnemonicParsing="false" onAction="#handleLine" prefHeight="45.0" prefWidth="45.0" text="Line" toggleGroup="$shapeGroup" />
-                  <ToggleButton fx:id="polygonBtn" mnemonicParsing="false" onAction="#handlePolygon" prefHeight="45.0" prefWidth="45.0" text="Polygon" toggleGroup="$shapeGroup">
+                  <ToggleButton fx:id="circleBtn" mnemonicParsing="false" onAction="#handleCircle" prefHeight="45.0" prefWidth="45.0" toggleGroup="$shapeGroup">
+                      <graphic>
+                          <ImageView fitHeight="30" fitWidth="30" preserveRatio="true">
+                              <Image url="@../images/icon/circle_50x50.png" />
+                          </ImageView>
+                      </graphic>
+                  </ToggleButton>
+                  <ToggleButton fx:id="ellipseBtn" mnemonicParsing="false" onAction="#handleEllipses" prefHeight="45.0" prefWidth="45.0" toggleGroup="$shapeGroup">
+                      <graphic>
+                          <ImageView fitHeight="30" fitWidth="30" preserveRatio="true">
+                              <Image url="@../images/icon/ellipse_50x50.png" />
+                          </ImageView>
+                      </graphic>
+                  </ToggleButton>
+                  <ToggleButton fx:id="lineBtn" mnemonicParsing="false" onAction="#handleLine" prefHeight="45.0" prefWidth="45.0" toggleGroup="$shapeGroup">
+                      <graphic>
+                          <ImageView fitHeight="30" fitWidth="30" preserveRatio="true">
+                              <Image url="@../images/icon/line_50x50.png" />
+                          </ImageView>
+                      </graphic>
+                  </ToggleButton>
+                  <ToggleButton fx:id="polygonBtn" mnemonicParsing="false" onAction="#handlePolygon" prefHeight="45.0" prefWidth="45.0" toggleGroup="$shapeGroup">
+                      <graphic>
+                          <ImageView fitHeight="30" fitWidth="30" preserveRatio="true">
+                              <Image url="@../images/icon/polygon_50x50.png" />
+                          </ImageView>
+                      </graphic>
                      <contextMenu>
                         <ContextMenu style="-fx-background-color: #727272;">
                           <items>
@@ -42,7 +70,12 @@
                         </ContextMenu>
                      </contextMenu>
                   </ToggleButton>
-                  <ToggleButton fx:id="rectangleBtn" mnemonicParsing="false" onAction="#handleRectangle" prefHeight="45.0" prefWidth="45.0" text="Rectangle" toggleGroup="$shapeGroup">
+                  <ToggleButton fx:id="rectangleBtn" mnemonicParsing="false" onAction="#handleRectangle" prefHeight="45.0" prefWidth="45.0" toggleGroup="$shapeGroup">
+                      <graphic>
+                          <ImageView fitHeight="30" fitWidth="30" preserveRatio="true">
+                              <Image url="@../images/icon/rectangle_50x50.png" />
+                          </ImageView>
+                      </graphic>
                      <contextMenu>
                         <ContextMenu onAction="#handleRoundedRectangle" style="-fx-background-color: #727272;">
                           <items>
@@ -51,19 +84,54 @@
                         </ContextMenu>
                      </contextMenu>
                   </ToggleButton>
-                  <ToggleButton fx:id="textBtn" mnemonicParsing="false" onAction="#handleText" prefHeight="45.0" prefWidth="45.0" text="Text" toggleGroup="$shapeGroup" />
-                  <ToggleButton fx:id="moveBtn" mnemonicParsing="false" onAction="#handleMove" prefHeight="45.0" prefWidth="45.0" text="Move" toggleGroup="$shapeGroup" />
-                  <ToggleButton fx:id="pathBtn" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handlePath" prefHeight="45.0" prefWidth="45.0" text="Path" toggleGroup="$shapeGroup">
-                     <contextMenu>
+                  <ToggleButton fx:id="moveBtn" mnemonicParsing="false" onAction="#handleMove" prefHeight="45.0" prefWidth="45.0" toggleGroup="$shapeGroup">
+                      <graphic>
+                          <ImageView fitHeight="30" fitWidth="30" preserveRatio="true">
+                              <Image url="@../images/icon/move_50x50.png" />
+                          </ImageView>
+                      </graphic>
+                  </ToggleButton>
+                  <ToggleButton fx:id="pathBtn" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handlePath" prefHeight="45.0" prefWidth="45.0" toggleGroup="$shapeGroup">
+                      <graphic>
+                          <ImageView fitHeight="30" fitWidth="30" preserveRatio="true">
+                              <Image url="@../images/icon/draw_50x50.png" />
+                          </ImageView>
+                      </graphic>
+                      <contextMenu>
                         <ContextMenu style="-fx-background-color: #727272;">
                           <items>
                             <MenuItem mnemonicParsing="false" onAction="#handleEraser" text="Eraser" />
                           </items>
                         </ContextMenu>
                      </contextMenu></ToggleButton>
-                  <Button fx:id="btnDrawUndo" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleDrawUndo" prefHeight="25.0" prefWidth="45.0" text="Undo" />
-                  <Button fx:id="btnDrawRedo" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleDrawRedo" prefHeight="25.0" prefWidth="45.0" text="Redo" />
-                  <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleClear" prefHeight="25.0" prefWidth="45.0" text="Clear" />
+                  <ToggleButton fx:id="textBtn" mnemonicParsing="false" onAction="#handleText" prefHeight="45.0" prefWidth="45.0" toggleGroup="$shapeGroup">
+                      <graphic>
+                          <ImageView fitHeight="30" fitWidth="30" preserveRatio="true">
+                              <Image url="@../images/icon/text_50x50.png" />
+                          </ImageView>
+                      </graphic>
+                  </ToggleButton>
+                  <Button fx:id="btnDrawUndo" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleDrawUndo" prefHeight="45.0" prefWidth="45.0">
+                      <graphic>
+                          <ImageView fitHeight="30" fitWidth="30" preserveRatio="true">
+                              <Image url="@../images/icon/undo_50x50.png" />
+                          </ImageView>
+                      </graphic>
+                  </Button>
+                  <Button fx:id="btnDrawRedo" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleDrawRedo" prefHeight="45.0" prefWidth="45.0">
+                      <graphic>
+                          <ImageView fitHeight="30" fitWidth="30" preserveRatio="true">
+                              <Image url="@../images/icon/redo_50x50.png" />
+                          </ImageView>
+                      </graphic>
+                  </Button>
+                  <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleClear" prefHeight="45.0" prefWidth="45.0">
+                      <graphic>
+                          <ImageView fitHeight="30" fitWidth="30" preserveRatio="true">
+                              <Image url="@../images/icon/clear_50x50.png" />
+                          </ImageView>
+                      </graphic>
+                  </Button>
               </items>
             </ToolBar>
             <MenuBar fx:id="menuBar" maxHeight="29.0" maxWidth="270.0" minHeight="29.0" minWidth="270.0" prefHeight="29.0" prefWidth="270.0">

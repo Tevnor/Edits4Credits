@@ -5,7 +5,9 @@ import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ChoiceDialog;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
@@ -25,6 +27,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Optional;
 import java.util.stream.IntStream;
 
 public class ImportControl {
@@ -37,35 +40,36 @@ public class ImportControl {
 
     /*  file manipulation   */
     private FileChooser getChooser(String name, boolean isOpen){
-        FileChooser save = new FileChooser();
+        FileChooser chooser = new FileChooser();
         if(isOpen){
             FileChooser.ExtensionFilter all = new FileChooser.ExtensionFilter("Image Types","*.jpg","*.jpeg","*.gif","*.png","*.tif");
-            save.getExtensionFilters().add(all);
+            chooser.getExtensionFilters().add(all);
         }else{
             FileChooser.ExtensionFilter jpg = new FileChooser.ExtensionFilter("JPG","*.jpg");
             FileChooser.ExtensionFilter jpeg = new FileChooser.ExtensionFilter("JPEG","*.jpeg");
             FileChooser.ExtensionFilter gif = new FileChooser.ExtensionFilter("GIF","*.gif");
             FileChooser.ExtensionFilter png = new FileChooser.ExtensionFilter("PNG","*.png");
             FileChooser.ExtensionFilter tif = new FileChooser.ExtensionFilter("TIF","*.tif");
-            save.getExtensionFilters().addAll(jpg,jpeg,gif,png,tif);
+            chooser.getExtensionFilters().addAll(jpg,jpeg,gif,png,tif);
         }
         if(name != null){
-            save.setInitialFileName(name);
+            chooser.setInitialFileName(name);
         }
-        save.setInitialDirectory(new File(galleryPath));
-        save.setTitle("Choose image");
-        return save;
+        chooser.setTitle("Choose image");
+        return chooser;
     }
     private void createGalleryDir(){
         File gallery = new File(galleryPath);
         if(!gallery.exists()){
             gallery.mkdir();
+            IC_LOGGER.debug("Gallery directory created");
         }
     }
     protected void reset(){
         importedImg = null;
         fitToEditor = null;
         isSet = false;
+        IC_LOGGER.debug("ImportControl reset()");
     }
 
     /*  import image    */
@@ -107,23 +111,54 @@ public class ImportControl {
     }
 
     /*  saving  */
-    public void save(Project project, Canvas finishedOriginal, int[] drawingBuffer, boolean toGallery){
-        saveToFile(getFinalImage(project,drawingBuffer,getOriginalBuffer(finishedOriginal)),project);
+    protected void save(Project project, Canvas finishedOriginal, int[] drawingBuffer, boolean toGallery){
+        if(toGallery){
+            ChoiceDialog<String> c = new ChoiceDialog(".png", ".jpg", ".gif",".png", ".tif");
+            c.setTitle("Select Image Type");
+            c.setHeaderText("Please select the image type to export.");
+            c.setResultConverter( ( ButtonType type ) -> {
+                ButtonBar.ButtonData data = type == null ? null : type.getButtonData();
+                if ( data == ButtonBar.ButtonData.OK_DONE ) {
+                    return "OK";
+                } else {
+                    return "CANCEL";
+                }
+            } );
+            Optional<String> result = c.showAndWait();
+            if(result.get().equals("OK")){
+                saveToGallery(getFinalImage(project,drawingBuffer,getOriginalBuffer(finishedOriginal)),project,c.getSelectedItem());
+            }else{
+                IC_LOGGER.warn("No file type chose -> cancel save");
+            }
+        }else{
+            saveToExtern(getFinalImage(project,drawingBuffer,getOriginalBuffer(finishedOriginal)),project);
+        }
     }
-    private void saveToFile(Image writableImage, Project project) {
+    private void saveToExtern(Image writableImage, Project project) {
         createGalleryDir();
         FileChooser chooser = getChooser(project.getProjectName(), false);
         File file = chooser.showSaveDialog(null);
 
         try {
             writeImage(writableImage,file);
-        } catch (IOException exception) {
+        } catch (Exception exception) {
             IC_LOGGER.error("Could not save image!: " + exception.getMessage());
             Alert cannotSave = new Alert(Alert.AlertType.ERROR);
             cannotSave.setHeaderText("Could not save image at chosen location. Please try again!");
-            cannotSave.show();
         }
     }
+    private void saveToGallery(Image writableImage, Project project, String extension) {
+        createGalleryDir();
+        File file = new File(galleryPath + project.getProjectName() + extension);
+        try {
+            writeImage(writableImage,file);
+        } catch (Exception exception) {
+            IC_LOGGER.error("Could not save image!: " + exception.getMessage());
+            Alert cannotSave = new Alert(Alert.AlertType.ERROR);
+            cannotSave.setHeaderText("Could not save image at chosen location. Please try again!");
+        }
+    }
+
     private void writeImage(Image img, File file) throws IOException {
         BufferedImage outImg = SwingFXUtils.fromFXImage(img, null);
         String ext = FilenameUtils.getExtension(file.toString());
@@ -131,14 +166,14 @@ public class ImportControl {
     }
 
     /*  initializing main canvases and images    */
-    public ImageDimensions getImageDimInstance(){
+    protected ImageDimensions getImageDimInstance(){
         return new ImageDimensions(importedImg,0,0,importedImg.getWidth(),importedImg.getHeight());
     }
-    public Canvas getEditorImageCanvas(StackPane stack){
+    protected Canvas getEditorImageCanvas(StackPane stack){
         Canvas canvas = new Canvas(stack.getPrefWidth(),stack.getPrefHeight());
         return canvas;
     }
-    public Canvas getOriginalImageCanvas(Project project){
+    protected Canvas getOriginalImageCanvas(Project project){
         return new Canvas(project.getProjectWidth(),project.getProjectHeight());
     }
     /**
@@ -147,7 +182,7 @@ public class ImportControl {
      * @param canvas {@link Canvas} object on which the imported image should be drawn upon
      * @param imgDims {@link ImageDimensions} object of to be drawn image
      */
-    public void setImportedImgOnCanvas(Canvas canvas, ImageDimensions imgDims, boolean isOriginal){
+    protected void setImportedImgOnCanvas(Canvas canvas, ImageDimensions imgDims, boolean isOriginal){
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
         double ratio = imgDims.getImageAspectRatio(importedImg);
@@ -175,10 +210,10 @@ public class ImportControl {
         IC_LOGGER.debug("Drawed imported image with dims: x= " + resizedImage.getWidth() + " y= " + resizedImage.getHeight() + " ratio= " + ratio);
         if(!isOriginal){
             fitToEditor = resizedImage;
-            IC_LOGGER.trace("Set fitToEditor to: " + resizedImage);
+            IC_LOGGER.debug("Set fitToEditor to: " + resizedImage);
         }
     }
-    public ImageTool getImageTool(Canvas editorCanvas){
+    protected ImageTool getImageTool(Canvas editorCanvas){
         if(fitToEditor != null){
             ImageTool imgTool = new ImageTool(fitToEditor, editorCanvas, editorCanvas.getGraphicsContext2D());
             imgTool.createPixelArray();
@@ -187,11 +222,6 @@ public class ImportControl {
         IC_LOGGER.error("Could not create ImageTool because this.fitToEditorImg is null");
         return null;
     }
-    public ImageTool getImageTool(Canvas editorCanvas,Image filtered){
-        ImageTool imgTool = new ImageTool(filtered, editorCanvas, editorCanvas.getGraphicsContext2D());
-        imgTool.createPixelArray();
-        return imgTool;
-    }
 
     /*  pixel manipulation  */
     private WritableImage getFinalImage(Project project, int[] drawingBuffer, int[] imageBuffer){
@@ -199,20 +229,25 @@ public class ImportControl {
             length = projectWidth * projectHeight;
         WritableImage export = new WritableImage(projectWidth,projectHeight);
         PixelWriter pw = export.getPixelWriter();
+
         IntStream range = IntStream.range(0,length).parallel();
         if(project.isTransparent()) {
             if(imageBuffer == null){
                 range.forEach(i -> pw.setArgb(i % projectWidth, i / projectWidth, drawingBuffer[i]));
+                IC_LOGGER.debug("final image: drawing layer");
             }else{
                 range.forEach(i -> pw.setArgb(i % projectWidth, i / projectWidth, srcOverArgb(drawingBuffer[i], imageBuffer[i])));
+                IC_LOGGER.debug("final image: image layer < drawing layer");
             }
         }else{
             if(imageBuffer == null){
                 range.forEach(i -> pw.setArgb(i % projectWidth, i / projectWidth,
                         srcOverArgb(drawingBuffer[i], convertColor(project.getBackgroundColor()))));
+                IC_LOGGER.debug("final image: background layer < drawing layer");
             }else{
                 range.forEach(i -> pw.setArgb(i % projectWidth, i / projectWidth,
                         srcOverArgb(drawingBuffer[i], srcOverArgb(imageBuffer[i],convertColor(project.getBackgroundColor())))));
+                IC_LOGGER.debug("final image: background layer < image layer < drawing layer");
             }
         }
         return export;
@@ -230,6 +265,20 @@ public class ImportControl {
                         WritablePixelFormat.getIntArgbInstance(), export, 0, (int)canvas.getWidth());
         return export;
     }
+    private int convertColor(Color color){
+        int alpha = (int)Math.round(color.getOpacity() * 255);
+        int red = (int)Math.round(color.getRed() * 255);
+        int green = (int)Math.round(color.getGreen() * 255);
+        int blue = (int)Math.round(color.getBlue() * 255);
+
+        return (alpha << 24) | (red << 16) | (green << 8) | blue;
+    }
+    /**
+     * Calculates an INT_ARGB of the SRC_OVER algorithm for two pixels
+     * @param argb_fg int_argb value of foreground pixel
+     * @param argb_bg int_argb value of background pixel
+     * @return src_over value of input
+     */
     private int srcOverArgb(int argb_fg, int argb_bg){
         //conversion into 0-1 multiplied by alpha value
         double alpha_fg = (double)((argb_fg >> 24) & 0xff)/255, alpha_bg = (double)((argb_bg >> 24) & 0xff)/255;
@@ -249,15 +298,4 @@ public class ImportControl {
         //bitwise addition into INT_ARGB format
         return (alpha_final << 24) | ((red_final << 16) & 0xffffff) | ((green_final << 8) & 0xffff) | (blue_final  & 0xff);
     }
-    private int convertColor(Color color){
-        int alpha = (int)Math.round(color.getOpacity() * 255);
-        int red = (int)Math.round(color.getRed() * 255);
-        int green = (int)Math.round(color.getGreen() * 255);
-        int blue = (int)Math.round(color.getBlue() * 255);
-
-        return (alpha << 24) | (red << 16) | (green << 8) | blue;
-    }
-
-
-
 }

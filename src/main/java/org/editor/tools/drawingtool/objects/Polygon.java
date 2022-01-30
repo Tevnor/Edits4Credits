@@ -92,9 +92,8 @@ public class Polygon extends Shapes {
     }
     @Override
     public Shapes reposition(Point2D point) {
-        //TODO moving bug
         Point2D repos = point.subtract(new Point2D(getMinX(),getMinY()));
-        double[] reposDims = getReposDims(repos);
+        double[] reposDims = getReposDims(point);
         double[] reposX = new double[xPoints.length], reposY = new double[yPoints.length];
 
         for(int i = 0;i < xPoints.length; i++){
