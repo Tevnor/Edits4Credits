@@ -119,7 +119,6 @@ public class GalleryController implements Initializable, ControlScreen {
     private void handleImport() {
         GC_LOGGER.debug("entered import");
         isTmp = false;
-        int before = imgs.size();
         page = (imgs.size() - 1) / 9;
         List<File> files = getFileChooser().showOpenMultipleDialog(null);
 
@@ -134,7 +133,6 @@ public class GalleryController implements Initializable, ControlScreen {
                 GC_LOGGER.warn("File could not be imported");
             }
         });
-        int delta = imgs.size() - before;
         populateDisplays(isTmp);
     }
     @FXML

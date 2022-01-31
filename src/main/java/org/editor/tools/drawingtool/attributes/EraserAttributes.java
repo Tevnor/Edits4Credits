@@ -4,7 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class EraserAttributes extends AbstractGeneral {
-    private static final Logger EA_LOGGER = LogManager.getLogger(EraserAttributes.class.getName());
+    private static final Logger EA_LOGGER = LogManager.getLogger(EraserAttributes.class);
     private final double size;
     private final boolean circle;
 

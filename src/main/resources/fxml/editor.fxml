@@ -8,6 +8,7 @@
 <?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -25,112 +26,124 @@
          <children>
             <ToolBar fx:id="toolBar" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefHeight="604.0" prefWidth="56.0">
               <items>
-                  <ToggleButton fx:id="arcBtn" mnemonicParsing="false" onAction="#handleArc" prefHeight="45.0" prefWidth="45.0">
+                  <ToggleButton maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleArc" prefHeight="45.0" prefWidth="45.0">
                       <graphic>
-                          <ImageView fitHeight="30" fitWidth="30" preserveRatio="true">
+                          <ImageView fitHeight="35" fitWidth="35" preserveRatio="true">
                               <Image url="@../images/icon/arc_50x50.png" />
                           </ImageView>
                       </graphic>
+                      <tooltip><Tooltip text="Arc" /></tooltip>
                      <toggleGroup>
                         <ToggleGroup fx:id="shapeGroup" />
                      </toggleGroup>
                   </ToggleButton>
-                  <ToggleButton fx:id="circleBtn" mnemonicParsing="false" onAction="#handleCircle" prefHeight="45.0" prefWidth="45.0" toggleGroup="$shapeGroup">
+                  <ToggleButton maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleCircle" prefHeight="45.0" prefWidth="45.0" toggleGroup="$shapeGroup">
                       <graphic>
-                          <ImageView fitHeight="30" fitWidth="30" preserveRatio="true">
+                          <ImageView fitHeight="35" fitWidth="35" preserveRatio="true">
                               <Image url="@../images/icon/circle_50x50.png" />
                           </ImageView>
                       </graphic>
+                      <tooltip><Tooltip text="Circle" /></tooltip>
                   </ToggleButton>
-                  <ToggleButton fx:id="ellipseBtn" mnemonicParsing="false" onAction="#handleEllipses" prefHeight="45.0" prefWidth="45.0" toggleGroup="$shapeGroup">
+                  <ToggleButton maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleEllipses" prefHeight="45.0" prefWidth="45.0" toggleGroup="$shapeGroup">
                       <graphic>
-                          <ImageView fitHeight="30" fitWidth="30" preserveRatio="true">
+                          <ImageView fitHeight="35" fitWidth="35" preserveRatio="true">
                               <Image url="@../images/icon/ellipse_50x50.png" />
                           </ImageView>
                       </graphic>
+                      <tooltip><Tooltip text="Ellipse" /></tooltip>
                   </ToggleButton>
-                  <ToggleButton fx:id="lineBtn" mnemonicParsing="false" onAction="#handleLine" prefHeight="45.0" prefWidth="45.0" toggleGroup="$shapeGroup">
+                  <ToggleButton maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleLine" prefHeight="45.0" prefWidth="45.0" toggleGroup="$shapeGroup">
                       <graphic>
-                          <ImageView fitHeight="30" fitWidth="30" preserveRatio="true">
+                          <ImageView fitHeight="35" fitWidth="35" preserveRatio="true">
                               <Image url="@../images/icon/line_50x50.png" />
                           </ImageView>
                       </graphic>
+                      <tooltip><Tooltip text="Line" /></tooltip>
                   </ToggleButton>
-                  <ToggleButton fx:id="polygonBtn" mnemonicParsing="false" onAction="#handlePolygon" prefHeight="45.0" prefWidth="45.0" toggleGroup="$shapeGroup">
+                  <ToggleButton maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handlePolygon" prefHeight="45.0" prefWidth="45.0" toggleGroup="$shapeGroup">
                       <graphic>
-                          <ImageView fitHeight="30" fitWidth="30" preserveRatio="true">
+                          <ImageView fitHeight="35" fitWidth="35" preserveRatio="true">
                               <Image url="@../images/icon/polygon_50x50.png" />
                           </ImageView>
                       </graphic>
+                      <tooltip><Tooltip text="Polygon" /></tooltip>
                      <contextMenu>
-                        <ContextMenu style="-fx-background-color: #727272;">
+                        <ContextMenu>
                           <items>
-                            <MenuItem mnemonicParsing="false" onAction="#handleDrawPolygon" styleClass="label-context" text="draw Polygon" />
+                            <MenuItem mnemonicParsing="false" onAction="#handleDrawPolygon" text="Draw" />
                           </items>
                         </ContextMenu>
                      </contextMenu>
                   </ToggleButton>
-                  <ToggleButton fx:id="rectangleBtn" mnemonicParsing="false" onAction="#handleRectangle" prefHeight="45.0" prefWidth="45.0" toggleGroup="$shapeGroup">
+                  <ToggleButton maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleRectangle" prefHeight="45.0" prefWidth="45.0" toggleGroup="$shapeGroup">
                       <graphic>
-                          <ImageView fitHeight="30" fitWidth="30" preserveRatio="true">
+                          <ImageView fitHeight="35" fitWidth="35" preserveRatio="true">
                               <Image url="@../images/icon/rectangle_50x50.png" />
                           </ImageView>
                       </graphic>
+                      <tooltip><Tooltip text="Rectangle" /></tooltip>
                      <contextMenu>
-                        <ContextMenu onAction="#handleRoundedRectangle" style="-fx-background-color: #727272;">
+                        <ContextMenu onAction="#handleRoundedRectangle">
                           <items>
                             <MenuItem mnemonicParsing="false" text="Rounded Rectangle" />
                           </items>
                         </ContextMenu>
                      </contextMenu>
                   </ToggleButton>
-                  <ToggleButton fx:id="moveBtn" mnemonicParsing="false" onAction="#handleMove" prefHeight="45.0" prefWidth="45.0" toggleGroup="$shapeGroup">
+                  <ToggleButton maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handlePath" prefHeight="45.0" prefWidth="45.0" toggleGroup="$shapeGroup">
                       <graphic>
-                          <ImageView fitHeight="30" fitWidth="30" preserveRatio="true">
-                              <Image url="@../images/icon/move_50x50.png" />
-                          </ImageView>
-                      </graphic>
-                  </ToggleButton>
-                  <ToggleButton fx:id="pathBtn" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handlePath" prefHeight="45.0" prefWidth="45.0" toggleGroup="$shapeGroup">
-                      <graphic>
-                          <ImageView fitHeight="30" fitWidth="30" preserveRatio="true">
+                          <ImageView fitHeight="35" fitWidth="35" preserveRatio="true">
                               <Image url="@../images/icon/draw_50x50.png" />
                           </ImageView>
                       </graphic>
+                      <tooltip><Tooltip text="Pencil" /></tooltip>
                       <contextMenu>
-                        <ContextMenu style="-fx-background-color: #727272;">
+                        <ContextMenu>
                           <items>
                             <MenuItem mnemonicParsing="false" onAction="#handleEraser" text="Eraser" />
                           </items>
                         </ContextMenu>
                      </contextMenu></ToggleButton>
-                  <ToggleButton fx:id="textBtn" mnemonicParsing="false" onAction="#handleText" prefHeight="45.0" prefWidth="45.0" toggleGroup="$shapeGroup">
+                  <ToggleButton maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleText" prefHeight="45.0" prefWidth="45.0" toggleGroup="$shapeGroup">
                       <graphic>
-                          <ImageView fitHeight="30" fitWidth="30" preserveRatio="true">
+                          <ImageView fitHeight="35" fitWidth="35" preserveRatio="true">
                               <Image url="@../images/icon/text_50x50.png" />
                           </ImageView>
                       </graphic>
+                      <tooltip><Tooltip text="Text" /></tooltip>
                   </ToggleButton>
-                  <Button fx:id="btnDrawUndo" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleDrawUndo" prefHeight="45.0" prefWidth="45.0">
+                  <ToggleButton maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleMove" prefHeight="45.0" prefWidth="45.0" toggleGroup="$shapeGroup">
                       <graphic>
-                          <ImageView fitHeight="30" fitWidth="30" preserveRatio="true">
+                          <ImageView fitHeight="35" fitWidth="35" preserveRatio="true">
+                              <Image url="@../images/icon/move_50x50.png" />
+                          </ImageView>
+                      </graphic>
+                      <tooltip><Tooltip text="Move Shape" /></tooltip>
+                  </ToggleButton>
+                  <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleDrawUndo" prefHeight="45.0" prefWidth="45.0">
+                      <graphic>
+                          <ImageView fitHeight="35" fitWidth="35" preserveRatio="true">
                               <Image url="@../images/icon/undo_50x50.png" />
                           </ImageView>
                       </graphic>
+                      <tooltip><Tooltip text="Undo" /></tooltip>
                   </Button>
-                  <Button fx:id="btnDrawRedo" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleDrawRedo" prefHeight="45.0" prefWidth="45.0">
+                  <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleDrawRedo" prefHeight="45.0" prefWidth="45.0">
                       <graphic>
-                          <ImageView fitHeight="30" fitWidth="30" preserveRatio="true">
+                          <ImageView fitHeight="35" fitWidth="35" preserveRatio="true">
                               <Image url="@../images/icon/redo_50x50.png" />
                           </ImageView>
                       </graphic>
+                      <tooltip><Tooltip text="Redo" /></tooltip>
                   </Button>
                   <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleClear" prefHeight="45.0" prefWidth="45.0">
                       <graphic>
-                          <ImageView fitHeight="30" fitWidth="30" preserveRatio="true">
+                          <ImageView fitHeight="35" fitWidth="35" preserveRatio="true">
                               <Image url="@../images/icon/clear_50x50.png" />
                           </ImageView>
                       </graphic>
+                      <tooltip><Tooltip text="Clear" /></tooltip>
                   </Button>
               </items>
             </ToolBar>

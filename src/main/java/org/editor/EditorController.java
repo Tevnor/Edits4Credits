@@ -27,6 +27,7 @@ import org.editor.layout.EditorControllerLayoutManager;
 import org.editor.project.Project;
 import org.editor.tools.drawingtool.DrawOptionsController;
 import org.editor.tools.drawingtool.DrawingTool;
+import org.editor.tools.drawingtool.handlers.EraserDrawer;
 import org.editor.tools.drawingtool.handlers.HandlerFactory;
 import org.editor.tools.drawingtool.handlers.PolygonDrawer;
 import java.io.IOException;
@@ -77,25 +78,7 @@ public class EditorController implements Initializable, ControlScreen {
     @FXML
     private javafx.scene.control.MenuItem openFile;
     @FXML
-    private ToggleButton arcBtn;
-    @FXML
-    private ToggleButton circleBtn;
-    @FXML
-    private ToggleButton ellipseBtn;
-    @FXML
-    private ToggleButton lineBtn;
-    @FXML
-    private ToggleButton rectangleBtn;
-    @FXML
-    private ToggleButton polygonBtn;
-    @FXML
-    private ToggleButton textBtn;
-    @FXML
-    private ToggleButton moveBtn;
-    @FXML
     private StackPane stack;
-    @FXML
-    private Button btnDrawUndo, btnDrawRedo;
     @FXML
     private MenuBar menuBar;
     @FXML
@@ -402,6 +385,8 @@ public class EditorController implements Initializable, ControlScreen {
         }
         if(drawer instanceof PolygonDrawer){
             ((PolygonDrawer) drawer).resetPoints();
+        }else if(drawer instanceof EraserDrawer){
+            ((EraserDrawer) drawer).reset();
         }
         if(drawer != null){
             stack.removeEventHandler(MouseEvent.ANY, drawer);

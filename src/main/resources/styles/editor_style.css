@@ -2,41 +2,25 @@
     -fx-background-radius: 0 0 10 10;
     -fx-background-color: #282828;
 }
-.menu-item{
+.menu-item, .toggle-button, .button, .context-menu, .color-picker{
     -fx-background-color: #282828;
 }
 
-.context-menu{
-    -fx-background-color: #282828;
-}
 .menu {
     -fx-label-padding: 1px;
 }
-.context-menu .menu-item .label:focused{
-    -fx-background-color:  rgba(0, 0, 0, 0.8);
-}
 
-.menu .label, .menu-item .label{
+.label, .toggle-button, .button, .color-picker-label{
     -fx-font-family: "Segoe UI Semibold";
     -fx-text-fill: #eeeeee;
 }
-.menu:hover, .menu:focused, .menu:pressed{
+.menu:hover, .menu:focused, .menu:pressed, .menu-item:focused, .menu-item:focused{
     -fx-background-color: rgba(0, 0, 0, 0.8);
 }
 .menu:showing{
     -fx-background-color: rgba(0, 0, 0, 0.4);
 }
-.menu-item:focused, -context-item:focused{
-    -fx-background-color:  rgba(0, 0, 0, 0.8);
-}
-
 .tool-bar{
     -fx-background-radius: 0 10 10 0;
     -fx-background-color: #727272;
-}
-
-.toggle-button, .button{
-    -fx-background-color: #282828;
-    -fx-font-family: "Segoe UI Semibold";
-    -fx-text-fill: #eeeeee;
 }

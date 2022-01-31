@@ -149,7 +149,7 @@ public class ImportControl {
     }
     private void saveToGallery(Image writableImage, Project project, String extension) {
         createGalleryDir();
-        File file = new File(galleryPath + project.getProjectName() + extension);
+        File file = new File(galleryPath + '\\' + project.getProjectName() + extension);
         try {
             writeImage(writableImage,file);
         } catch (Exception exception) {

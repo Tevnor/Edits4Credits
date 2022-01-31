@@ -1,6 +1,8 @@
 package org.editor.tools.drawingtool.handlers;
 
 import javafx.scene.input.MouseEvent;
+import javafx.scene.shape.StrokeLineCap;
+import javafx.scene.shape.StrokeLineJoin;
 import org.editor.tools.drawingtool.DrawingTool;
 import org.editor.tools.drawingtool.attributes.AbstractGeneral;
 import org.editor.tools.drawingtool.attributes.General;
@@ -18,6 +20,10 @@ public class PathDrawer implements DrawHandler {
         dt.getGcBrush().setFill(attributes.getColor());
         dt.getGcBrush().setStroke(attributes.getColor());
         dt.getGcBrush().setLineWidth(attributes.getLineWidth());
+        dt.getGcBrush().setGlobalBlendMode(attributes.getBm());
+        dt.getGcBrush().setGlobalAlpha(attributes.getAlpha());
+        dt.getGcBrush().setLineCap(StrokeLineCap.ROUND);
+        dt.getGcBrush().setLineJoin(StrokeLineJoin.ROUND);
     }
 
 

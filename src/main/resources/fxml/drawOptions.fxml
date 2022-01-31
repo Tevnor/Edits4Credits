@@ -750,7 +750,7 @@
                         <RowConstraints maxHeight="200.33331298828128" minHeight="10.0" prefHeight="198.33331298828128" vgrow="SOMETIMES" />
                      </rowConstraints>
                      <children>
-                        <Slider fx:id="sliderEraserSize" blockIncrement="5.0" majorTickUnit="50.0" max="500.0" min="5.0" minorTickCount="4" showTickMarks="true" snapToTicks="true" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
+                        <Slider fx:id="sliderEraserSize" blockIncrement="5.0" majorTickUnit="50.0" max="300.0" min="5.0" minorTickCount="4" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="20.0" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
                            <GridPane.margin>
                               <Insets bottom="40.0" left="20.0" right="20.0" />
                            </GridPane.margin>

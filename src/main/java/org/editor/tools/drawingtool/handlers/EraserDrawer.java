@@ -3,16 +3,21 @@ package org.editor.tools.drawingtool.handlers;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
 import org.editor.tools.drawingtool.DrawingTool;
 import org.editor.tools.drawingtool.attributes.AbstractGeneral;
 import org.editor.tools.drawingtool.attributes.EraserAttributes;
 
 
 public class EraserDrawer implements DrawHandler {
-
     private final DrawingTool dt;
+    private Shape floater;
+    private double offset = 0;
     private EraserAttributes attributes;
     private final PixelWriter pw;
+
 
     public EraserDrawer(DrawingTool dt){
         this.dt = dt;
@@ -24,10 +29,19 @@ public class EraserDrawer implements DrawHandler {
         if(MouseEvent.MOUSE_PRESSED.equals(mouseEvent.getEventType()) || MouseEvent.MOUSE_DRAGGED.equals(mouseEvent.getEventType())) {
             double width = attributes.getSize();
             if (attributes.isCircle()) {
-                deleteRectangle(mouseEvent.getX(), mouseEvent.getY(), width);
-            } else {
                 deleteCircle(mouseEvent.getX(), mouseEvent.getY(), width / 2);
+            } else {
+                deleteRectangle(mouseEvent.getX(), mouseEvent.getY(), width);
             }
+        }
+        if(MouseEvent.MOUSE_MOVED.equals(mouseEvent.getEventType()) || MouseEvent.MOUSE_DRAGGED.equals(mouseEvent.getEventType())){
+            floater.setTranslateX(mouseEvent.getX()-offset);
+            floater.setTranslateY(mouseEvent.getY()-offset);
+        }
+        if(MouseEvent.MOUSE_ENTERED.equals(mouseEvent.getEventType())){
+            floater.setVisible(true);
+        }else if(MouseEvent.MOUSE_EXITED.equals(mouseEvent.getEventType())){
+            floater.setVisible(false);
         }
     }
 
@@ -42,6 +56,7 @@ public class EraserDrawer implements DrawHandler {
                 }
             }
         }
+        System.out.println("circ");
     }
     private void deleteRectangle(double pX, double pY, double width){
         int minX = (int)Math.round(pX-width/2);
@@ -54,9 +69,23 @@ public class EraserDrawer implements DrawHandler {
         }
 
     }
-
     @Override
     public void setAttributes(AbstractGeneral attributes) {
         this.attributes = (EraserAttributes) attributes;
+        if(this.attributes.isCircle()){
+            floater = new Circle(this.attributes.getSize()/2);
+        }else{
+            floater = new Rectangle(this.attributes.getSize(),this.attributes.getSize());
+        }
+        offset = this.attributes.getSize()/2;
+        floater.setFill(Color.TRANSPARENT);
+        floater.setStroke(Color.rgb(180,180,180,0.5));
+        dt.getStack().getChildren().add(floater);
     }
+    public void reset(){
+        if(floater != null){
+            dt.getStack().getChildren().removeAll(floater);
+        }
+    }
+
 }

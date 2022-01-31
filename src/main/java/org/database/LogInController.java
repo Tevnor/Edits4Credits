@@ -29,6 +29,7 @@ import org.screencontrol.Window;
 
 import java.net.URL;
 
+import java.nio.file.Path;
 import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
@@ -170,7 +171,7 @@ public class LogInController implements Initializable, ControlScreen {
         Group root = new Group();
         root.getChildren().addAll(iv, screensController);
         Scene scene = new Scene(root, Color.TRANSPARENT);
-
+        scene.getStylesheets().add(LogInController.class.getResource("/styles/styles.css").toExternalForm());
 
         appStage = new Stage();
         appStage.initStyle(StageStyle.TRANSPARENT);
