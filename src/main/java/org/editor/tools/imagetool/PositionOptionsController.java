@@ -19,8 +19,6 @@ public class PositionOptionsController implements Initializable {
     @FXML
     private TextField yPositionInput;
     @FXML
-    private Button applyPositionChange;
-    @FXML
     private Button closeMoveOptions;
 
     private double xPosition = 0;

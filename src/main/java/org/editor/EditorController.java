@@ -544,7 +544,12 @@ public class EditorController implements Initializable, ControlScreen {
             scaleOptRoot = scaleOptLoader.load();
             Stage scaleOptStage = new Stage();
             Scene scaleOptScene = new Scene(scaleOptRoot);
+            scaleOptScene.setFill(Color.TRANSPARENT);
             scaleOptStage.setScene(scaleOptScene);
+            scaleOptStage.initStyle(StageStyle.UNDECORATED);
+            scaleOptStage.initStyle(StageStyle.TRANSPARENT);
+            scaleOptStage.setResizable(false);
+            scaleOptStage.initModality(Modality.APPLICATION_MODAL);
             scaleOptStage.show();
             scaleOptions = scaleOptLoader.getController();
             scaleOptions.setEditorController(this);
