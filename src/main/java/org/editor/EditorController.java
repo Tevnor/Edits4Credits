@@ -196,6 +196,7 @@ public class EditorController implements Initializable, ControlScreen {
         }
         noiseOptStage = new Stage();
         Scene noiseOptScene = new Scene(noiseOptRoot);
+        noiseOptScene.setFill(Color.TRANSPARENT);
         noiseOptStage.setScene(noiseOptScene);
 
         noiseController.setEditorController(this);
@@ -376,6 +377,7 @@ public class EditorController implements Initializable, ControlScreen {
         drawOptStage.centerOnScreen();
         options.setSelShape(drawHandler);
         drawOptStage.show();
+
     }
     private void initShapeHandler(){
         importButton.setVisible(false);
@@ -422,7 +424,12 @@ public class EditorController implements Initializable, ControlScreen {
 
     public void handleAddNoise(ActionEvent event) {
         noiseOptStage.centerOnScreen();
+        noiseOptStage.initStyle(StageStyle.UNDECORATED);
+        noiseOptStage.initStyle(StageStyle.TRANSPARENT);
+        noiseOptStage.setResizable(false);
+        noiseOptStage.initModality(Modality.APPLICATION_MODAL);
         noiseOptStage.show();
+
     }
 
     // Checkerboard mode
@@ -605,5 +612,10 @@ public class EditorController implements Initializable, ControlScreen {
     }
     public ImageDimensions getOriginalImageObject(){
         return this.originalImageObject;
+    }
+    public void drawUnfilteredCanvasImage(){
+        GraphicsContext gc = editorCanvasImage.getGraphicsContext2D();
+        gc.clearRect(0, 0, editorCanvasImage.getWidth(), editorCanvasImage.getHeight());
+        gc.drawImage(editorImageObject.getOriginalImage(), editorImageObject.getCurrentXPosition(), editorImageObject.getCurrentYPosition(), editorImageObject.getCurrentWidth(), editorImageObject.getCurrentHeight());
     }
 }
