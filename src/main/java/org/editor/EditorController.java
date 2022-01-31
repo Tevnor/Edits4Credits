@@ -519,7 +519,12 @@ public class EditorController implements Initializable, ControlScreen {
             moveOptRoot = moveOptLoader.load();
             Stage moveOptStage = new Stage();
             Scene moveOptScene = new Scene(moveOptRoot);
+            moveOptScene.setFill(Color.TRANSPARENT);
             moveOptStage.setScene(moveOptScene);
+            moveOptStage.initStyle(StageStyle.UNDECORATED);
+            moveOptStage.initStyle(StageStyle.TRANSPARENT);
+            moveOptStage.setResizable(false);
+            moveOptStage.initModality(Modality.APPLICATION_MODAL);
             moveOptStage.show();
             moveOptions = moveOptLoader.getController();
             moveOptions.setEditorController(this);
