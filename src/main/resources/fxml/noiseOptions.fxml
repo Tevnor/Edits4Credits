@@ -1,28 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<?import javafx.scene.layout.HBox?>
-<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="200.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17" fx:controller="org.editor.tools.filtertool.NoiseController">
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="200.0" style="-fx-background-color: #727272; -fx-border-color: #282828; -fx-border-radius: 20; -fx-background-radius: 20; -fx-border-width: 2;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.editor.tools.filtertool.NoiseController">
   <columnConstraints>
     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
   </columnConstraints>
   <rowConstraints>
       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
-      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Noise Strength" textAlignment="CENTER" />
-      <Slider fx:id="noiseSlider" majorTickUnit="10.0" max="10.0" minorTickCount="10" showTickLabels="true" showTickMarks="true" snapToTicks="true" GridPane.rowIndex="1" />
-       <HBox>
-           <Button fx:id="applyNoiseOnlyOnImage" mnemonicParsing="false" onAction="#handleApplyNoiseOnlyOnImage" text="only image " GridPane.rowIndex="2" />
-           <Button fx:id="applyNoiseOnEverything" alignment="CENTER_RIGHT" mnemonicParsing="false" onAction="#handleApplyNoiseOnEverything" text="everything" GridPane.rowIndex="2" />
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Noise Strength" textAlignment="CENTER" GridPane.rowIndex="1">
+         <font>
+            <Font name="System Bold" size="20.0" />
+         </font>
+         <GridPane.margin>
+            <Insets left="25.0" />
+         </GridPane.margin></Text>
+      <Slider fx:id="noiseSlider" majorTickUnit="10.0" max="10.0" minorTickCount="10" onDragDone="#handleAddNoisePreview" showTickLabels="true" showTickMarks="true" snapToTicks="true" GridPane.rowIndex="2">
+         <GridPane.margin>
+            <Insets left="10.0" right="10.0" />
+         </GridPane.margin></Slider>
+       <HBox style="-fx-background-color: 727272; -fx-border-color: 282828; -fx-border-radius: 20; -fx-border-width: 2;" GridPane.rowIndex="3">
+           <Button fx:id="applyNoiseOnlyOnImage" mnemonicParsing="false" onAction="#handleApplyNoiseOnlyOnImage" style="-fx-background-radius: 20; -fx-background-color: #282828;" text="Apply Filter" textFill="#eeeeee" GridPane.rowIndex="2">
+            <font>
+               <Font name="System Bold" size="20.0" />
+            </font>
+            <opaqueInsets>
+               <Insets />
+            </opaqueInsets>
+            <HBox.margin>
+               <Insets left="25.0" />
+            </HBox.margin></Button>
        </HBox>
+      <ButtonBar prefHeight="40.0" prefWidth="200.0" style="-fx-background-radius: 20 20 0 0; -fx-background-color: #282828;">
+        <buttons>
+          <Button fx:id="closeNoiseOptions" mnemonicParsing="false" onAction="#handleCloseNoiseOptions" style="-fx-background-color: transparent;" text="Close" textFill="#e8e8e8">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Button>
+        </buttons>
+         <GridPane.margin>
+            <Insets bottom="50.0" />
+         </GridPane.margin>
+      </ButtonBar>
    </children>
 </GridPane>

@@ -202,6 +202,7 @@ public class EditorController implements Initializable, ControlScreen {
         }
         noiseOptStage = new Stage();
         Scene noiseOptScene = new Scene(noiseOptRoot);
+        noiseOptScene.setFill(Color.TRANSPARENT);
         noiseOptStage.setScene(noiseOptScene);
 
         noiseController.setEditorController(this);
@@ -436,6 +437,10 @@ public class EditorController implements Initializable, ControlScreen {
 
     public void handleAddNoise(ActionEvent event) {
         noiseOptStage.centerOnScreen();
+        noiseOptStage.initStyle(StageStyle.UNDECORATED);
+        noiseOptStage.initStyle(StageStyle.TRANSPARENT);
+        noiseOptStage.setResizable(false);
+        noiseOptStage.initModality(Modality.APPLICATION_MODAL);
         noiseOptStage.show();
     }
 
@@ -531,7 +536,12 @@ public class EditorController implements Initializable, ControlScreen {
             moveOptRoot = moveOptLoader.load();
             Stage moveOptStage = new Stage();
             Scene moveOptScene = new Scene(moveOptRoot);
+            moveOptScene.setFill(Color.TRANSPARENT);
             moveOptStage.setScene(moveOptScene);
+            moveOptStage.initStyle(StageStyle.UNDECORATED);
+            moveOptStage.initStyle(StageStyle.TRANSPARENT);
+            moveOptStage.setResizable(false);
+            moveOptStage.initModality(Modality.APPLICATION_MODAL);
             moveOptStage.show();
             moveOptions = moveOptLoader.getController();
             moveOptions.setEditorController(this);
@@ -551,7 +561,12 @@ public class EditorController implements Initializable, ControlScreen {
             scaleOptRoot = scaleOptLoader.load();
             Stage scaleOptStage = new Stage();
             Scene scaleOptScene = new Scene(scaleOptRoot);
+            scaleOptScene.setFill(Color.TRANSPARENT);
             scaleOptStage.setScene(scaleOptScene);
+            scaleOptStage.initStyle(StageStyle.UNDECORATED);
+            scaleOptStage.initStyle(StageStyle.TRANSPARENT);
+            scaleOptStage.setResizable(false);
+            scaleOptStage.initModality(Modality.APPLICATION_MODAL);
             scaleOptStage.show();
             scaleOptions = scaleOptLoader.getController();
             scaleOptions.setEditorController(this);
@@ -584,7 +599,6 @@ public class EditorController implements Initializable, ControlScreen {
         }
         orderStack();
     }
-
     @FXML
     private void handleSaveGallery() {
         ic.save(project,originalCanvas,dt.getPixelBufferOfDrawing(project),true);
@@ -628,6 +642,11 @@ public class EditorController implements Initializable, ControlScreen {
     }
     public ImageDimensions getOriginalImageObject(){
         return this.originalImageObject;
+    }
+    public void drawUnfilteredCanvasImage(){
+        GraphicsContext gc = editorCanvasImage.getGraphicsContext2D();
+        gc.clearRect(0, 0, editorCanvasImage.getWidth(), editorCanvasImage.getHeight());
+        gc.drawImage(editorImageObject.getOriginalImage(), editorImageObject.getCurrentXPosition(), editorImageObject.getCurrentYPosition(), editorImageObject.getCurrentWidth(), editorImageObject.getCurrentHeight());
     }
 
     @FXML

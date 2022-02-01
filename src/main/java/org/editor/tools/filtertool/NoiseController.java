@@ -1,29 +1,39 @@
 package org.editor.tools.filtertool;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.MouseDragEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.canvas.Canvas;
+import javafx.stage.Stage;
 import org.editor.EditorController;
 
+import java.net.URL;
+import java.util.ResourceBundle;
 
-public class NoiseController {
+
+public class NoiseController implements Initializable {
     @FXML
     private Slider noiseSlider;
     @FXML
-    private Button applyNoiseOnlyOnImage;
-    @FXML
-    private Button applyNoiseOnEverything;
+    private Button closeNoiseOptions;
+
+
 
     private double noiseStrength;
     private WritableImage filteredImage;
     private WritableImage filteredOriginalImage;
     private EditorController editorController;
+    private Stage stage;
 
     public void handleApplyNoiseOnlyOnImage(ActionEvent event) {
         noiseStrength = noiseSlider.getValue();
@@ -41,10 +51,6 @@ public class NoiseController {
 
     public void setEditorController(EditorController editorController) {
         this.editorController = editorController;
-    }
-
-    public void handleApplyNoiseOnEverything(ActionEvent event) {
-
     }
 
     public WritableImage addNoiseToImage(WritableImage inputImage, double noiseStrength){
@@ -73,4 +79,33 @@ public class NoiseController {
         return image;
     }
 
+    public void handleCloseNoiseOptions(ActionEvent event) {
+        stage = (Stage) closeNoiseOptions.getScene().getWindow();
+        editorController.drawUnfilteredCanvasImage();
+        stage.close();
+    }
+
+    @FXML
+    public void handleAddNoisePreview(MouseDragEvent event) {
+        noiseSlider.valueProperty().addListener((observableValue, oldValue, newValue) -> {
+
+        });
+    }
+
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        noiseSlider.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observableValue, Number number, Number t1) {
+                noiseStrength = noiseSlider.getValue();
+                filteredImage = addNoiseToImage(editorController.getOriginalImageObject().createWritableOriginalImage(), noiseStrength);
+                editorController.getEditorImageObject().setFilteredImage(filteredImage);
+                editorController.drawFilteredImage();
+
+            }
+        });
+    }
 }
+
+

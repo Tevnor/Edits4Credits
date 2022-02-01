@@ -6,6 +6,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 import org.editor.EditorController;
 
 import java.net.URL;
@@ -18,12 +19,13 @@ public class PositionOptionsController implements Initializable {
     @FXML
     private TextField yPositionInput;
     @FXML
-    private Button applyPositionChange;
-
+    private Button closeMoveOptions;
 
     private double xPosition = 0;
     private double yPosition = 0;
     private EditorController editorController;
+    private Stage stage;
+
 
     public void handleApplyPositionChange(ActionEvent event) {
 
@@ -100,6 +102,12 @@ public class PositionOptionsController implements Initializable {
                     }
                 }
         );
+    }
+
+    public void handleCloseMoveOptions(ActionEvent event) {
+        stage = (Stage) closeMoveOptions.getScene().getWindow();
+        editorController.drawUnfilteredCanvasImage();
+        stage.close();
     }
 }
 
