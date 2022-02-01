@@ -203,6 +203,11 @@ public class EditorController implements Initializable, ControlScreen {
         noiseOptStage = new Stage();
         Scene noiseOptScene = new Scene(noiseOptRoot);
         noiseOptScene.setFill(Color.TRANSPARENT);
+        noiseOptStage.centerOnScreen();
+        noiseOptStage.initStyle(StageStyle.UNDECORATED);
+        noiseOptStage.initStyle(StageStyle.TRANSPARENT);
+        noiseOptStage.setResizable(false);
+        noiseOptStage.initModality(Modality.APPLICATION_MODAL);
         noiseOptStage.setScene(noiseOptScene);
 
         noiseController.setEditorController(this);
@@ -436,11 +441,9 @@ public class EditorController implements Initializable, ControlScreen {
     }
 
     public void handleAddNoise(ActionEvent event) {
-        noiseOptStage.centerOnScreen();
-        noiseOptStage.initStyle(StageStyle.UNDECORATED);
-        noiseOptStage.initStyle(StageStyle.TRANSPARENT);
-        noiseOptStage.setResizable(false);
-        noiseOptStage.initModality(Modality.APPLICATION_MODAL);
+        openNoiseOptions();
+    }
+    public void openNoiseOptions(){
         noiseOptStage.show();
     }
 
