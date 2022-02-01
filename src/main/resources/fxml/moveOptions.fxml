@@ -50,7 +50,7 @@
          <font>
             <Font name="Segoe UI Semibold" size="16.0" />
          </font></Button>
-      <ButtonBar prefHeight="40.0" prefWidth="200.0" style="-fx-background-radius: 20 20 0 0; -fx-background-color: #282828;">
+      <ButtonBar fx:id="bar" prefHeight="40.0" prefWidth="200.0" style="-fx-background-radius: 20 20 0 0; -fx-background-color: #282828;">
         <buttons>
           <Button fx:id="closeMoveOptions" mnemonicParsing="false" onAction="#handleCloseMoveOptions" style="-fx-background-color: transparent;" text="Close" textFill="#e8e8e8">
                <font>

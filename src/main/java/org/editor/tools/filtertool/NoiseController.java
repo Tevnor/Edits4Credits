@@ -5,6 +5,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Point2D;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.image.PixelReader;
@@ -12,6 +13,7 @@ import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.MouseDragEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.canvas.Canvas;
 import javafx.stage.Stage;
@@ -26,7 +28,8 @@ public class NoiseController implements Initializable {
     private Slider noiseSlider;
     @FXML
     private Button closeNoiseOptions;
-
+    @FXML
+    private ButtonBar bar;
 
 
     private double noiseStrength;
@@ -34,6 +37,7 @@ public class NoiseController implements Initializable {
     private WritableImage filteredOriginalImage;
     private EditorController editorController;
     private Stage stage;
+    private Point2D delta;
 
     public void handleApplyNoiseOnlyOnImage(ActionEvent event) {
         noiseStrength = noiseSlider.getValue();
@@ -102,7 +106,18 @@ public class NoiseController implements Initializable {
                 filteredImage = addNoiseToImage(editorController.getOriginalImageObject().createWritableOriginalImage(), noiseStrength);
                 editorController.getEditorImageObject().setFilteredImage(filteredImage);
                 editorController.drawFilteredImage();
-
+            }
+        });
+        initButtons();
+    }
+    private void initButtons(){
+        bar.addEventHandler(MouseEvent.ANY, event -> {
+            stage = (Stage) bar.getScene().getWindow();
+            if(event.getEventType().equals(MouseEvent.MOUSE_PRESSED)){
+                delta = new Point2D(stage.getX()-event.getScreenX(),stage.getY()-event.getScreenY());
+            }else if(event.getEventType().equals(MouseEvent.MOUSE_DRAGGED)){
+                stage.setX(event.getScreenX()+delta.getX());
+                stage.setY(event.getScreenY()+delta.getY());
             }
         });
     }
