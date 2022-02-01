@@ -28,9 +28,7 @@ import java.util.ResourceBundle;
  */
 public class ModeSelectionController implements Initializable, ControlScreen {
 
-    ScreensController screensController;
-    Window window;
-    private FXMLLoader loader;
+    private ScreensController screensController;
     private double screenWidth;
     private double screenHeight;
 
@@ -69,7 +67,6 @@ public class ModeSelectionController implements Initializable, ControlScreen {
         screensController = screenParent;
     }
     public void setWindow(Window window) {
-        this.window = window;
         this.screenWidth = window.getScreenWidth();
         this.screenHeight = window.getScreenHeight();
     }

@@ -149,34 +149,37 @@
             </ToolBar>
             <MenuBar fx:id="menuBar" maxHeight="29.0" maxWidth="270.0" minHeight="29.0" minWidth="270.0" prefHeight="29.0" prefWidth="270.0">
               <menus>
-                <Menu mnemonicParsing="false" text="File">
-                  <items>
-                    <MenuItem fx:id="openFile" mnemonicParsing="false" onAction="#importImageFromExplorer" text="Open File" />
-                        <Menu mnemonicParsing="false" text="Save">
-                           <items>
-                              <MenuItem fx:id="saveGallery" mnemonicParsing="false" onAction="#handleSaveGallery" text="to Gallery" />
-                              <MenuItem fx:id="saveExtern" mnemonicParsing="false" onAction="#handleSaveExtern" text="to Extern" />
-                           </items>
-                        </Menu>
-                        <MenuItem fx:id="deleteFile" mnemonicParsing="false" onAction="#handleDeleteFile" text="Delete File" />
-                  </items>
-                </Menu>
-                  <Menu mnemonicParsing="false" text="Image">
-                     <items>
-                        <MenuItem fx:id="moveImage" mnemonicParsing="false" onAction="#handleMoveImage" text="Move Image" />
-                        <MenuItem fx:id="scaleImage" mnemonicParsing="false" onAction="#handleScaleImage" text="Scale Image" />
-                     </items>
+                  <Menu fx:id="menuBarFile" mnemonicParsing="false" text="File">
+                      <MenuItem fx:id="openFile" mnemonicParsing="false" onAction="#importImageFromExplorer"
+                                text="Open File"/>
+                      <Menu mnemonicParsing="false" text="Save">
+                          <MenuItem fx:id="saveGallery" mnemonicParsing="false" onAction="#handleSaveGallery"
+                                    text="to Gallery"/>
+                          <MenuItem fx:id="saveExtern" mnemonicParsing="false" onAction="#handleSaveExtern"
+                                    text="to Extern"/>
+                      </Menu>
+                      <MenuItem fx:id="deleteFile" mnemonicParsing="false" onAction="#handleDeleteFile"
+                                text="Delete File"/>
                   </Menu>
-                <Menu mnemonicParsing="false" text="Filter">
-                  <items>
-                      <MenuItem fx:id="addNoise" mnemonicParsing="false" onAction="#handleAddNoise" text="Add Noise" />
-                      <MenuItem fx:id="addGlitch" mnemonicParsing="false" onAction="#handleAddGlitch" text="Add Glitch" />
-                      <MenuItem fx:id="addInverse" mnemonicParsing="false" onAction="#handleAddInverse" text="Inverse" />
-                      <MenuItem fx:id="addGrayscale" mnemonicParsing="false" onAction="#handleAddGrayscale" text="Add Grayscale" />
-                      <MenuItem fx:id="checkerboardFilterItem" mnemonicParsing="false" onAction="#handleApplyCheckerboard" text="Apply Checkerboard" />
-                      <MenuItem mnemonicParsing="false" text="Filter 4" />
-                  </items>
-                </Menu>
+                  <Menu fx:id="menubarImage" mnemonicParsing="false" text="Image">
+                      <MenuItem fx:id="moveImage" mnemonicParsing="false" onAction="#handleMoveImage"
+                                text="Move Image"/>
+                      <MenuItem fx:id="scaleImage" mnemonicParsing="false" onAction="#handleScaleImage"
+                                text="Scale Image"/>
+                      <MenuItem fx:id="resetImage" mnemonicParsing="false" onAction="#handleResetImage"
+                                text="Reset Image"/>
+                  </Menu>
+                  <Menu fx:id="menuBarFilter" mnemonicParsing="false" text="Filter">
+                      <MenuItem fx:id="addNoise" mnemonicParsing="false" onAction="#handleAddNoise" text="Add Noise"/>
+                      <MenuItem fx:id="addGlitch" mnemonicParsing="false" onAction="#handleAddGlitch"
+                                text="Add Glitch"/>
+                      <MenuItem fx:id="addInverse" mnemonicParsing="false" onAction="#handleAddInverse" text="Inverse"/>
+                      <MenuItem fx:id="addGrayscale" mnemonicParsing="false" onAction="#handleAddGrayscale"
+                                text="Add Grayscale"/>
+                      <MenuItem fx:id="checkerboardFilterItem" mnemonicParsing="false"
+                                onAction="#handleApplyCheckerboard" text="Apply Checkerboard"/>
+                      <MenuItem mnemonicParsing="false" text="Filter 4"/>
+                  </Menu>
                   <Menu mnemonicParsing="false" text="Gallery">
                     <items>
                       <MenuItem mnemonicParsing="false" onAction="#handleGallery" text="Open" />

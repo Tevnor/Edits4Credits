@@ -25,7 +25,6 @@ public class SettingsController implements Initializable, ControlScreen {
     private static final Logger logger = LogManager.getLogger(SettingsController.class);
 
     private ScreensController screensController;
-    private Window window;
     private Project project;
     private Image base;
 
@@ -39,14 +38,6 @@ public class SettingsController implements Initializable, ControlScreen {
     private ColorPicker cpBackgroundColor;
     @FXML
     private Button createProject;
-    @FXML
-    private Button openGallery;
-    @FXML
-    private Button logOut;
-    @FXML
-    private AnchorPane rootAnchorPane;
-    @FXML
-    private Pane settingsPane;
     @FXML
     private RadioButton radioBackground;
 
@@ -67,10 +58,10 @@ public class SettingsController implements Initializable, ControlScreen {
 
     @Override
     public void setWindow(Window window) {
-        this.window = window;
     }
 
-    public void handleCreateProject(ActionEvent event)  {
+    @FXML
+    private void handleCreateProject(ActionEvent event)  {
         try {
             int projectWidth = Integer.parseInt(widthInput.getText());
             int projectHeight = Integer.parseInt(heightInput.getText());
@@ -106,21 +97,25 @@ public class SettingsController implements Initializable, ControlScreen {
 
     }
 
-    public void enterProject(){
+    private void enterProject(){
         screensController.setScreen(ScreenName.EDITOR);
         setEditorPresets();
     }
-    public void handleTransparent(){
+
+    @FXML
+    private void handleTransparent(){
         cpBackgroundColor.setDisable(radioBackground.isSelected());
     }
 
-    public void handleOpenGallery(ActionEvent event) {
+    @FXML
+    private void handleOpenGallery(ActionEvent event) {
         screensController.setScreen(ScreenName.GALLERY);
         GalleryController gc = (GalleryController)screensController.getController(ScreenName.GALLERY);
         gc.init(false);
     }
 
-    public void handleLogOut(ActionEvent event) {
+    @FXML
+    private void handleLogOut(ActionEvent event) {
         //TODO
     }
 
@@ -131,7 +126,8 @@ public class SettingsController implements Initializable, ControlScreen {
         widthInput.setDisable(true);
         heightInput.setDisable(true);
     }
-    public void setEditorPresets(){
+
+    private void setEditorPresets(){
         EditorController ec = (EditorController)screensController.getController(ScreenName.EDITOR);
         ec.setProject(project);
         ec.initEC();

@@ -14,6 +14,8 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Screen;
 import javafx.util.Duration;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.awt.*;
 import java.io.IOException;
@@ -27,6 +29,8 @@ import java.util.Objects;
  *
  */
 public class ScreensController extends StackPane {
+
+    private static final Logger SC_LOGGER = LogManager.getLogger(ScreensController.class);
 
     private final HashMap<ScreenName, Node> screenToNodeMap = new HashMap<>();
     private final HashMap<ScreenName,ControlScreen> screenToController = new HashMap<>();
@@ -47,7 +51,7 @@ public class ScreensController extends StackPane {
      * @param name   the name
      * @param screen the screen
      */
-    public void addScreen(ScreenName name, Node screen) {
+    private void addScreen(ScreenName name, Node screen) {
         screenToNodeMap.put(name, screen);
     }
 
@@ -57,7 +61,7 @@ public class ScreensController extends StackPane {
      * @param name the name
      * @return the screen's node
      */
-    public Node getScreen(ScreenName name) {
+    private Node getScreen(ScreenName name) {
         return screenToNodeMap.get(name);
     }
 
@@ -74,6 +78,7 @@ public class ScreensController extends StackPane {
         double height = monitor.getDisplayMode().getHeight() / scaleY;
 
         this.window = new Window(width, height);
+        SC_LOGGER.debug("Monitor info analyzed. Width: " + width + ", height: " + height + ", scale: " + scaleX);
     }
 
     /**
@@ -107,9 +112,12 @@ public class ScreensController extends StackPane {
             Pane loadPane = (Pane) ap.getChildren().get(1);
 
             addScreen(name, loadPane);
+
+            SC_LOGGER.debug("Screen '" + name + "' loaded.");
             return true;
         } catch (IOException e) {
             e.printStackTrace();
+            SC_LOGGER.error("Screen '" + name + "' could not be loaded.");
             return false;
         }
     }
@@ -139,7 +147,7 @@ public class ScreensController extends StackPane {
      *
      * @param name the name of the C screen
      */
-    public void setCenter(ScreenName name) {
+    private void setCenter(ScreenName name) {
         switch (name)  {
             case MODE_SELECTION:
                 setLayoutX(window.getScreenWidth() / 2 - 500);
@@ -174,6 +182,7 @@ public class ScreensController extends StackPane {
                         new KeyFrame(new Duration(1000), actionEvent -> {
                             getChildren().remove(0);
                             getChildren().add(0, screenToNodeMap.get(name));
+                            SC_LOGGER.debug("Screen set to: " + name);
 
                             Timeline screenFadeIn = new Timeline(
                                     new KeyFrame(Duration.ZERO, new KeyValue(opacity, 0.0)),
@@ -199,9 +208,8 @@ public class ScreensController extends StackPane {
                 delayCenter.play();
             }
             return true;
-        // If no such screen exists
         } else {
-            System.err.println("Screen has not been loaded.");
+            SC_LOGGER.error("Screen has not been loaded.");
             return false;
         }
     }
@@ -212,11 +220,12 @@ public class ScreensController extends StackPane {
      * @param name the name of the departing screen
      * @return the boolean depending on successful execution
      */
-    public boolean unloadScreen(ScreenName name) {
+    private boolean unloadScreen(ScreenName name) {
         if (screenToNodeMap.remove(name) != null) {
+            SC_LOGGER.debug(name + " screen unloaded.");
             return true;
         } else {
-            System.err.println("Screen doesn't exist.");
+            SC_LOGGER.error("Screen doesn't exist.");
             return false;
         }
     }

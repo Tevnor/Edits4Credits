@@ -33,7 +33,7 @@ public class GuiDriver  extends Application {
     openLogin();
   }
 
-  public void openLogin() {
+  private void openLogin() {
     try {
       FXMLLoader loginLoader = new FXMLLoader();
       loginLoader.setLocation(Objects.requireNonNull(getClass().getResource("/fxml/login.fxml")));

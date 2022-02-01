@@ -83,7 +83,6 @@ public class FilterOptionsController implements Initializable {
      *
      * The view of the pop-up menu gets set according to the selected filter.
      *
-     *
      * @param original   the original image
      * @param resized    the resized image
      * @param appType    the application type of the selected filter
@@ -109,7 +108,7 @@ public class FilterOptionsController implements Initializable {
      * Updates the ImageDimensions objects through the EditorController method.
      * Calls on another EditorController method to draw the new images to their respective canvases.
      */
-    public void applyFilter() {
+    private void applyFilter() {
         // On resized
         filterOperation = new FilterOperation(resizedImageGrid, inputAttributes);
         int[] resizedPixelArrayNew = filterOperation.startFilter();
@@ -132,7 +131,7 @@ public class FilterOptionsController implements Initializable {
     /**
      * Draws a preview of a filter's effect before altering the actual ImageDimensions objects.
      */
-    public void previewFilter() {
+    private void previewFilter() {
         filterOperation = new FilterOperation(resizedImageGrid, inputAttributes);
         int[] pixelArrayNew = filterOperation.startFilter();
 
@@ -144,7 +143,8 @@ public class FilterOptionsController implements Initializable {
     /**
      * Handles apply filter selection.
      */
-    public void handleApplyFilter() {
+    @FXML
+    private void handleApplyFilter() {
         applyFilter();
         stage = (Stage) applyFilterButton.getScene().getWindow();
         stage.close();
@@ -154,7 +154,8 @@ public class FilterOptionsController implements Initializable {
      * Toggles the glitch filter's silhouette effect on/off.
      * Shows a preview.
      */
-    public void handleSilhouette() {
+    @FXML
+    private void handleSilhouette() {
         inputAttributes.setSilhouetteToggle(silhouetteToggleButton.isSelected());
         previewFilter();
     }
@@ -162,7 +163,8 @@ public class FilterOptionsController implements Initializable {
     /**
      * Toggles the glitch filter's complement effect on/off
      */
-    public void handleComplement() {
+    @FXML
+    private void handleComplement() {
         inputAttributes.setComplementToggle(complementToggleButton.isSelected());
         previewFilter();
     }
@@ -173,8 +175,8 @@ public class FilterOptionsController implements Initializable {
      *
      * @param mouseEvent the mouse event
      */
-// Get x and y coordinates from input pane for glitch factors
-    public void handleCoordinates(MouseEvent mouseEvent) {
+    @FXML
+    private void handleCoordinates(MouseEvent mouseEvent) {
         inputAttributes.setFactorX(mouseEvent.getX());
         inputAttributes.setFactorY(mouseEvent.getY() * 1000);
         previewFilter();
@@ -184,10 +186,13 @@ public class FilterOptionsController implements Initializable {
      * Reads the value of the slider and updates the value in the FilterAttributes object.
      * Shows a preview.
      */
-    public void changeSliderValue() {
+    @FXML
+    private void changeSliderValue() {
         inputAttributes.setFactor(glitchSlider.getValue() / 10000);
         previewFilter();
     }
+
+    // FIXME: 01.02.2022 disable apply filter with empty selection
 
     /**
      * Gets first user selected filter.
@@ -195,7 +200,7 @@ public class FilterOptionsController implements Initializable {
      *
      * @param actionEvent the action event
      */
-    public void getFirstFilter(ActionEvent actionEvent) {
+    private void getFirstFilter(ActionEvent actionEvent) {
         setCheckerBoard(filterTypeChoiceBox1, 0);
     }
 
@@ -205,7 +210,7 @@ public class FilterOptionsController implements Initializable {
      *
      * @param actionEvent the action event
      */
-    public void getSecondFilter(ActionEvent actionEvent) {
+    private void getSecondFilter(ActionEvent actionEvent) {
         setCheckerBoard(filterTypeChoiceBox2, 1);
     }
 
@@ -215,7 +220,7 @@ public class FilterOptionsController implements Initializable {
      *
      * @param actionEvent the action event
      */
-    public void getThirdFilter(ActionEvent actionEvent) {
+    private void getThirdFilter(ActionEvent actionEvent) {
         setCheckerBoard(filterTypeChoiceBox3, 2);
     }
 
@@ -225,7 +230,7 @@ public class FilterOptionsController implements Initializable {
      *
      * @param actionEvent the action event
      */
-    public void getFourthFilter(ActionEvent actionEvent) {
+    private void getFourthFilter(ActionEvent actionEvent) {
         setCheckerBoard(filterTypeChoiceBox4, 3);
     }
 
@@ -243,7 +248,8 @@ public class FilterOptionsController implements Initializable {
     /**
      * Handle panel increase.
      */
-    public void handlePanelIncrease() {
+    @FXML
+    private void handlePanelIncrease() {
         inputAttributes.increaseRuns();
         previewFilter();
     }
@@ -251,7 +257,8 @@ public class FilterOptionsController implements Initializable {
     /**
      * Handle panel decrease.
      */
-    public void handlePanelDecrease() {
+    @FXML
+    private void handlePanelDecrease() {
         inputAttributes.decreaseRuns();
         previewFilter();
     }
@@ -259,7 +266,8 @@ public class FilterOptionsController implements Initializable {
     /**
      * Cancel out of the filter menu and revert to the image's previous state.
      */
-    public void handleCancelFilter() {
+    @FXML
+    private void handleCancelFilter() {
         ec.drawPreviousImage();
 
         stage = (Stage) cancelFilterButton.getScene().getWindow();
@@ -272,7 +280,7 @@ public class FilterOptionsController implements Initializable {
      * @param appType the application type
      * @param filterType the filter type
      */
-    public void setMenu(FilterApplicationType appType, FilterType filterType) {
+    private void setMenu(FilterApplicationType appType, FilterType filterType) {
         checkerboardGridPane.setVisible(false);
         glitchGridPane.setVisible(false);
         intensityGridPane.setVisible(false);
@@ -359,7 +367,7 @@ public class FilterOptionsController implements Initializable {
      * @param filterTypeList the filter type list
      * @return the list
      */
-    public List<FilterType> maximizeList(List<FilterType> filterTypeList) {
+    private List<FilterType> maximizeList(List<FilterType> filterTypeList) {
         FilterType filterTypeOne= filterTypeList.get(0);
         filterTypeList.add(filterTypeOne);
         filterTypeList.add(filterTypeOne);

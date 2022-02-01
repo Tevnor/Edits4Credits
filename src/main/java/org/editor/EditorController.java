@@ -82,6 +82,12 @@ public class EditorController implements Initializable, ControlScreen {
     @FXML
     private MenuBar menuBar;
     @FXML
+    private Menu menuBarFile;
+    @FXML
+    private Menu menubarImage;
+    @FXML
+    private Menu menuBarFilter;
+    @FXML
     private AnchorPane rootAnchorPane;
     @FXML
     private ToolBar toolBar;
@@ -117,7 +123,6 @@ public class EditorController implements Initializable, ControlScreen {
     private ScaleOptionsController scaleOptions;
 
     private Canvas originalCanvas;
-    //private Boolean isFiltered = false;
     private ImageDimensions originalImageObject;
     private ImageDimensions editorImageObject;
     private EditorControllerLayoutManager layoutManager;
@@ -128,8 +133,6 @@ public class EditorController implements Initializable, ControlScreen {
     private Parent filterOptRoot;
     private FilterOptionsController filterOptionsController;
     private Stage filterOptStage = new Stage();
-//    private List<FilterType> filterTypeList;
-    private FilterType filterType;
 
 
     @Override
@@ -184,7 +187,10 @@ public class EditorController implements Initializable, ControlScreen {
         double y = (window.getScreenHeight() - getMenuBarHeight())/2 + menuBar.getPrefHeight() + (20/window.getScaleY()) - stack.getPrefHeight()/2;
         stack.setLayoutX(x);
         stack.setLayoutY(y);
-        EC_LOGGER.debug("succesfully created stack (x layout: " + x + ", y layout: " + y + ")");
+        toggleFileMenuItems(true);
+        toggleImageMenuItems(true);
+        toggleFilterMenuItems(true);
+        EC_LOGGER.debug("Successfully created stack (x layout: " + x + ", y layout: " + y + ")");
     }
     private void initAddNoiseOpt() {
         try {
@@ -264,6 +270,9 @@ public class EditorController implements Initializable, ControlScreen {
         layoutManager.changeDisableBtn(importButton);
         layoutManager.addToStack(editorCanvasImage,stack);
         imageTool = ic.getImageTool(editorCanvasImage);
+        toggleFileMenuItems(false);
+        toggleImageMenuItems(false);
+        toggleFilterMenuItems(false);
     }
     private void delete(){
         EC_LOGGER.debug("entered delete()");
@@ -275,6 +284,8 @@ public class EditorController implements Initializable, ControlScreen {
         layoutManager.changeDisableBtn(importButton);
         imageTool = null;
         ic.reset();
+        toggleFilterMenuItems(true);
+        toggleImageMenuItems(true);
         orderStack();
     }
 
@@ -378,6 +389,7 @@ public class EditorController implements Initializable, ControlScreen {
         drawOptStage.show();
     }
     private void initShapeHandler(){
+        toggleFileMenuItems(false);
         importButton.setVisible(false);
         dt.getDc().addMarkingHandler(stack);
         if(mover != null){
@@ -402,11 +414,8 @@ public class EditorController implements Initializable, ControlScreen {
     /**
      * Filter
      * */
-    public void initFilterOptions() {
+    private void initFilterOptions() {
         try {
-            /**
-             * Filter Variables
-             * */
             FXMLLoader filterOptLoader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/fxml/filterOptions.fxml")));
             filterOptRoot = filterOptLoader.load();
             filterOptionsController = filterOptLoader.getController();
@@ -418,6 +427,11 @@ public class EditorController implements Initializable, ControlScreen {
         filterOptScene.setFill(Color.TRANSPARENT);
         filterOptStage.setScene(filterOptScene);
         filterOptStage.centerOnScreen();
+    }
+
+    private void toggleFilterMenuItems(boolean setDisabled) {
+        menuBarFilter.getItems().forEach(menuItem -> menuItem.setDisable(setDisabled));
+
     }
 
     public void handleAddNoise(ActionEvent event) {
@@ -456,7 +470,7 @@ public class EditorController implements Initializable, ControlScreen {
             // Maybe add finally to prompt users to import image
         }
     }
-    //TODO new
+
     public void setFilteredImages(Image originalImage, Image editorImage) {
         originalImageObject.setFilteredImage(originalImage);
         editorImageObject.setFilteredImage(editorImage);
@@ -504,7 +518,12 @@ public class EditorController implements Initializable, ControlScreen {
         gc.drawImage(previewImage,editorImageObject.getCurrentXPosition(), editorImageObject.getCurrentYPosition(), editorImageObject.getCurrentWidth(), editorImageObject.getCurrentHeight());
     }
 
-    // Scale the imported source image to the maximum canvas size
+    /**
+     * Image Transforms
+     * */
+    private void toggleImageMenuItems(boolean setDisabled) {
+        menubarImage.getItems().forEach(menuItem -> menuItem.setDisable(setDisabled));
+    }
 
     public void handleMoveImage(ActionEvent event) {
         try{
@@ -565,6 +584,7 @@ public class EditorController implements Initializable, ControlScreen {
         }
         orderStack();
     }
+
     @FXML
     private void handleSaveGallery() {
         ic.save(project,originalCanvas,dt.getPixelBufferOfDrawing(project),true);
@@ -583,6 +603,9 @@ public class EditorController implements Initializable, ControlScreen {
         screensController.setScreen(ScreenName.GALLERY);
     }
 
+    public void toggleFileMenuItems(boolean setDisabled) {
+        menuBarFile.getItems().stream().skip(1).forEach(menuItem -> menuItem.setDisable(setDisabled));
+    }
 
     public double getOriginalAndEditorCanvasRatio(){
         double ratio = originalCanvas.getHeight()/ editorCanvasImage.getHeight();
@@ -605,5 +628,15 @@ public class EditorController implements Initializable, ControlScreen {
     }
     public ImageDimensions getOriginalImageObject(){
         return this.originalImageObject;
+    }
+
+    @FXML
+    private void handleResetImage(ActionEvent actionEvent) {
+        ic.setImportedImgOnCanvas(editorCanvasImage, editorImageObject, false);
+        ic.setImportedImgOnCanvas(originalCanvas, originalImageObject, true);
+        originalImageObject.setPreviousImage(originalImageObject.getOriginalImage());
+        originalImageObject.setFilteredImage(originalImageObject.getOriginalImage());
+        editorImageObject.setPreviousImage(editorImageObject.getOriginalImage());
+        editorImageObject.setFilteredImage(editorImageObject.getOriginalImage());
     }
 }

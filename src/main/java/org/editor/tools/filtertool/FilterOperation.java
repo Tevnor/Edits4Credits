@@ -29,7 +29,6 @@ public class FilterOperation {
     private final int[] pixelArrayNew;
     private final List<FilterType> filterTypeList;
 
-    private final double factor;
     private final double factorX;
     private final double factorY;
     private final boolean isComplement;
@@ -46,7 +45,7 @@ public class FilterOperation {
         this.pixelArray = imageGrid.getPixelArray();
         this.pixelArrayNew = new int[pixelArray.length];
         this.filterTypeList = inputAttributes.getFilterTypeList();
-        this.factor = inputAttributes.getFactor();
+        double factor = inputAttributes.getFactor();
         this.factorX = inputAttributes.getFactorX();
         this.factorY = inputAttributes.getFactorY();
         this.isComplement = inputAttributes.isComplementToggle();
@@ -126,7 +125,7 @@ public class FilterOperation {
          * Map the user selected filters to their functions with the FILTER_TO_ENUM_MAP.
          *
          */
-        public void startBlock() {
+        private void startBlock() {
             CountDownLatch panelFinish = new CountDownLatch(4);
             ExecutorService panelExecs = Executors.newFixedThreadPool(4);
             ArrayList<Runnable> panelRunnableList = new ArrayList<>();
@@ -158,7 +157,7 @@ public class FilterOperation {
          * @param ordinal the ordinal of the panel
          * @return the panel starting index
          */
-        public int getPanelStartingIndex(int index, int ordinal) {
+        private int getPanelStartingIndex(int index, int ordinal) {
             switch (ordinal) {
                 case 0:
                     // Index stays the same
@@ -212,7 +211,7 @@ public class FilterOperation {
          * If silhouette is toggled on, integer values are cast to shorts, effectively manipulating some pixels into falling into their alpha channel's zero range, thus being set invisible.
          * If complement is toggled on, all these pixel values are shifted bitwise to create a negative.
          */
-        public void startPanel() {
+        private void startPanel() {
             int rowIndex = pixelIndex;
 
             for (int row = 0; row < panelHeight; row++) {
@@ -220,9 +219,9 @@ public class FilterOperation {
                     int argbOriginal = pixelArray[pixelIndex];
 
                     //TODO new
-                    double factorxy = factorX / factorY;
+                    double factorXY = factorX / factorY;
 
-                    int argb = filter.applyFilter(pixelArray[pixelIndex], factorxy);
+                    int argb = filter.applyFilter(pixelArray[pixelIndex], factorXY);
 
                     if (isSilhouette) {
                         argb = (short) argb;

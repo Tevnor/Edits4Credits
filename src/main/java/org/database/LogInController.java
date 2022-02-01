@@ -138,7 +138,7 @@ public class LogInController implements Initializable, ControlScreen {
 //        }
 //    }
 
-    public void startClosingSequence() {
+    private void startClosingSequence() {
         ExecutorService closeLoginExecutor = Executors.newFixedThreadPool(1);
         Runnable r1 = this::startClosingAnimation;
 
@@ -159,7 +159,7 @@ public class LogInController implements Initializable, ControlScreen {
         }
     });
 
-    public void initAppStages(){
+    private void initAppStages(){
         screensController.loadScreen(ScreenName.MODE_SELECTION);
         loader = screensController.getLoader();
         screensController.loadScreen(ScreenName.PROJECT_SETTINGS);
@@ -179,7 +179,7 @@ public class LogInController implements Initializable, ControlScreen {
         appStage.setScene(scene);
     }
 
-    public void createApp() {
+    private void createApp() {
         try {
             // Pass logged in user to menu class
             ModeSelectionController modeSelector = loader.getController();
@@ -198,12 +198,13 @@ public class LogInController implements Initializable, ControlScreen {
         }
     }
 
-    public void cancelLogin(ActionEvent event) {
+    @FXML
+    private void cancelLogin(ActionEvent event) {
         startFade(rootPane, 0, 0);
         closeLoginStage(0.75);
     }
 
-    public void closeLoginStage(double seconds){
+    private void closeLoginStage(double seconds){
         Stage stage = (Stage) logInButton.getScene().getWindow();
         PauseTransition delay = new PauseTransition(Duration.seconds(seconds));
         delay.setOnFinished( event -> stage.close() );
@@ -221,7 +222,7 @@ public class LogInController implements Initializable, ControlScreen {
         logInButton.setOpacity(0);
         cancelButton.setOpacity(0);
     }
-    public void showElements() {
+    private void showElements() {
         startFade(username, 0.3, 0.7);
         startFade(password, 0.3, 0.7);
         startFade(logInButton, 0.3, 0.7);
@@ -250,7 +251,7 @@ public class LogInController implements Initializable, ControlScreen {
         delay5.play();
 
     }
-    public void startClosingAnimation() {
+    private void startClosingAnimation() {
         startFade(username, 1, 0);
         startFade(password, 1, 0);
         moveNodeX(logInButton, 85, new Duration(200));
@@ -266,13 +267,13 @@ public class LogInController implements Initializable, ControlScreen {
         delay.play();
     }
 
-    public void startTransition(ModeSelectionController modeSelector) {
+    private void startTransition(ModeSelectionController modeSelector) {
         appStage.show();
         modeSelector.startAnimations();
         closeLoginStage(0.1);
     }
 
-    public void startFade(Node node, double time, double value) {
+    private void startFade(Node node, double time, double value) {
         Duration fadeDuration = new Duration(750);
         Duration fadeDelay = new Duration(time);
 
@@ -284,32 +285,32 @@ public class LogInController implements Initializable, ControlScreen {
         fade.play();
     }
 
-    public void moveNodeX(Node node, double direction, Duration delay) {
+    private void moveNodeX(Node node, double direction, Duration delay) {
         KeyValue keyValue = new KeyValue(node.translateXProperty(), direction);
         KeyFrame keyFrame = new KeyFrame(Duration.seconds(0.2), keyValue);
 
         moveNode(keyFrame, delay);
     }
-    public void moveNodeY(Node node, double direction, Duration delay) {
+    private void moveNodeY(Node node, double direction, Duration delay) {
         KeyValue keyValue = new KeyValue(node.translateYProperty(), direction);
         KeyFrame keyFrame = new KeyFrame(Duration.seconds(0.2), keyValue);
 
         moveNode(keyFrame, delay);
     }
 
-    public void moveNode(KeyFrame keyFrame, Duration delay) {
+    private void moveNode(KeyFrame keyFrame, Duration delay) {
         Timeline timeline = new Timeline(keyFrame);
         timeline.setDelay(delay);
         timeline.play();
     }
 
-    public void changeButtonText(Button btn, String text) {
+    private void changeButtonText(Button btn, String text) {
         PauseTransition delay = new PauseTransition(Duration.seconds(.4));
         delay.setOnFinished( event -> btn.setText(text));
         delay.play();
     }
 
-    public void scaleNode(Node node, double factor) {
+    private void scaleNode(Node node, double factor) {
         Duration durationScale = new Duration(900);
         ScaleTransition scale = new ScaleTransition(Duration.seconds(.5), node);
 
