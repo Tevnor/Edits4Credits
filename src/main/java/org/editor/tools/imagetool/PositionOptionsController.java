@@ -3,9 +3,12 @@ package org.editor.tools.imagetool;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import org.editor.EditorController;
 
@@ -20,11 +23,14 @@ public class PositionOptionsController implements Initializable {
     private TextField yPositionInput;
     @FXML
     private Button closeMoveOptions;
+    @FXML
+    private ButtonBar bar;
 
     private double xPosition = 0;
     private double yPosition = 0;
     private EditorController editorController;
     private Stage stage;
+    private Point2D delta;
 
 
     public void handleApplyPositionChange(ActionEvent event) {
@@ -102,12 +108,24 @@ public class PositionOptionsController implements Initializable {
                     }
                 }
         );
+        initButtons();
     }
 
     public void handleCloseMoveOptions(ActionEvent event) {
         stage = (Stage) closeMoveOptions.getScene().getWindow();
         editorController.drawUnfilteredCanvasImage();
         stage.close();
+    }
+    private void initButtons(){
+        bar.addEventHandler(MouseEvent.ANY, event -> {
+            stage = (Stage) bar.getScene().getWindow();
+            if(event.getEventType().equals(MouseEvent.MOUSE_PRESSED)){
+                delta = new Point2D(stage.getX()-event.getScreenX(),stage.getY()-event.getScreenY());
+            }else if(event.getEventType().equals(MouseEvent.MOUSE_DRAGGED)){
+                stage.setX(event.getScreenX()+delta.getX());
+                stage.setY(event.getScreenY()+delta.getY());
+            }
+        });
     }
 }
 
