@@ -2,11 +2,14 @@ package org.database;
 
 
 import javafx.animation.*;
+import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.CacheHint;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -18,6 +21,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
@@ -30,6 +34,8 @@ import org.screencontrol.Window;
 import java.net.URL;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
@@ -38,14 +44,18 @@ import java.util.concurrent.Executors;
 public class LogInController implements Initializable, ControlScreen {
 
     private ScreensController screensController;
+    private Stage loginStage;
     private Stage appStage;
     private User user;
     private Window window;
     private FXMLLoader loader;
+    private ModeSelectionController modeSelector;
 
     public LogInController(){
     }
 
+    @FXML
+    private Rectangle loginBackground;
     @FXML
     private TextField username;
     @FXML
@@ -63,8 +73,14 @@ public class LogInController implements Initializable, ControlScreen {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+    }
+
+    public void initLogin() {
+        setCenter();
+        initLoginElements();
         hideElements();
-        startOpeningAnimation();
+        preloadScreens();
+        initAppStages();
     }
 
     @Override
@@ -75,8 +91,6 @@ public class LogInController implements Initializable, ControlScreen {
         this.window = window;
     }
     public void setCenter() {
-//        double xCenter = window.getScreenWidth() / (2 * window.getScaleX());
-//        double yCenter = window.getScreenHeight() / (2 * window.getScaleY());
         double xCenter = window.getScreenWidth() / 2;
         double yCenter = window.getScreenHeight() / 2;
 
@@ -86,9 +100,11 @@ public class LogInController implements Initializable, ControlScreen {
 
     @FXML
     private void enterMainApp(ActionEvent event) {
+        loginStage = (Stage) logInButton.getScene().getWindow();
         user = new User(username.getText());
         if (username!=null && password != null) {
-            startClosingSequence();
+            createApp();
+            startClosingAnimation();
         } else {
             loginError.setText("Invalid login. Please try again.");
         }
@@ -138,186 +154,228 @@ public class LogInController implements Initializable, ControlScreen {
 //        }
 //    }
 
-    private void startClosingSequence() {
-        ExecutorService closeLoginExecutor = Executors.newFixedThreadPool(1);
-        Runnable r1 = this::startClosingAnimation;
-
-        closeLoginExecutor.execute(r1);
-        closeLoginExecutor.shutdown();
-        while(!closeLoginExecutor.isTerminated()) {}
-
-        PauseTransition delay = new PauseTransition(Duration.seconds(2));
-        delay.setOnFinished( event -> enterApp.start());
-        delay.play();
-    }
-
-    Thread enterApp = new Thread(new Runnable() {
-        @Override
-        public void run() {
-            Platform.runLater(() -> initAppStages());
-            Platform.runLater(() -> createApp());
-        }
-    });
-
-    private void initAppStages(){
+    private void preloadScreens() {
         screensController.loadScreen(ScreenName.MODE_SELECTION);
         loader = screensController.getLoader();
         screensController.loadScreen(ScreenName.PROJECT_SETTINGS);
         screensController.loadScreen(ScreenName.GALLERY);
         screensController.loadScreen(ScreenName.EDITOR);
         screensController.setScreen(ScreenName.MODE_SELECTION);
-
+    }
+    private void initAppStages(){
         ImageView iv = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/e4c-bg.png")), window.getScreenWidth(), window.getScreenHeight(), false, true));
         Group root = new Group();
         root.getChildren().addAll(iv, screensController);
-        Scene scene = new Scene(root, Color.TRANSPARENT);
-        scene.getStylesheets().add(LogInController.class.getResource("/styles/styles.css").toExternalForm());
 
+        Scene scene = new Scene(root, Color.TRANSPARENT);
+        scene.getStylesheets().add(Objects.requireNonNull(LogInController.class.getResource("/styles/styles.css")).toExternalForm());
         appStage = new Stage();
         appStage.initStyle(StageStyle.TRANSPARENT);
         appStage.setMaximized(true);
         appStage.setScene(scene);
     }
-
     private void createApp() {
-        try {
-            // Pass logged in user to menu class
-            ModeSelectionController modeSelector = loader.getController();
-            modeSelector.initUserData(user);
-            modeSelector.setWindow(window);
-            modeSelector.setRootAnchorPane();
-            modeSelector.hideElements();
 
-            PauseTransition delay = new PauseTransition(Duration.seconds(1.3));
-            delay.setOnFinished( event -> startTransition(modeSelector));
-            delay.play();
+        Platform.runLater(() -> {
+            try {
+                // Pass logged in user to menu class
+                modeSelector = loader.getController();
+                modeSelector.initUserData(user);
+                modeSelector.setWindow(window);
+                modeSelector.setRootAnchorPane();
+                modeSelector.initModeSelectionElements();
+                modeSelector.hideElements();
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            e.getCause();
-        }
+            } catch (Exception e) {
+                e.printStackTrace();
+                e.getCause();
+            }
+        });
     }
 
     @FXML
     private void cancelLogin(ActionEvent event) {
-        startFade(rootPane, 0, 0);
-        closeLoginStage(0.75);
+        loginStage = (Stage) cancelButton.getScene().getWindow();
+        closeLoginStage(1000);
     }
 
-    private void closeLoginStage(double seconds){
-        Stage stage = (Stage) logInButton.getScene().getWindow();
-        PauseTransition delay = new PauseTransition(Duration.seconds(seconds));
-        delay.setOnFinished( event -> stage.close() );
-        delay.play();
+    private void closeLoginStage(double duration){
+        FadeTransition fadeToClose = getFade(rootPane, 0, duration, 0);
+        fadeToClose.play();
+        fadeToClose.setOnFinished(e -> loginStage.close());
     }
 
-    /*
-     * Animations
-     * */
+    /**
+     * Initiating Login Node Elements
+     */
+    private void initLoginElements() {
+        loginImageView.setCache(true);
+        loginImageView.setCacheHint(CacheHint.SCALE);
+        loginImageView.setCacheHint(CacheHint.SPEED);
+        loginImageView.setScaleX(0.5);
+        loginImageView.setScaleY(0.5);
+
+        logInButton.setCache(true);
+        logInButton.setCacheHint(CacheHint.SPEED);
+        cancelButton.setCache(true);
+        cancelButton.setCacheHint(CacheHint.SPEED);
+    }
     public void hideElements() {
         loginImageView.toBack();
-        loginImageView.setLayoutY(80);
+        loginImageView.setLayoutY(150);
         username.setOpacity(0);
         password.setOpacity(0);
         logInButton.setOpacity(0);
         cancelButton.setOpacity(0);
     }
-    private void showElements() {
-        startFade(username, 0.3, 0.7);
-        startFade(password, 0.3, 0.7);
-        startFade(logInButton, 0.3, 0.7);
-        startFade(cancelButton, 0.3, 0.7);
+
+    /**
+     * NEW OPENING SEQUENCE
+     * */
+    public void startLoginAnimation() {
+        // Scale back to regular size
+        ScaleTransition iconScale = getScale(loginImageView, 1000, 0, 1.0, 1.0);
+
+        // Move icon up, bring the node back to front, then move down to overlap on the menu
+        TranslateTransition iconTranslateUp = getTranslate(loginImageView, 600, 400, 0, 0, loginImageView.getLayoutY(), -225);
+        TranslateTransition iconTranslateToFront = getTranslate(loginImageView, 0, 100);
+        TranslateTransition iconTranslateDown = getTranslate(loginImageView, 400, 0, 0, 0, -225, -150);
+
+        // Scale and move up simultaneously
+        ParallelTransition iconScaleAndTranslateUp = new ParallelTransition();
+        iconScaleAndTranslateUp.getChildren().addAll(
+                iconScale,
+                iconTranslateUp
+        );
+
+        // Move down and show input fields simultaneously
+        ParallelTransition iconTranslateDownAndShowFields = new ParallelTransition();
+        iconTranslateDownAndShowFields.getChildren().addAll(
+                iconTranslateDown,
+                showInputFields()
+        );
+
+        // Move down sequentially
+        SequentialTransition iconSequence = new SequentialTransition(
+                iconScaleAndTranslateUp,
+                iconTranslateToFront,
+                iconTranslateDownAndShowFields
+        );
+        iconSequence.setInterpolator(Interpolator.EASE_OUT);
+
+        // Start animation sequence
+        iconSequence.play();
     }
 
-    public void startOpeningAnimation() {
-        PauseTransition delay1 = new PauseTransition(Duration.seconds(1));
-        delay1.setOnFinished(event -> moveNodeY(loginImageView, -130, new Duration(170)));
-        delay1.play();
+    private ParallelTransition showInputFields() {
+        ParallelTransition inputFieldSequence = new ParallelTransition();
 
-        PauseTransition delay2 = new PauseTransition(Duration.seconds(1.35));
-        delay2.setOnFinished(event -> moveNodeY(loginImageView, -75, new Duration(150)));
-        delay2.play();
+        List<Node> inputFieldList = new ArrayList<>();
+        inputFieldList.add(username);
+        inputFieldList.add(password);
+        inputFieldList.add(logInButton);
+        inputFieldList.add(cancelButton);
+        inputFieldList.forEach(node -> inputFieldSequence.getChildren().add(getFade(node, 250, 600, 1.0)));
 
-        PauseTransition delay3 = new PauseTransition(Duration.seconds(1.47));
-        delay3.setOnFinished(event -> showElements());
-        delay3.play();
-
-        PauseTransition delay4 = new PauseTransition(Duration.seconds(1.5));
-        delay4.setOnFinished(event -> loginImageView.toFront());
-        delay4.play();
-
-        PauseTransition delay5 = new PauseTransition(Duration.seconds(0.2));
-        delay5.setOnFinished(event -> scaleNode(loginImageView, 0.15));
-        delay5.play();
-
+        return inputFieldSequence;
     }
+    private ScaleTransition getScale(Node node, double duration, double delay, double scaleToX, double scaleToY) {
+        ScaleTransition scaleTransition = new ScaleTransition(Duration.millis(duration), node);
+        scaleTransition.setInterpolator(Interpolator.EASE_BOTH);
+        scaleTransition.setFromX(node.getScaleX());
+        scaleTransition.setToX(scaleToX);
+        scaleTransition.setFromY(node.getScaleY());
+        scaleTransition.setToY(scaleToY);
+        scaleTransition.setDelay(Duration.millis(delay));
+
+        return scaleTransition;
+    }
+    private TranslateTransition getTranslate(Node node, double duration, double delay, double translateFromX, double translateToX, double translateFromY, double translateToY) {
+        TranslateTransition translateTransition = new TranslateTransition(Duration.millis(duration), node);
+        translateTransition.setDelay(Duration.millis(delay));
+        translateTransition.setInterpolator(Interpolator.EASE_OUT);
+        translateTransition.setFromX(translateFromX);
+        translateTransition.setToX(translateToX);
+        translateTransition.setFromY(translateFromY);
+        translateTransition.setToY(translateToY);
+
+        return  translateTransition;
+    }
+    private TranslateTransition getTranslate(Node node, double duration, double delay) {
+        TranslateTransition translateToFront = new TranslateTransition(Duration.millis(duration), node);
+        translateToFront.setDelay(Duration.millis(delay));
+        translateToFront.setOnFinished(e -> node.toFront());
+        return translateToFront;
+    }
+
     private void startClosingAnimation() {
-        startFade(username, 1, 0);
-        startFade(password, 1, 0);
-        moveNodeX(logInButton, 85, new Duration(200));
-        moveNodeX(cancelButton, -85, new Duration(200));
-        changeButtonText(cancelButton, "Success");
-        changeButtonText(logInButton, "Success");
-        moveNodeY(loginImageView, 125, new Duration(600));
-        scaleNode(loginImageView, .33);
-        startFade(logInButton, 0, 0);
+        // Username and Password
+        FadeTransition usernameFade = getFade(username, 200, 500, 0);
+        FadeTransition passwordFade = getFade(password, 200, 500, 0);
 
-        PauseTransition delay = new PauseTransition(Duration.seconds(1.5));
-        delay.setOnFinished(event -> changeButtonText(cancelButton, "Loading..."));
-        delay.play();
+        ParallelTransition fieldFade = new ParallelTransition();
+        fieldFade.getChildren().addAll(
+                usernameFade,
+                passwordFade
+        );
+
+        // Move Buttons
+        TranslateTransition loginMove = getTranslate(logInButton, 400, 0, 0, 85, 0, 0);
+        TranslateTransition cancelMove = getTranslate(cancelButton, 400, 0, 0, -85, 0, 0);
+
+        ParallelTransition moveToCenter = new ParallelTransition();
+        moveToCenter.setInterpolator(Interpolator.EASE_BOTH);
+        moveToCenter.getChildren().addAll(
+                loginMove,
+                cancelMove
+        );
+
+        // Move and Scale Icon
+        TranslateTransition iconMoveDown = getTranslate(loginImageView, 400, 0, 0, 0, -150, 50);
+        ScaleTransition iconScaleUp = getScale(loginImageView, 400, 0, 1.5, 1.5);
+
+        // Run everything sequentially
+        SequentialTransition closingSequence = new SequentialTransition();
+        closingSequence.getChildren().addAll(
+                fieldFade,
+                moveToCenter,
+                iconMoveDown,
+                iconScaleUp,
+                new PauseTransition(Duration.millis(800))
+        );
+        closingSequence.play();
+
+        logInButton.setText("Loading...");
+        closingSequence.setOnFinished(e -> startTransition());
     }
 
-    private void startTransition(ModeSelectionController modeSelector) {
+    private void startTransition() {
+
+        FadeTransition loginButtonFade = getFade(logInButton, 0, 300, 0);
+        FadeTransition cancelButtonFade = getFade(cancelButton, 0, 300, 0);
+        FadeTransition loginFade = getFade(rootPane, 0, 300, 0);
+
+        ParallelTransition parallelClosing = new ParallelTransition();
+        parallelClosing.getChildren().addAll(
+                loginButtonFade,
+                cancelButtonFade
+        );
+        parallelClosing.play();
+
+        loginStage.toBack();
         appStage.show();
-        modeSelector.startAnimations();
-        closeLoginStage(0.1);
+        modeSelector.startOpeningSequence();
+
+        loginFade.play();
+        loginFade.setOnFinished(e -> closeLoginStage(500));
     }
 
-    private void startFade(Node node, double time, double value) {
-        Duration fadeDuration = new Duration(750);
-        Duration fadeDelay = new Duration(time);
+    private FadeTransition getFade(Node node, double delayInMillis, double duration, double value) {
+        FadeTransition fadeTransition = new FadeTransition(Duration.millis(duration), node);
+        fadeTransition.setToValue(value);
+        fadeTransition.setDelay(Duration.millis(delayInMillis));
 
-        FadeTransition fade = new FadeTransition();
-        fade.setToValue(value);
-        fade.setDelay(fadeDelay);
-        fade.setDuration(fadeDuration);
-        fade.setNode(node);
-        fade.play();
-    }
-
-    private void moveNodeX(Node node, double direction, Duration delay) {
-        KeyValue keyValue = new KeyValue(node.translateXProperty(), direction);
-        KeyFrame keyFrame = new KeyFrame(Duration.seconds(0.2), keyValue);
-
-        moveNode(keyFrame, delay);
-    }
-    private void moveNodeY(Node node, double direction, Duration delay) {
-        KeyValue keyValue = new KeyValue(node.translateYProperty(), direction);
-        KeyFrame keyFrame = new KeyFrame(Duration.seconds(0.2), keyValue);
-
-        moveNode(keyFrame, delay);
-    }
-
-    private void moveNode(KeyFrame keyFrame, Duration delay) {
-        Timeline timeline = new Timeline(keyFrame);
-        timeline.setDelay(delay);
-        timeline.play();
-    }
-
-    private void changeButtonText(Button btn, String text) {
-        PauseTransition delay = new PauseTransition(Duration.seconds(.4));
-        delay.setOnFinished( event -> btn.setText(text));
-        delay.play();
-    }
-
-    private void scaleNode(Node node, double factor) {
-        Duration durationScale = new Duration(900);
-        ScaleTransition scale = new ScaleTransition(Duration.seconds(.5), node);
-
-        scale.setByX(factor);
-        scale.setByY(factor);
-        scale.setDelay(durationScale);
-        scale.play();
+        return fadeTransition;
     }
 }
 

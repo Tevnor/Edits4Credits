@@ -18,127 +18,109 @@ Adding stylesheets="/styles/styles.css" yet does not work, see FxmlGuiDriver as 
 -->
 
 <AnchorPane fx:id="rootAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="0.0" prefWidth="0.0" style="-fx-background-color: transparent;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.launcher.ModeSelectionController">
-   <children>
-      <ImageView fx:id="backgroundImageView" fitHeight="1119.0" fitWidth="1920.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../images/e4c-bg.png" />
-         </image>
-      </ImageView>
-      <Pane fx:id="modeSelectorElementsPane" prefWidth="1000.0">
-         <children>
-            <Pane fx:id="profilePane" layoutX="425.0" maxWidth="150.0">
-               <children>
-                  <Label fx:id="usernameLabel" alignment="CENTER" layoutX="-40.0" layoutY="195.0" prefHeight="32.0" prefWidth="230.0" text="username" textFill="#eeeeee">
-                     <font>
-                        <Font name="Segoe UI Semibold" size="22.0" />
-                     </font>
-                  </Label>
-                  <Label layoutY="170.0" minWidth="150.0" text="Welcome back," textAlignment="CENTER" textFill="#eeeeee">
-                     <font>
-                        <Font name="Segoe UI Semibold" size="22.0" />
-                     </font>
-                  </Label>
-                  <ImageView fx:id="profileImageView" fitHeight="150.0" fitWidth="150.0" opacity="0.7" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../images/buttons_typ.png" />
-                     </image>
-                     <effect>
-                        <DropShadow blurType="GAUSSIAN" offsetX="-2.0" offsetY="2.0" spread="0.23">
-                           <color>
-                              <Color red="0.3019607961177826" green="0.3019607961177826" blue="0.3019607961177826" />
-                           </color>
-                        </DropShadow>
-                     </effect>
-                  </ImageView>
-               </children>
-            </Pane>
-            <Pane fx:id="editorPane" layoutX="300.0" layoutY="75.0" prefHeight="450.0" prefWidth="400.0">
-               <children>
-                  <Rectangle arcHeight="150.0" arcWidth="150.0" fill="#727272" height="450.0" opacity="0.7" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="400.0">
-                     <effect>
-                        <DropShadow height="47.38" offsetX="-5.0" offsetY="5.0" radius="22.457500000000003" spread="0.22" width="44.45">
-                           <color>
-                              <Color red="0.4588235318660736" green="0.45490196347236633" blue="0.45490196347236633" />
-                           </color>
-                        </DropShadow>
-                     </effect>
-                     <rotationAxis>
-                        <Point3D />
-                     </rotationAxis>
-                  </Rectangle>
-                  <Button fx:id="editorButton" alignment="CENTER" layoutX="125.0" layoutY="350.0" mnemonicParsing="false" onAction="#enterEditor" opacity="0.7" prefHeight="46.0" prefWidth="150.0" style="-fx-background-radius: 20px; -fx-background-color: #282828;" text="Editor" textAlignment="CENTER" textFill="#eeeeee">
-                     <font>
-                        <Font name="Segoe UI Semibold" size="22.0" />
-                     </font>
-                     <effect>
-                        <DropShadow blurType="GAUSSIAN" offsetX="-2.0" offsetY="2.0" spread="0.2">
-                           <color>
-                              <Color red="0.3019607961177826" green="0.3019607961177826" blue="0.3019607961177826" />
-                           </color>
-                        </DropShadow>
-                     </effect>
-                     <opaqueInsets>
-                        <Insets />
-                     </opaqueInsets>
-                  </Button>
-                  <ImageView fx:id="avatarImage" fitHeight="225.0" fitWidth="225.0" layoutX="87.5" layoutY="87.5" opacity="0.7" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../images/buttons_typ.png" />
-                     </image>
-                     <effect>
-                        <DropShadow blurType="GAUSSIAN" offsetX="-2.0" offsetY="2.0" spread="0.23">
-                           <color>
-                              <Color red="0.3019607961177826" green="0.3019607961177826" blue="0.3019607961177826" />
-                           </color>
-                        </DropShadow>
-                     </effect>
-                     <rotationAxis>
-                        <Point3D />
-                     </rotationAxis>
-                  </ImageView>
-               </children>
-            </Pane>
-            <Pane fx:id="marketplacePane" layoutX="300.0" layoutY="75.0" prefHeight="450.0" prefWidth="400.0">
-               <children>
-                  <Rectangle arcHeight="150.0" arcWidth="150.0" fill="#727272" height="450.0" opacity="0.7" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="400.0">
-                     <effect>
-                        <DropShadow height="47.38" offsetX="-5.0" offsetY="5.0" radius="22.457500000000003" spread="0.22" width="44.45">
-                           <color>
-                              <Color red="0.4588235318660736" green="0.45490196347236633" blue="0.45490196347236633" />
-                           </color>
-                        </DropShadow>
-                     </effect>
-                  </Rectangle>
-                  <Button fx:id="marketplaceButton" alignment="CENTER" layoutX="125.0" layoutY="350.0" mnemonicParsing="false" onAction="#openMarketplace" opacity="0.7" prefHeight="46.0" style="-fx-background-radius: 20px; -fx-background-color: #282828;" text="Marketplace" textAlignment="CENTER" textFill="#eeeeee">
-                     <font>
-                        <Font name="Segoe UI Semibold" size="22.0" />
-                     </font>
-                     <effect>
-                        <DropShadow blurType="GAUSSIAN" offsetX="-2.0" offsetY="2.0" spread="0.2">
-                           <color>
-                              <Color red="0.3019607961177826" green="0.3019607961177826" blue="0.3019607961177826" />
-                           </color>
-                        </DropShadow>
-                     </effect>
-                     <opaqueInsets>
-                        <Insets />
-                     </opaqueInsets>
-                  </Button>
-                  <ImageView fitHeight="225.0" fitWidth="225.0" layoutX="87.5" layoutY="87.5" opacity="0.7" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../images/buttons_typ.png" />
-                     </image>
-                     <effect>
-                        <DropShadow blurType="GAUSSIAN" offsetX="-2.0" offsetY="2.0" spread="0.23">
-                           <color>
-                              <Color red="0.3019607961177826" green="0.3019607961177826" blue="0.3019607961177826" />
-                           </color>
-                        </DropShadow>
-                     </effect>
-                  </ImageView>
-               </children>
-            </Pane>
-         </children>
+   <ImageView fx:id="backgroundImageView" fitHeight="1119.0" fitWidth="1920.0" pickOnBounds="true" preserveRatio="true">
+      <Image url="@../images/e4c-bg.png" />
+   </ImageView>
+   <Pane fx:id="modeSelectorElementsPane" prefWidth="1000.0">
+      <Pane fx:id="profilePane" layoutX="425.0" maxWidth="150.0">
+         <Label fx:id="usernameLabel" alignment="CENTER" layoutX="-40.0" layoutY="195.0" prefHeight="32.0" prefWidth="230.0" text="username" textFill="#eeeeee">
+            <font>
+               <Font name="Segoe UI Semibold" size="22.0" />
+            </font>
+         </Label>
+         <Label layoutY="170.0" minWidth="150.0" text="Welcome back," textAlignment="CENTER" textFill="#eeeeee">
+            <font>
+               <Font name="Segoe UI Semibold" size="22.0" />
+            </font>
+         </Label>
+         <ImageView fx:id="profileImageView" fitHeight="150.0" fitWidth="150.0" opacity="0.7" pickOnBounds="true" preserveRatio="true">
+            <effect>
+               <DropShadow blurType="GAUSSIAN" offsetX="-2.0" offsetY="2.0" spread="0.23">
+                  <color>
+                     <Color red="0.3019607961177826" green="0.3019607961177826" blue="0.3019607961177826" />
+                  </color>
+               </DropShadow>
+            </effect>
+            <Image url="@../images/buttons_typ.png" />
+         </ImageView>
       </Pane>
-   </children>
+      <Pane fx:id="editorPane" layoutX="300.0" layoutY="75.0" prefHeight="450.0" prefWidth="400.0">
+         <Rectangle arcHeight="150.0" arcWidth="150.0" fill="#727272" height="450.0" opacity="0.7" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="400.0">
+            <rotationAxis>
+               <Point3D />
+            </rotationAxis>
+            <effect>
+               <DropShadow height="45.915000000000006" offsetX="-5.0" offsetY="5.0" radius="22.091250000000002" spread="0.22" width="44.45">
+                  <color>
+                     <Color red="0.4588235318660736" green="0.45490196347236633" blue="0.45490196347236633" />
+                  </color>
+               </DropShadow>
+            </effect>
+         </Rectangle>
+         <Button fx:id="editorButton" alignment="CENTER" layoutX="125.0" layoutY="350.0" mnemonicParsing="false" onAction="#enterEditor" prefHeight="46.0" prefWidth="150.0" style="-fx-background-radius: 20px; -fx-background-color: #3e3e3e;" text="Editor" textAlignment="CENTER" textFill="#eeeeee">
+            <font>
+               <Font name="Segoe UI Semibold" size="22.0" />
+            </font>
+            <effect>
+               <DropShadow blurType="GAUSSIAN" offsetX="-2.0" offsetY="2.0" spread="0.2">
+                  <color>
+                     <Color red="0.3019607961177826" green="0.3019607961177826" blue="0.3019607961177826" />
+                  </color>
+               </DropShadow>
+            </effect>
+            <opaqueInsets>
+               <Insets />
+            </opaqueInsets>
+         </Button>
+         <ImageView fx:id="avatarImage" fitHeight="225.0" fitWidth="225.0" layoutX="87.5" layoutY="87.5" opacity="0.7" pickOnBounds="true" preserveRatio="true">
+            <effect>
+               <DropShadow blurType="GAUSSIAN" offsetX="-2.0" offsetY="2.0" spread="0.23">
+                  <color>
+                     <Color red="0.3019607961177826" green="0.3019607961177826" blue="0.3019607961177826" />
+                  </color>
+               </DropShadow>
+            </effect>
+            <rotationAxis>
+               <Point3D />
+            </rotationAxis>
+            <Image url="@../images/buttons_typ.png" />
+         </ImageView>
+      </Pane>
+      <Pane fx:id="marketplacePane" layoutX="300.0" layoutY="75.0" prefHeight="450.0" prefWidth="400.0">
+         <Rectangle arcHeight="150.0" arcWidth="150.0" fill="#727272" height="450.0" opacity="0.7" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="400.0">
+            <effect>
+               <DropShadow blurType="ONE_PASS_BOX" height="45.185" offsetX="-5.0" offsetY="5.0" radius="21.90875" spread="0.22" width="44.45">
+                  <color>
+                     <Color red="0.4588235318660736" green="0.45490196347236633" blue="0.45490196347236633" />
+                  </color>
+               </DropShadow>
+            </effect>
+         </Rectangle>
+         <Button fx:id="marketplaceButton" alignment="CENTER" layoutX="125.0" layoutY="350.0" mnemonicParsing="false" onAction="#openMarketplace" prefHeight="46.0" style="-fx-background-radius: 20px; -fx-background-color: #3e3e3e;" text="Marketplace" textAlignment="CENTER" textFill="#eeeeee">
+            <font>
+               <Font name="Segoe UI Semibold" size="22.0" />
+            </font>
+            <effect>
+               <DropShadow blurType="GAUSSIAN" offsetX="-2.0" offsetY="2.0" spread="0.2">
+                  <color>
+                     <Color red="0.3019607961177826" green="0.3019607961177826" blue="0.3019607961177826" />
+                  </color>
+               </DropShadow>
+            </effect>
+            <opaqueInsets>
+               <Insets />
+            </opaqueInsets>
+         </Button>
+         <ImageView fitHeight="225.0" fitWidth="225.0" layoutX="87.5" layoutY="87.5" opacity="0.7" pickOnBounds="true" preserveRatio="true">
+            <effect>
+               <DropShadow blurType="GAUSSIAN" offsetX="-2.0" offsetY="2.0" spread="0.23">
+                  <color>
+                     <Color red="0.3019607961177826" green="0.3019607961177826" blue="0.3019607961177826" />
+                  </color>
+               </DropShadow>
+            </effect>
+            <Image url="@../images/buttons_typ.png" />
+         </ImageView>
+      </Pane>
+   </Pane>
 </AnchorPane>

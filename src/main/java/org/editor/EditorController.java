@@ -58,25 +58,7 @@ public class EditorController implements Initializable, ControlScreen {
     private static final Logger EC_LOGGER = LogManager.getLogger(EditorController.class.getName());
 
     @FXML
-    private ContextMenu contextPoly, contextRect;
-    @FXML
-    private MenuItem menuItemPoly, menuItemRect;
-    @FXML
     private Button importButton;
-    @FXML
-    private javafx.scene.control.MenuItem addNoise;
-    @FXML
-    private javafx.scene.control.MenuItem addGlitch;
-    @FXML
-    private javafx.scene.control.MenuItem checkerboardFilterItem;
-    @FXML
-    private javafx.scene.control.MenuItem saveImage;
-    @FXML
-    private javafx.scene.control.MenuItem openFileSettings;
-    @FXML
-    private javafx.scene.control.MenuItem deleteFile;
-    @FXML
-    private javafx.scene.control.MenuItem openFile;
     @FXML
     private StackPane stack;
     @FXML
@@ -87,8 +69,6 @@ public class EditorController implements Initializable, ControlScreen {
     private Menu menubarImage;
     @FXML
     private Menu menuBarFilter;
-    @FXML
-    private AnchorPane rootAnchorPane;
     @FXML
     private ToolBar toolBar;
 
