@@ -7,6 +7,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -28,6 +29,8 @@ public class FilterOptionsController implements Initializable {
 
     private static final Logger FOC_LOGGER = LogManager.getLogger(FilterOptionsController.class.getName());
 
+    @FXML
+    private Button closeFilterButton;
     @FXML
     private Label filterOptionsLabel;
     @FXML
@@ -51,6 +54,10 @@ public class FilterOptionsController implements Initializable {
     private ChoiceBox<FilterType> filterTypeChoiceBox3;
     @FXML
     private ChoiceBox<FilterType> filterTypeChoiceBox4;
+    @FXML
+    private Button panelIncreaseButton;
+    @FXML
+    private Button panelDecreaseButton;
 
     /**
      * Glitch Nodes
@@ -58,23 +65,44 @@ public class FilterOptionsController implements Initializable {
     @FXML
     private GridPane glitchGridPane;
     @FXML
+    private Pane coordinatePane;
+    @FXML
     private Slider glitchSlider;
     @FXML
     private ToggleButton complementToggleButton;
     @FXML
     private ToggleButton silhouetteToggleButton;
 
-    private EditorController ec;
-    private ImageGrid originalImageGrid;
-    private ImageGrid resizedImageGrid;
-    private FilterOperation filterOperation;
+    private final EditorController editorController;
+    private final ImageGrid originalImageGrid;
+    private final ImageGrid resizedImageGrid;
+    private final FilterInputAttributes inputAttributes;
     private FilterType filterType;
     private List<FilterType> filterTypeList;
-    private FilterInputAttributes inputAttributes;
+
+    public FilterOptionsController(Image original, Image resized, EditorController ec) {
+        inputAttributes = new FilterInputAttributes();
+        this.editorController = ec;
+        this.originalImageGrid = new ImageGrid(original);
+        this.resizedImageGrid = new ImageGrid(resized);
+        originalImageGrid.readPixelsIntoArray();
+        resizedImageGrid.readPixelsIntoArray();
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        applyFilterButton.setOnAction(actionEvent -> handleApplyFilter());
 
+        cancelFilterButton.setOnAction(actionEvent -> handleCancelFilter());
+        closeFilterButton.setOnAction(actionEvent -> handleCancelFilter());
+
+        coordinatePane.setOnMouseReleased((this::handleCoordinates));
+        complementToggleButton.setOnAction(actionEvent -> handleComplement());
+        silhouetteToggleButton.setOnAction(actionEvent -> handleSilhouette());
+        glitchSlider.setOnMouseReleased(mouseEvent -> changeSliderValue());
+
+        panelIncreaseButton.setOnAction(actionEvent -> handlePanelIncrease());
+        panelDecreaseButton.setOnAction(actionEvent -> handlePanelDecrease());
     }
 
     /**
@@ -89,19 +117,19 @@ public class FilterOptionsController implements Initializable {
      * @param filterType the type of the selected filter
      * @param ec         the object of the EditorController
      */
-    public void initFilterOptions(Image original, Image resized, FilterApplicationType appType, FilterType filterType, EditorController ec) {
-        inputAttributes = new FilterInputAttributes();
-        this.ec = ec;
-        this.originalImageGrid = new ImageGrid(original);
-        this.resizedImageGrid = new ImageGrid(resized);
-        originalImageGrid.setPixelArray();
-        resizedImageGrid.setPixelArray();
-
-        filterTypeList = new ArrayList<>();
-        this.filterType = filterType;
-
-        setMenu(appType, filterType);
-    }
+//    public void initFilterOptions(Image original, Image resized, FilterApplicationType appType, FilterType filterType, EditorController ec) {
+//        inputAttributes = new FilterInputAttributes();
+//        this.ec = ec;
+//        this.originalImageGrid = new ImageGrid(original);
+//        this.resizedImageGrid = new ImageGrid(resized);
+//        originalImageGrid.readPixelsIntoArray();
+//        resizedImageGrid.readPixelsIntoArray();
+//
+//        filterTypeList = new ArrayList<>();
+//        this.filterType = filterType;
+//
+//        setMenu(appType, filterType);
+//    }
 
     /**
      * Applies filter to the ImageGrid arrays of the original and resized images.
@@ -109,35 +137,30 @@ public class FilterOptionsController implements Initializable {
      * Calls on another EditorController method to draw the new images to their respective canvases.
      */
     private void applyFilter() {
-        // On resized
-        filterOperation = new FilterOperation(resizedImageGrid, inputAttributes);
-        int[] resizedPixelArrayNew = filterOperation.startFilter();
-        resizedImageGrid.processPixels(resizedPixelArrayNew);
-        Image editorImage = resizedImageGrid.writeNewPixelArray();
+        // On editor image
+        FilterOperation editorOperation = new FilterOperation(resizedImageGrid, inputAttributes);
+        int[] editorPixelArrayNew = editorOperation.startFilter();
+        Image editorImage = resizedImageGrid.writeNewPixelArray(editorPixelArrayNew);
 
-        // On original
-        filterOperation = new FilterOperation(originalImageGrid, inputAttributes);
-        int[] originalPixelArrayNew = filterOperation.startFilter();
-        originalImageGrid.processPixels(originalPixelArrayNew);
-        Image originalImage = originalImageGrid.writeNewPixelArray();
-
+        // On original image
+        FilterOperation originalOperation = new FilterOperation(originalImageGrid, inputAttributes);
+        int[] originalPixelArrayNew = originalOperation.startFilter();
+        Image originalImage = originalImageGrid.writeNewPixelArray(originalPixelArrayNew);
 
         // Update both filtered images
-        ec.setFilteredImages(originalImage, editorImage);
+        editorController.setFilteredImages(originalImage, editorImage);
         // Draw both to their respective canvas
-        ec.drawFilteredImages();
+        editorController.drawFilteredImages();
     }
 
     /**
      * Draws a preview of a filter's effect before altering the actual ImageDimensions objects.
      */
     private void previewFilter() {
-        filterOperation = new FilterOperation(resizedImageGrid, inputAttributes);
-        int[] pixelArrayNew = filterOperation.startFilter();
-
-        resizedImageGrid.processPixels(pixelArrayNew);
-        Image pi = (resizedImageGrid.writeNewPixelArray());
-        ec.drawPreviewImage(pi);
+        FilterOperation preview = new FilterOperation(resizedImageGrid, inputAttributes);
+        int[] pixelArrayNew = preview.startFilter();
+        Image pi = (resizedImageGrid.writeNewPixelArray(pixelArrayNew));
+        editorController.drawPreviewImage(pi);
     }
 
     /**
@@ -203,37 +226,15 @@ public class FilterOptionsController implements Initializable {
     private void getFirstFilter(ActionEvent actionEvent) {
         setCheckerBoard(filterTypeChoiceBox1, 0);
     }
-
-    /**
-     * Gets second user selected filter.
-     * Shows a preview of top-right panel.
-     *
-     * @param actionEvent the action event
-     */
     private void getSecondFilter(ActionEvent actionEvent) {
         setCheckerBoard(filterTypeChoiceBox2, 1);
     }
-
-    /**
-     * Gets third user selected filter.
-     * Shows a preview of bottom-left panel.
-     *
-     * @param actionEvent the action event
-     */
     private void getThirdFilter(ActionEvent actionEvent) {
         setCheckerBoard(filterTypeChoiceBox3, 2);
     }
-
-    /**
-     * Gets fourth user selected filter.
-     * Shows a preview of bottom-right panel.
-     *
-     * @param actionEvent the action event
-     */
     private void getFourthFilter(ActionEvent actionEvent) {
         setCheckerBoard(filterTypeChoiceBox4, 3);
     }
-
 
     private void setCheckerBoard(ChoiceBox<FilterType> filterTypeChoice, int index) {
         if (null != filterTypeList.get(index)) {
@@ -268,7 +269,7 @@ public class FilterOptionsController implements Initializable {
      */
     @FXML
     private void handleCancelFilter() {
-        ec.drawPreviousImage();
+        editorController.drawPreviousImage();
 
         stage = (Stage) cancelFilterButton.getScene().getWindow();
         stage.close();
@@ -280,7 +281,10 @@ public class FilterOptionsController implements Initializable {
      * @param appType the application type
      * @param filterType the filter type
      */
-    private void setMenu(FilterApplicationType appType, FilterType filterType) {
+    public void setFilterView(FilterApplicationType appType, FilterType filterType) {
+        filterTypeList = new ArrayList<>();
+        this.filterType = filterType;
+
         checkerboardGridPane.setVisible(false);
         glitchGridPane.setVisible(false);
         intensityGridPane.setVisible(false);
@@ -294,11 +298,8 @@ public class FilterOptionsController implements Initializable {
                 case GLITCH:
                     initGlitchFilter();
                     break;
-                case NOISE:
-                    //TODO
-                    initStandardFilter();
-                    break;
                 default:
+                    initStandardFilter();
             }
         }
     }
@@ -328,7 +329,6 @@ public class FilterOptionsController implements Initializable {
             filterTypeChoiceBox2.setValue(FilterType.ORIGINAL);
             filterTypeChoiceBox3.setValue(FilterType.ORIGINAL);
             filterTypeChoiceBox4.setValue(FilterType.ORIGINAL);
-
 
             filterTypeChoiceBox1.getItems().addAll(FilterType.TYPE_TO_FILTER_ENUM_MAP.keySet());
             filterTypeChoiceBox2.getItems().addAll(FilterType.TYPE_TO_FILTER_ENUM_MAP.keySet());

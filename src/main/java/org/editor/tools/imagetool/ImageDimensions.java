@@ -11,7 +11,7 @@ public class ImageDimensions {
     private double yPosition;
     private double currentWidth;
     private double currentHeight;
-    private Image originalImage;
+    private final Image originalImage;
     private Image filteredImage;
     private Image previousImage;
 

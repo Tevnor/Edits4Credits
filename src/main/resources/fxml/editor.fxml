@@ -158,7 +158,7 @@
                       </Menu>
                       <MenuItem fx:id="deleteFile" mnemonicParsing="false" onAction="#handleDeleteFile" text="Delete File" />
                   </Menu>
-                  <Menu fx:id="menubarImage" mnemonicParsing="false" text="Image">
+                  <Menu fx:id="menuBarImage" mnemonicParsing="false" text="Image">
                       <MenuItem fx:id="moveImage" mnemonicParsing="false" onAction="#handleMoveImage" text="Move Image" />
                       <MenuItem fx:id="scaleImage" mnemonicParsing="false" onAction="#handleScaleImage" text="Scale Image" />
                       <MenuItem fx:id="resetImage" mnemonicParsing="false" onAction="#handleResetImage" text="Reset Image" />
@@ -177,7 +177,7 @@
                       <MenuItem fx:id="addInverse" mnemonicParsing="false" onAction="#handleAddInverse" text="Inverse" />
                      <MenuItem fx:id="sepiaEffectItem" mnemonicParsing="false" onAction="#handleAddSepia" text="Sepia" />
                   </Menu>
-                  <Menu fx:id="menuBarFilter1" mnemonicParsing="false" text="Effects">
+                  <Menu fx:id="menuBarEffect" mnemonicParsing="false" text="Effects">
                      <items>
                         <MenuItem fx:id="blurEffectItem" mnemonicParsing="false" onAction="#handleAddBlur" text="Blur" />
                          <MenuItem fx:id="checkerboardFilterItem" mnemonicParsing="false" onAction="#handleApplyCheckerboard" text="Checkerboard" />

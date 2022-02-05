@@ -11,7 +11,6 @@ import javafx.stage.Stage;
 import org.editor.EditorController;
 import org.editor.tools.filtertool.filtercontrol.Effect;
 import org.editor.tools.filtertool.filtercontrol.effects.EffectType;
-
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -23,45 +22,49 @@ public class EffectOptionsController implements Initializable {
     private Button applyEffectButton;
     @FXML
     private Button cancelEffectButton;
-
+    @FXML
+    private Button closeEffectButton;
     @FXML
     private VBox effectFactorVBox;
     @FXML
     private Slider effectSlider;
-
     @FXML
     private VBox adjustmentFactorVBox;
     @FXML
     private Slider adjustmentSlider;
 
-    private EditorController editorController;
-    private Image originalImage;
-    private Image editorImage;
+    private final EditorController editorController;
+    private final Image originalImage;
+    private final Image editorImage;
     private Effect effect;
 
     private double factor;
     private Stage stage;
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-
-    }
-
-    public void initEffectOptions(Image originalImage, Image editorImage, EffectType effectType, EditorController editorController) {
+    public EffectOptionsController(Image originalImage, Image editorImage, EditorController editorController) {
         this.originalImage = originalImage;
         this.editorImage = editorImage;
         this.editorController = editorController;
-        this.effect = EffectType.TYPE_TO_EFFECT_ENUM_MAP.get(effectType);
-
-        setMenu(effectType);
     }
 
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        applyEffectButton.setOnAction(actionEvent -> handleApplyEffect());
+
+        cancelEffectButton.setOnAction(actionEvent -> handleCancelEffect());
+        closeEffectButton.setOnAction(actionEvent -> handleCancelEffect());
+
+        adjustmentSlider.setOnMouseReleased(mouseEvent -> handleAdjustmentSlider());
+        effectSlider.setOnMouseReleased(mouseEvent -> handleEffectSlider());
+    }
+
+
     private void applyEffect() {
-        originalImage = effect.applyEffect(originalImage, factor);
-        editorImage = effect.applyEffect(editorImage, factor);
+        Image originalPostEffectImage = effect.applyEffect(originalImage, factor);
+        Image editorPostEffectImage = effect.applyEffect(editorImage, factor);
 
         // Update both filtered images
-        editorController.setFilteredImages(originalImage, editorImage);
+        editorController.setFilteredImages(originalPostEffectImage, editorPostEffectImage);
         // Draw both to their respective canvas
         editorController.drawFilteredImages();
     }
@@ -100,7 +103,9 @@ public class EffectOptionsController implements Initializable {
         stage.close();
     }
 
-    private void setMenu(EffectType effectType) {
+    public void setEffectView(EffectType effectType) {
+        this.effect = EffectType.TYPE_TO_EFFECT_ENUM_MAP.get(effectType);
+
         factor = 0;
         adjustmentFactorVBox.setVisible(false);
         effectFactorVBox.setVisible(false);

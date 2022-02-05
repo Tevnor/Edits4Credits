@@ -17,8 +17,6 @@ public class ImageGrid {
     private final PixelWriter pixelWriter;
     private final WritablePixelFormat<IntBuffer> writablePixelFormat;
     private final int[] pixelArray;
-    private int[] pixelArrayNew;
-
 
     public ImageGrid(Image image) {
         this.width = (int) image.getWidth();
@@ -28,30 +26,20 @@ public class ImageGrid {
         this.pixelWriter = writableImage.getPixelWriter();
         this.writablePixelFormat = WritablePixelFormat.getIntArgbInstance();
         this.pixelArray = new int[width * height];
-        this.pixelArrayNew = new int[pixelArray.length];
     }
 
     /**
      * For initial read/write of pixel array
      * */
-    public void setPixelArray() {
+    public void readPixelsIntoArray() {
         this.pixelReader.getPixels(0, 0, width, height, writablePixelFormat, pixelArray, 0, width);
         IG_LOGGER.debug("Pixel array created with length of: " + pixelArray.length);
     }
 
     /**
-     * Sequence for actual filter application
-     * */
-    public void processPixels(int[] pixelArrayNew) {
-        this.pixelArrayNew = pixelArrayNew;
-        writeNewPixelArray();
-    }
-
-
-    /**
      * Write new pixel array onto image
      * */
-    public WritableImage writeNewPixelArray() {
+    public WritableImage writeNewPixelArray(int[] pixelArrayNew) {
         pixelWriter.setPixels(0, 0, width, height, writablePixelFormat, pixelArrayNew, 0, width);
         return writableImage;
     }

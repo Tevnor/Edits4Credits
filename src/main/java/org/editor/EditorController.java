@@ -37,9 +37,6 @@ import java.util.ResourceBundle;
 import org.editor.tools.filtertool.EffectOptionsController;
 import org.editor.tools.filtertool.FilterOptionsController;
 import org.editor.tools.filtertool.NoiseController;
-import org.editor.tools.filtertool.filtercontrol.FilterApplicationType;
-import org.editor.tools.filtertool.filtercontrol.effects.EffectType;
-import org.editor.tools.filtertool.filtercontrol.filter.FilterType;
 import org.editor.tools.imagetool.ImageDimensions;
 import org.editor.tools.imagetool.PositionOptionsController;
 import org.editor.tools.imagetool.ScaleOptionsController;
@@ -67,7 +64,9 @@ public class EditorController implements Initializable, ControlScreen {
     @FXML
     private Menu menuBarFile;
     @FXML
-    private Menu menubarImage;
+    private Menu menuBarImage;
+    @FXML
+    private Menu menuBarEffect;
     @FXML
     private Menu menuBarFilter;
     @FXML
@@ -96,7 +95,7 @@ public class EditorController implements Initializable, ControlScreen {
     private PositionOptionsController moveOptions;
 
 
-    private GraphicsContext gc;
+    private GraphicsContext graphicsContext;
     private Parent scaleOptRoot;
     private FXMLLoader scaleOptLoader;
     private ScaleOptionsController scaleOptions;
@@ -109,6 +108,7 @@ public class EditorController implements Initializable, ControlScreen {
     /**
      * Filter Variables
      * */
+    private FXMLLoader filterOptLoader;
     private Parent filterOptRoot;
     private FilterOptionsController filterOptionsController;
     private Stage filterOptStage = new Stage();
@@ -116,6 +116,7 @@ public class EditorController implements Initializable, ControlScreen {
     /**
      * Effect Variables
      * */
+    private FXMLLoader effectOptLoader;
     private Parent effectOptRoot;
     private EffectOptionsController effectOptionsController;
     private Stage effectOptStage = new Stage();
@@ -148,8 +149,6 @@ public class EditorController implements Initializable, ControlScreen {
         initAddNoiseOpt();
         initControls();
         initBackground();
-        initFilterOptions();
-        initEffectOptions();
         orderStack();
     }
     // method to calculate stack pane size
@@ -175,8 +174,7 @@ public class EditorController implements Initializable, ControlScreen {
         stack.setLayoutX(x);
         stack.setLayoutY(y);
         toggleFileMenuItems(true);
-        toggleImageMenuItems(true);
-        toggleFilterMenuItems(true);
+        toggleMenuBarItems(true);
         EC_LOGGER.debug("Successfully created stack (x layout: " + x + ", y layout: " + y + ")");
     }
     private void initAddNoiseOpt() {
@@ -262,9 +260,12 @@ public class EditorController implements Initializable, ControlScreen {
         ic.setImportedImgOnCanvas(originalCanvas,originalImageObject, true);
         layoutManager.changeDisableBtn(importButton);
         layoutManager.addToStack(editorCanvasImage,stack);
+
         toggleFileMenuItems(false);
-        toggleImageMenuItems(false);
-        toggleFilterMenuItems(false);
+        toggleMenuBarItems(false);
+
+        loadFilterOptions();
+        loadEffectOptions();
     }
     private void delete(){
         EC_LOGGER.debug("entered delete()");
@@ -275,8 +276,7 @@ public class EditorController implements Initializable, ControlScreen {
         originalCanvas = null;
         layoutManager.changeDisableBtn(importButton);
         ic.reset();
-        toggleFilterMenuItems(true);
-        toggleImageMenuItems(true);
+        toggleMenuBarItems(true);
         orderStack();
     }
 
@@ -292,6 +292,11 @@ public class EditorController implements Initializable, ControlScreen {
             editorCanvasImage.toBack();
         }
         project.getBackground().toBack();
+    }
+    private void toggleMenuBarItems(boolean setDisabled) {
+        toggleFilterMenuItems(setDisabled);
+        toggleImageMenuItems(setDisabled);
+        toggleEffectMenuItems(setDisabled);
     }
 
     /**
@@ -405,22 +410,34 @@ public class EditorController implements Initializable, ControlScreen {
     /**
      * Filter
      * */
-    private void initFilterOptions() {
+    private void loadFilterOptions() {
         try {
-            FXMLLoader filterOptLoader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/fxml/filterOptions.fxml")));
+            filterOptLoader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/fxml/filterOptions.fxml")));
+            initFilterOptionsController();
             filterOptRoot = filterOptLoader.load();
-            filterOptionsController = filterOptLoader.getController();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        filterOptStage = new Stage();
-        Scene filterOptScene = new Scene(filterOptRoot);
-        filterOptScene.setFill(Color.TRANSPARENT);
-        filterOptStage.setScene(filterOptScene);
-        filterOptStage.centerOnScreen();
+
+        filterOptStage = initStage(filterOptRoot);
     }
+    private Stage initStage(Parent root) {
+        Stage stage = new Stage();
+        Scene scene = new Scene(root);
+        scene.setFill(Color.TRANSPARENT);
+        stage.setScene(scene);
+        stage.centerOnScreen();
 
-
+        return stage;
+    }
+    private void initFilterOptionsController() {
+        filterOptLoader.setController(new FilterOptionsController(
+                originalImageObject.getFilteredImage(),
+                editorImageObject.getFilteredImage(),
+                this
+        ));
+        filterOptionsController = filterOptLoader.getController();
+    }
 
     private void toggleFilterMenuItems(boolean setDisabled) {
         menuBarFilter.getItems().forEach(menuItem -> menuItem.setDisable(setDisabled));
@@ -434,106 +451,105 @@ public class EditorController implements Initializable, ControlScreen {
     }
 
     // Checkerboard mode
-    public void handleApplyCheckerboard(ActionEvent event) {
-        openFilterOptions(CHECKERBOARD, null);
+    public void handleApplyCheckerboard() {
+        filterOptionsController.setFilterView(CHECKERBOARD, null);
+        filterOptStage.show();
     }
 
     // Singular filter
-    public void handleAddGlitch(ActionEvent event) {
-        openFilterOptions(STANDARD, GLITCH);
+    public void handleAddGlitch() {
+        filterOptionsController.setFilterView(STANDARD, GLITCH);
+        filterOptStage.show();
     }
-    public void handleAddInverse(ActionEvent event) {
-        openFilterOptions(STANDARD, INVERTED);
-    }
-    public void handleAddGrayscale(ActionEvent event) {
-        openFilterOptions(STANDARD, GRAYSCALE);
+    public void handleAddInverse() {
+        filterOptionsController.setFilterView(STANDARD, INVERTED);
+        filterOptStage.show();
     }
 
-
-    private void openFilterOptions(FilterApplicationType appType,  FilterType filterType) {
-        try {
-            filterOptionsController.initFilterOptions(
-                    originalImageObject.getFilteredImage(),
-                    editorImageObject.getFilteredImage(),
-                    appType,
-                    filterType,
-                    this
-            );
-            filterOptStage.show();
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-            EC_LOGGER.debug("Images not loaded");
-            // Maybe add finally to prompt users to import image
-        }
+    @FXML
+    public void handleAddGrayscale() {
+        filterOptionsController.setFilterView(STANDARD, GRAYSCALE);
+        filterOptStage.show();
     }
+
     /**
      * Effect
      * */
-    private void initEffectOptions() {
+    private void loadEffectOptions() {
         try {
-            FXMLLoader effectOptLoader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/fxml/effectOptions.fxml")));
+            effectOptLoader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/fxml/effectOptions.fxml")));
+            initEffectOptionsController();
             effectOptRoot = effectOptLoader.load();
             effectOptionsController = effectOptLoader.getController();
         } catch (Exception e ) {
             e.printStackTrace();
+            EC_LOGGER.debug("FXML for {} couldn't be loaded", effectOptLoader);
         }
-        effectOptStage = new Stage();
-        Scene effectOptScene = new Scene(effectOptRoot);
-        effectOptScene.setFill(Color.TRANSPARENT);
-        effectOptStage.setScene(effectOptScene);
-        effectOptStage.centerOnScreen();
+        effectOptStage = initStage(effectOptRoot);
     }
-
-    public void handleAddBlur(ActionEvent event) {
-        openEffectOptions(BLUR);
-    }
-    public void handleAddSepia(ActionEvent event) {
-        openEffectOptions(SEPIA);
-    }
-    public void handleAddDisplacement(ActionEvent event) {
-        openEffectOptions(DISPLACE);
-    }
-
-    public void handleAdjustBrightness(ActionEvent event) {
-        openEffectOptions(BRIGHTNESS);
-    }
-    public void handleAdjustContrast(ActionEvent event) {
-        openEffectOptions(CONTRAST);
-    }
-    public void handleAdjustSaturation(ActionEvent event) {
-        openEffectOptions(SATURATION);
-    }
-
-    private void openEffectOptions(EffectType effectType) {
+    private void initEffectOptionsController() {
         try {
-            effectOptionsController.initEffectOptions(
+            effectOptLoader.setController(new EffectOptionsController(
                     originalImageObject.getFilteredImage(),
                     editorImageObject.getFilteredImage(),
-                    effectType,
                     this
-            );
-            effectOptStage.show();
-        } catch (NullPointerException e) {
+            ));
+        } catch (Exception e) {
             e.printStackTrace();
-            EC_LOGGER.debug("Images not loaded");
+            EC_LOGGER.error("Could not load {}", effectOptLoader);
         }
+        effectOptionsController = effectOptLoader.getController();
     }
 
+    private void toggleEffectMenuItems(boolean setDisabled) {
+        menuBarEffect.getItems().forEach(menuItem -> menuItem.setDisable(setDisabled));
+    }
+
+    // Effects
+    public void handleAddBlur(ActionEvent event) {
+        effectOptionsController.setEffectView(BLUR);
+        effectOptStage.show();
+    }
+    public void handleAddSepia(ActionEvent event) {
+        effectOptionsController.setEffectView(SEPIA);
+        effectOptStage.show();
+    }
+    public void handleAddDisplacement(ActionEvent event) {
+        effectOptionsController.setEffectView(DISPLACE);
+        effectOptStage.show();
+    }
+    // Adjustments
+    public void handleAdjustBrightness(ActionEvent event) {
+        effectOptionsController.setEffectView(BRIGHTNESS);
+        effectOptStage.show();
+    }
+    public void handleAdjustContrast(ActionEvent event) {
+        effectOptionsController.setEffectView(CONTRAST);
+        effectOptStage.show();
+    }
+    public void handleAdjustSaturation(ActionEvent event) {
+        effectOptionsController.setEffectView(SATURATION);
+        effectOptStage.show();
+    }
 
     /**
      * Drawing to Canvas
      * */
     //TODO duplicate code
     public void drawFilteredImage(){
-        gc = editorCanvasImage.getGraphicsContext2D();
-        gc.drawImage(editorImageObject.getFilteredImage(), editorImageObject.getCurrentXPosition(), editorImageObject.getCurrentYPosition(), editorImageObject.getCurrentWidth(), editorImageObject.getCurrentHeight());
-
+        graphicsContext = editorCanvasImage.getGraphicsContext2D();
+        graphicsContext.drawImage(
+                editorImageObject.getFilteredImage(),
+                editorImageObject.getCurrentXPosition(),
+                editorImageObject.getCurrentYPosition(),
+                editorImageObject.getCurrentWidth(),
+                editorImageObject.getCurrentHeight());
     }
     // overwrite both canvases
     public void drawFilteredImages(){
         // Draw editor image
-        gc = editorCanvasImage.getGraphicsContext2D();
-        gc.drawImage(
+        graphicsContext = editorCanvasImage.getGraphicsContext2D();
+        graphicsContext.drawImage(
                 editorImageObject.getFilteredImage(),
                 editorImageObject.getCurrentXPosition(),
                 editorImageObject.getCurrentYPosition(),
@@ -551,20 +567,20 @@ public class EditorController implements Initializable, ControlScreen {
     }
     // Draw temporary preview image
     public void drawPreviousImage(){
-        gc = editorCanvasImage.getGraphicsContext2D();
-        gc.drawImage(editorImageObject.getPreviousImage() ,editorImageObject.getCurrentXPosition(), editorImageObject.getCurrentYPosition(), editorImageObject.getCurrentWidth(), editorImageObject.getCurrentHeight());
+        graphicsContext = editorCanvasImage.getGraphicsContext2D();
+        graphicsContext.drawImage(editorImageObject.getPreviousImage() ,editorImageObject.getCurrentXPosition(), editorImageObject.getCurrentYPosition(), editorImageObject.getCurrentWidth(), editorImageObject.getCurrentHeight());
     }
     // Draw temporary preview image
     public void drawPreviewImage(Image previewImage){
-        gc = editorCanvasImage.getGraphicsContext2D();
-        gc.drawImage(previewImage,editorImageObject.getCurrentXPosition(), editorImageObject.getCurrentYPosition(), editorImageObject.getCurrentWidth(), editorImageObject.getCurrentHeight());
+        graphicsContext = editorCanvasImage.getGraphicsContext2D();
+        graphicsContext.drawImage(previewImage,editorImageObject.getCurrentXPosition(), editorImageObject.getCurrentYPosition(), editorImageObject.getCurrentWidth(), editorImageObject.getCurrentHeight());
     }
 
     /**
      * Image Transforms
      * */
     private void toggleImageMenuItems(boolean setDisabled) {
-        menubarImage.getItems().forEach(menuItem -> menuItem.setDisable(setDisabled));
+        menuBarImage.getItems().forEach(menuItem -> menuItem.setDisable(setDisabled));
     }
 
     public void handleMoveImage(ActionEvent event) {
@@ -624,6 +640,9 @@ public class EditorController implements Initializable, ControlScreen {
         originalImageObject.setFilteredImage(originalImage);
         editorImageObject.setFilteredImage(editorImage);
         editorImageObject.setPreviousImage(editorImage);
+
+        loadFilterOptions();
+        loadEffectOptions();
     }
 
     /**
@@ -679,8 +698,8 @@ public class EditorController implements Initializable, ControlScreen {
         gc.drawImage(originalImageObject.getFilteredImage(), originalImageObject.getCurrentXPosition(), originalImageObject.getCurrentYPosition(), newWidth, newHeight);
     }
     public void drawFilteredOriginalImage(){
-        gc = originalCanvas.getGraphicsContext2D();
-        gc.drawImage(originalImageObject.getOriginalImage(),originalImageObject.getCurrentXPosition(), originalImageObject.getCurrentYPosition(), originalImageObject.getCurrentWidth(), originalImageObject.getCurrentHeight());
+        graphicsContext = originalCanvas.getGraphicsContext2D();
+        graphicsContext.drawImage(originalImageObject.getOriginalImage(),originalImageObject.getCurrentXPosition(), originalImageObject.getCurrentYPosition(), originalImageObject.getCurrentWidth(), originalImageObject.getCurrentHeight());
         //initImageTool(filteredOriginalImage);
     }
     public ImageDimensions getOriginalImageObject(){
@@ -700,5 +719,8 @@ public class EditorController implements Initializable, ControlScreen {
         originalImageObject.setFilteredImage(originalImageObject.getOriginalImage());
         editorImageObject.setPreviousImage(editorImageObject.getOriginalImage());
         editorImageObject.setFilteredImage(editorImageObject.getOriginalImage());
+
+        loadFilterOptions();
+        loadEffectOptions();
     }
 }
