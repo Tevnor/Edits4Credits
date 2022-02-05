@@ -24,7 +24,7 @@ public class ImageDimensions {
         this.originalImage = originalImage;
         this.filteredImage = originalImage;
         this.previousImage = originalImage;
-        this.previousImage = originalImage;
+        this.previewImage = originalImage;
     }
     public void setCurrentWidth(double newWidth){
         this.currentWidth = newWidth;
