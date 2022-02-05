@@ -430,6 +430,7 @@ public class EditorController implements Initializable, ControlScreen {
         openNoiseOptions();
     }
     public void openNoiseOptions(){
+        noiseController.setApplied();
         noiseOptStage.show();
     }
 
@@ -688,7 +689,7 @@ public class EditorController implements Initializable, ControlScreen {
     public void drawUnfilteredCanvasImage(){
         GraphicsContext gc = editorCanvasImage.getGraphicsContext2D();
         gc.clearRect(0, 0, editorCanvasImage.getWidth(), editorCanvasImage.getHeight());
-        gc.drawImage(editorImageObject.getOriginalImage(), editorImageObject.getCurrentXPosition(), editorImageObject.getCurrentYPosition(), editorImageObject.getCurrentWidth(), editorImageObject.getCurrentHeight());
+        gc.drawImage(editorImageObject.getFilteredImage(), editorImageObject.getCurrentXPosition(), editorImageObject.getCurrentYPosition(), editorImageObject.getCurrentWidth(), editorImageObject.getCurrentHeight());
     }
 
     @FXML

@@ -75,7 +75,7 @@ public class ImageDimensions {
     public WritableImage createWritableOriginalImage(){
         Canvas tmp = new Canvas(originalImage.getWidth(), originalImage.getHeight());
         GraphicsContext gc = tmp.getGraphicsContext2D();
-        gc.drawImage(originalImage, 0, 0, originalImage.getWidth(), originalImage.getHeight());
+        gc.drawImage(filteredImage, 0, 0, filteredImage.getWidth(), filteredImage.getHeight());
         WritableImage originalImage = tmp.snapshot(null, null);
         return originalImage;
     }
