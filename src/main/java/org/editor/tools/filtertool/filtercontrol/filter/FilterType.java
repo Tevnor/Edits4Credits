@@ -1,6 +1,8 @@
 package org.editor.tools.filtertool.filtercontrol.filter;
 
+import org.editor.tools.filtertool.filtercontrol.Effect;
 import org.editor.tools.filtertool.filtercontrol.Filter;
+import org.editor.tools.filtertool.filtercontrol.effects.BlurEffect;
 
 import java.util.Collections;
 import java.util.EnumMap;
@@ -26,6 +28,7 @@ public enum FilterType {
             INVERTED, new InvertedFilter(),
             NOISE, new NoiseFilter()
     ));
+
 
     /**
      * Static, public, and safely accessible, unmodifiable Map derived from typeFilterEnumMap.

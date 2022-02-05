@@ -8,7 +8,7 @@ public class NoiseFilter implements Filter {
     public int applyFilter(int argb, double noiseStrength) {
         Color color = convertARGBtoColor(argb);
 
-        double noise = Math.random() / noiseStrength;
+        double noise = Math.random() / (noiseStrength / 2);
 
         Color newColor = new Color(Math.min(color.getRed() + noise, 1),
                 Math.min(color.getGreen() + noise, 1),

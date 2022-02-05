@@ -299,7 +299,6 @@ public class FilterOptionsController implements Initializable {
                     initStandardFilter();
                     break;
                 default:
-                    initStandardFilter();
             }
         }
     }
@@ -312,6 +311,7 @@ public class FilterOptionsController implements Initializable {
     private void initCheckerBoard() {
         // Visual
         checkerboardGridPane.setVisible(true);
+        glitchSlider.setValue(0);
 
         // Functional
         inputAttributes.setFactorX(333);
@@ -328,6 +328,7 @@ public class FilterOptionsController implements Initializable {
             filterTypeChoiceBox2.setValue(FilterType.ORIGINAL);
             filterTypeChoiceBox3.setValue(FilterType.ORIGINAL);
             filterTypeChoiceBox4.setValue(FilterType.ORIGINAL);
+
 
             filterTypeChoiceBox1.getItems().addAll(FilterType.TYPE_TO_FILTER_ENUM_MAP.keySet());
             filterTypeChoiceBox2.getItems().addAll(FilterType.TYPE_TO_FILTER_ENUM_MAP.keySet());
@@ -346,7 +347,7 @@ public class FilterOptionsController implements Initializable {
 
         // Functional
         filterTypeList.add(filterType);
-        filterTypeList = maximizeList(filterTypeList);
+        maximizeList(filterTypeList);
         inputAttributes.setFilterTypeList(filterTypeList);
         inputAttributes.setRuns(2);
     }
@@ -356,7 +357,7 @@ public class FilterOptionsController implements Initializable {
 
         // Functional
         filterTypeList.add(filterType);
-        filterTypeList = maximizeList(filterTypeList);
+        maximizeList(filterTypeList);
         inputAttributes.setFilterTypeList(filterTypeList);
         inputAttributes.setRuns(2);
     }
@@ -365,14 +366,11 @@ public class FilterOptionsController implements Initializable {
      * Maximize filter list for panel quarters
      *
      * @param filterTypeList the filter type list
-     * @return the list
      */
-    private List<FilterType> maximizeList(List<FilterType> filterTypeList) {
+    private void maximizeList(List<FilterType> filterTypeList) {
         FilterType filterTypeOne= filterTypeList.get(0);
         filterTypeList.add(filterTypeOne);
         filterTypeList.add(filterTypeOne);
         filterTypeList.add(filterTypeOne);
-
-        return filterTypeList;
     }
 }
