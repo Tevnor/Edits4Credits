@@ -35,4 +35,6 @@ module gui {
     opens org.editor.tools.filtertool.filtercontrol to javafx.fxml;
     exports org.editor.tools.filtertool.filtercontrol.filter;
     opens org.editor.tools.filtertool.filtercontrol.filter to javafx.fxml;
+    exports org.editor.tools.filtertool.filtercontrol.effects;
+    opens org.editor.tools.filtertool.filtercontrol.effects to javafx.fxml;
 }

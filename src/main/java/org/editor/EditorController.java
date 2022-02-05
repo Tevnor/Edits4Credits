@@ -16,7 +16,6 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -35,12 +34,13 @@ import java.net.URL;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
+import org.editor.tools.filtertool.EffectOptionsController;
 import org.editor.tools.filtertool.FilterOptionsController;
 import org.editor.tools.filtertool.NoiseController;
 import org.editor.tools.filtertool.filtercontrol.FilterApplicationType;
+import org.editor.tools.filtertool.filtercontrol.effects.EffectType;
 import org.editor.tools.filtertool.filtercontrol.filter.FilterType;
 import org.editor.tools.imagetool.ImageDimensions;
-import org.editor.tools.imagetool.ImageTool;
 import org.editor.tools.imagetool.PositionOptionsController;
 import org.editor.tools.imagetool.ScaleOptionsController;
 import org.marketplace.gallery.GalleryController;
@@ -51,6 +51,7 @@ import org.screencontrol.Window;
 
 import static org.editor.tools.filtertool.filtercontrol.FilterApplicationType.CHECKERBOARD;
 import static org.editor.tools.filtertool.filtercontrol.FilterApplicationType.STANDARD;
+import static org.editor.tools.filtertool.filtercontrol.effects.EffectType.*;
 import static org.editor.tools.filtertool.filtercontrol.filter.FilterType.*;
 
 public class EditorController implements Initializable, ControlScreen {
@@ -89,8 +90,6 @@ public class EditorController implements Initializable, ControlScreen {
     private Parent noiseOptRoot;
     private NoiseController noiseController;
     private Stage noiseOptStage = new Stage();
-    private ImageTool imageTool;
-
 
     private Parent moveOptRoot;
     private FXMLLoader moveOptLoader;
@@ -113,6 +112,13 @@ public class EditorController implements Initializable, ControlScreen {
     private Parent filterOptRoot;
     private FilterOptionsController filterOptionsController;
     private Stage filterOptStage = new Stage();
+
+    /**
+     * Effect Variables
+     * */
+    private Parent effectOptRoot;
+    private EffectOptionsController effectOptionsController;
+    private Stage effectOptStage = new Stage();
 
 
     @Override
@@ -143,6 +149,7 @@ public class EditorController implements Initializable, ControlScreen {
         initControls();
         initBackground();
         initFilterOptions();
+        initEffectOptions();
         orderStack();
     }
     // method to calculate stack pane size
@@ -255,7 +262,6 @@ public class EditorController implements Initializable, ControlScreen {
         ic.setImportedImgOnCanvas(originalCanvas,originalImageObject, true);
         layoutManager.changeDisableBtn(importButton);
         layoutManager.addToStack(editorCanvasImage,stack);
-        imageTool = ic.getImageTool(editorCanvasImage);
         toggleFileMenuItems(false);
         toggleImageMenuItems(false);
         toggleFilterMenuItems(false);
@@ -268,7 +274,6 @@ public class EditorController implements Initializable, ControlScreen {
         editorCanvasImage = null;
         originalCanvas = null;
         layoutManager.changeDisableBtn(importButton);
-        imageTool = null;
         ic.reset();
         toggleFilterMenuItems(true);
         toggleImageMenuItems(true);
@@ -415,9 +420,10 @@ public class EditorController implements Initializable, ControlScreen {
         filterOptStage.centerOnScreen();
     }
 
+
+
     private void toggleFilterMenuItems(boolean setDisabled) {
         menuBarFilter.getItems().forEach(menuItem -> menuItem.setDisable(setDisabled));
-
     }
 
     public void handleAddNoise(ActionEvent event) {
@@ -443,6 +449,7 @@ public class EditorController implements Initializable, ControlScreen {
         openFilterOptions(STANDARD, GRAYSCALE);
     }
 
+
     private void openFilterOptions(FilterApplicationType appType,  FilterType filterType) {
         try {
             filterOptionsController.initFilterOptions(
@@ -450,7 +457,8 @@ public class EditorController implements Initializable, ControlScreen {
                     editorImageObject.getFilteredImage(),
                     appType,
                     filterType,
-                    this);
+                    this
+            );
             filterOptStage.show();
         } catch (NullPointerException e) {
             e.printStackTrace();
@@ -458,26 +466,72 @@ public class EditorController implements Initializable, ControlScreen {
             // Maybe add finally to prompt users to import image
         }
     }
+    /**
+     * Effect
+     * */
+    private void initEffectOptions() {
+        try {
+            FXMLLoader effectOptLoader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/fxml/effectOptions.fxml")));
+            effectOptRoot = effectOptLoader.load();
+            effectOptionsController = effectOptLoader.getController();
+        } catch (Exception e ) {
+            e.printStackTrace();
+        }
+        effectOptStage = new Stage();
+        Scene effectOptScene = new Scene(effectOptRoot);
+        effectOptScene.setFill(Color.TRANSPARENT);
+        effectOptStage.setScene(effectOptScene);
+        effectOptStage.centerOnScreen();
+    }
 
-    public void setFilteredImages(Image originalImage, Image editorImage) {
-        originalImageObject.setFilteredImage(originalImage);
-        editorImageObject.setFilteredImage(editorImage);
-        editorImageObject.setPreviousImage(editorImage);
+    public void handleAddBlur(ActionEvent event) {
+        openEffectOptions(BLUR);
     }
-    public void drawFilteredImage(){
-        gc = editorCanvasImage.getGraphicsContext2D();
-        gc.drawImage(editorImageObject.getFilteredImage(), editorImageObject.getCurrentXPosition(), editorImageObject.getCurrentYPosition(), editorImageObject.getCurrentWidth(), editorImageObject.getCurrentHeight());
-        //initImageTool(filteredImage);
+    public void handleAddSepia(ActionEvent event) {
+        openEffectOptions(SEPIA);
     }
+    public void handleAddDisplacement(ActionEvent event) {
+        openEffectOptions(DISPLACE);
+    }
+
+    public void handleAdjustBrightness(ActionEvent event) {
+        openEffectOptions(BRIGHTNESS);
+    }
+    public void handleAdjustContrast(ActionEvent event) {
+        openEffectOptions(CONTRAST);
+    }
+    public void handleAdjustSaturation(ActionEvent event) {
+        openEffectOptions(SATURATION);
+    }
+
+    private void openEffectOptions(EffectType effectType) {
+        try {
+            effectOptionsController.initEffectOptions(
+                    originalImageObject.getFilteredImage(),
+                    editorImageObject.getFilteredImage(),
+                    effectType,
+                    this
+            );
+            effectOptStage.show();
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            EC_LOGGER.debug("Images not loaded");
+        }
+    }
+
 
     /**
      * Drawing to Canvas
      * */
     //TODO duplicate code
+    public void drawFilteredImage(){
+        gc = editorCanvasImage.getGraphicsContext2D();
+        gc.drawImage(editorImageObject.getFilteredImage(), editorImageObject.getCurrentXPosition(), editorImageObject.getCurrentYPosition(), editorImageObject.getCurrentWidth(), editorImageObject.getCurrentHeight());
 
+    }
     // overwrite both canvases
     public void drawFilteredImages(){
-        // Draw resized
+        // Draw editor image
         gc = editorCanvasImage.getGraphicsContext2D();
         gc.drawImage(
                 editorImageObject.getFilteredImage(),
@@ -486,7 +540,7 @@ public class EditorController implements Initializable, ControlScreen {
                 editorImageObject.getCurrentWidth(),
                 editorImageObject.getCurrentHeight());
 
-        //Draw original
+        // Draw original image
         GraphicsContext orig = originalCanvas.getGraphicsContext2D();
         orig.drawImage(
                 originalImageObject.getFilteredImage(),
@@ -564,6 +618,12 @@ public class EditorController implements Initializable, ControlScreen {
         GraphicsContext gc = editorCanvasImage.getGraphicsContext2D();
         gc.clearRect(0, 0, editorCanvasImage.getWidth(), editorCanvasImage.getHeight());
         gc.drawImage(editorImageObject.getFilteredImage(), editorImageObject.getCurrentXPosition(), editorImageObject.getCurrentYPosition(), scaledWidth, scaledHeight);
+    }
+
+    public void setFilteredImages(Image originalImage, Image editorImage) {
+        originalImageObject.setFilteredImage(originalImage);
+        editorImageObject.setFilteredImage(editorImage);
+        editorImageObject.setPreviousImage(editorImage);
     }
 
     /**

@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
+<?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Slider?>
@@ -16,184 +19,275 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<GridPane fx:id="filterGridPane" gridLinesVisible="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.editor.tools.filtertool.FilterOptionsController">
+<GridPane id="outerGrid" styleClass="gray" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.editor.tools.filtertool.FilterOptionsController">
     <columnConstraints>
-        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
     </columnConstraints>
     <rowConstraints>
-        <RowConstraints minHeight="10.0" percentHeight="20.0" prefHeight="30.0" vgrow="SOMETIMES" />
-        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-        <RowConstraints minHeight="5.0" percentHeight="20.0" prefHeight="10.0" vgrow="SOMETIMES" />
+        <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+        <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
     </rowConstraints>
-    <children>
-      <Label fx:id="filterOptionsLabel" alignment="CENTER" contentDisplay="CENTER" text="Glitch Filter" textAlignment="CENTER" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
-         <font>
-            <Font name="Segoe UI Semibold" size="18.0" />
-         </font>
-      </Label>
-      <GridPane fx:id="glitchGridPane" gridLinesVisible="true" visible="false" GridPane.rowIndex="1">
+    <stylesheets>
+        <URL value="@../styles/drawOptionsStyle.css" />
+        <URL value="@../styles/filterOptionsStyle.css" />
+    </stylesheets>
+    <ButtonBar fx:id="filterButtonBar" prefHeight="40.0" prefWidth="200.0">
+        <buttons>
+          <Button fx:id="closeFilterButton" alignment="CENTER_RIGHT" contentDisplay="RIGHT" mnemonicParsing="false" onAction="#handleCancelFilter" style="-fx-background-color: transparent;" text="Close" textAlignment="CENTER" textFill="#e8e8e8">
+              <font>
+                  <Font name="System Bold" size="16.0" />
+              </font>
+              <cursor>
+                  <Cursor fx:constant="HAND" />
+              </cursor>
+              <padding>
+                  <Insets right="15.0" />
+              </padding>
+          </Button>
+        </buttons>
+    </ButtonBar>
+    <GridPane fx:id="filterGridPane" gridLinesVisible="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="200.0" styleClass="tabGrid" GridPane.rowIndex="1">
         <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
         </columnConstraints>
         <rowConstraints>
-          <RowConstraints minHeight="10.0" percentHeight="50.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" percentHeight="50.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" percentHeight="20.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="5.0" percentHeight="20.0" prefHeight="10.0" vgrow="SOMETIMES" />
         </rowConstraints>
-         <children>
-            <Pane fx:id="coordinatePane" onMouseReleased="#handleCoordinates" style="-fx-background-color: lightgrey;">
-               <opaqueInsets>
-                  <Insets />
-               </opaqueInsets>
-               <cursor>
-                  <Cursor fx:constant="CROSSHAIR" />
-               </cursor>
-               <GridPane.margin>
-                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-               </GridPane.margin>
+        <Label fx:id="filterOptionsLabel" alignment="CENTER" contentDisplay="CENTER" text="Glitch Filter" textAlignment="CENTER" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+            <font>
+                <Font name="Segoe UI Semibold" size="20.0" />
+            </font>
+        </Label>
+        <GridPane fx:id="glitchGridPane" gridLinesVisible="true" GridPane.rowIndex="1">
+            <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints minHeight="10.0" percentHeight="50.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" percentHeight="50.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            </rowConstraints>
+            <Pane fx:id="coordinatePane" onMouseReleased="#handleCoordinates" style="-fx-background-color: lightgrey;" styleClass="glitchXYPane" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                <opaqueInsets>
+                    <Insets />
+                </opaqueInsets>
+                <cursor>
+                    <Cursor fx:constant="CROSSHAIR" />
+                </cursor>
+                <GridPane.margin>
+                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                </GridPane.margin>
             </Pane>
-              <VBox fx:id="silhouetteVBox" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
-                  <children>
-                      <ToggleButton fx:id="silhouetteToggleButton" mnemonicParsing="false" onAction="#handleSilhouette" text="Silhouette">
-                          <VBox.margin>
-                              <Insets bottom="10.0" left="10.0" right="10.0" />
-                          </VBox.margin>
-                          <padding>
-                              <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
-                          </padding>
-                          <font>
-                              <Font name="Segoe UI Semilight" size="12.0" />
-                          </font>
-                      </ToggleButton>
-                      <ToggleButton fx:id="complementToggleButton" mnemonicParsing="false" onAction="#handleComplement" text="Complement">
-                          <padding>
-                              <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
-                          </padding>
-                          <font>
-                              <Font name="Segoe UI Semilight" size="12.0" />
-                          </font>
-                     <VBox.margin>
+            <VBox fx:id="silhouetteVBox" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                <ToggleButton id="silhouetteToggleButton" fx:id="silhouetteToggleButton" mnemonicParsing="false" onAction="#handleSilhouette" text="Silhouette" textFill="#e8e8e8">
+                    <VBox.margin>
+                        <Insets bottom="10.0" left="10.0" right="10.0" />
+                    </VBox.margin>
+                    <padding>
+                        <Insets bottom="5.0" left="15.0" right="15.0" top="5.0" />
+                    </padding>
+                    <font>
+                        <Font name="Segoe UI" size="14.0" />
+                    </font>
+                    <styleClass>
+                        <String fx:value="round" />
+                        <String fx:value="darkGray" />
+                  <String fx:value="glitchToggleButton" />
+                    </styleClass>
+                    <cursor>
+                        <Cursor fx:constant="HAND" />
+                    </cursor>
+                </ToggleButton>
+                <ToggleButton fx:id="complementToggleButton" mnemonicParsing="false" onAction="#handleComplement" text="Complement" textFill="#e8e8e8">
+                    <padding>
+                        <Insets bottom="5.0" left="15.0" right="15.0" top="5.0" />
+                    </padding>
+                    <font>
+                        <Font name="Segoe UI" size="14.0" />
+                    </font>
+                    <VBox.margin>
                         <Insets />
-                     </VBox.margin>
-                      </ToggleButton>
-                  </children>
-              </VBox>
-         </children>
-      </GridPane>
-      <GridPane fx:id="checkerboardGridPane" gridLinesVisible="true" GridPane.rowIndex="1">
-        <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-        </columnConstraints>
-        <rowConstraints>
-          <RowConstraints minHeight="10.0" percentHeight="70.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints />
-        </rowConstraints>
-         <children>
+                    </VBox.margin>
+                    <styleClass>
+                        <String fx:value="round" />
+                        <String fx:value="darkGray" />
+                  <String fx:value="glitchToggleButton" />
+                    </styleClass>
+                    <cursor>
+                        <Cursor fx:constant="HAND" />
+                    </cursor>
+                </ToggleButton>
+            </VBox>
+        </GridPane>
+        <GridPane fx:id="checkerboardGridPane" gridLinesVisible="true" visible="false" GridPane.rowIndex="1">
+            <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints minHeight="10.0" percentHeight="70.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints />
+            </rowConstraints>
             <VBox fx:id="filterPickVBox" alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
-               <children>
-                  <ChoiceBox fx:id="filterTypeChoiceBox1" prefWidth="150.0">
-                     <VBox.margin>
+                <ChoiceBox id="filterTypeChoiceBox1" fx:id="filterTypeChoiceBox1" prefWidth="150.0">
+                    <VBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                     </VBox.margin>
-                  </ChoiceBox>
-                  <ChoiceBox fx:id="filterTypeChoiceBox2" layoutX="35.0" layoutY="152.0" prefWidth="150.0">
-                     <VBox.margin>
+                    </VBox.margin>
+                    <styleClass>
+                        <String fx:value="round" />
+                        <String fx:value="filterTypeChoiceBox" />
+                    </styleClass>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+                </ChoiceBox>
+                <ChoiceBox id="filterTypeChoiceBox2" fx:id="filterTypeChoiceBox2" layoutX="35.0" layoutY="152.0" prefWidth="150.0">
+                    <VBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                     </VBox.margin>
-                  </ChoiceBox>
-                  <ChoiceBox fx:id="filterTypeChoiceBox3" layoutX="35.0" layoutY="175.0" prefWidth="150.0">
-                     <VBox.margin>
+                    </VBox.margin>
+                    <styleClass>
+                        <String fx:value="round" />
+                        <String fx:value="filterTypeChoiceBox" />
+                    </styleClass>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+                </ChoiceBox>
+                <ChoiceBox id="filterTypeChoiceBox3" fx:id="filterTypeChoiceBox3" layoutX="35.0" layoutY="175.0" prefWidth="150.0">
+                    <VBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                     </VBox.margin>
-                  </ChoiceBox>
-                  <ChoiceBox fx:id="filterTypeChoiceBox4" layoutX="35.0" layoutY="200.0" prefWidth="150.0">
-                     <VBox.margin>
+                    </VBox.margin>
+                    <styleClass>
+                        <String fx:value="round" />
+                        <String fx:value="filterTypeChoiceBox" />
+                    </styleClass>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+                </ChoiceBox>
+                <ChoiceBox id="filterTypeChoiceBox2" fx:id="filterTypeChoiceBox4" layoutX="35.0" layoutY="200.0" prefWidth="150.0">
+                    <VBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                     </VBox.margin>
-                  </ChoiceBox>
-               </children>
+                    </VBox.margin>
+                    <styleClass>
+                        <String fx:value="round" />
+                        <String fx:value="filterTypeChoiceBox" />
+                    </styleClass>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+                </ChoiceBox>
             </VBox>
             <VBox fx:id="panelVBox" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="1">
-               <children>
-                  <Label text="Panel Amount">
-                     <font>
+                <Label text="Panel Amount">
+                    <font>
                         <Font name="Segoe UI" size="14.0" />
-                     </font>
-                     <VBox.margin>
+                    </font>
+                    <VBox.margin>
                         <Insets top="10.0" />
-                     </VBox.margin>
-                  </Label>
-                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
-                     <children>
-                        <Button fx:id="panelIncreaseButton" mnemonicParsing="false" onAction="#handlePanelIncrease" text="+">
-                           <HBox.margin>
-                              <Insets right="15.0" />
-                           </HBox.margin>
-                           <padding>
-                              <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
-                           </padding>
-                        </Button>
-                        <Button fx:id="panelDecreaseButton" mnemonicParsing="false" onAction="#handlePanelDecrease" text="-">
-                           <HBox.margin>
-                              <Insets left="15.0" />
-                           </HBox.margin>
-                           <padding>
-                              <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
-                           </padding>
-                        </Button>
-                     </children>
-                  </HBox>
-               </children>
-            </VBox>
-         </children>
-      </GridPane>
-      <GridPane fx:id="intensityGridPane" visible="false" GridPane.rowIndex="1">
-        <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-        </columnConstraints>
-        <rowConstraints>
-          <RowConstraints minHeight="10.0" percentHeight="50.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" percentHeight="50.0" prefHeight="30.0" vgrow="SOMETIMES" />
-        </rowConstraints>
-         <children>
-            <VBox fx:id="factorVBox" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="1">
-               <children>
-                    <Slider fx:id="glitchSlider" blockIncrement="33.0" majorTickUnit="111.0" max="1000.0" minorTickCount="33" onDragDetected="#changeSliderValue" showTickMarks="true">
-                     <padding>
-                        <Insets left="10.0" right="10.0" />
-                     </padding>
-                  </Slider>
-                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Intensity" textAlignment="CENTER">
+                    </VBox.margin>
+                </Label>
+                <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                    <Button fx:id="panelIncreaseButton" mnemonicParsing="false" onAction="#handlePanelIncrease" text="+" textFill="#e8e8e8">
+                        <HBox.margin>
+                            <Insets right="10.0" />
+                        </HBox.margin>
+                        <padding>
+                            <Insets bottom="5.0" left="15.0" right="15.0" top="5.0" />
+                        </padding>
+                        <styleClass>
+                            <String fx:value="round" />
+                            <String fx:value="darkGray" />
+                        </styleClass>
                         <font>
-                            <Font name="Segoe UI Semilight" size="16.0" />
+                            <Font size="14.0" />
                         </font>
-                    </Text>
-               </children>
+                  <cursor>
+                     <Cursor fx:constant="HAND" />
+                  </cursor>
+                    </Button>
+                    <Button fx:id="panelDecreaseButton" mnemonicParsing="false" onAction="#handlePanelDecrease" text="-" textFill="#e8e8e8">
+                        <HBox.margin>
+                            <Insets left="10.0" />
+                        </HBox.margin>
+                        <padding>
+                            <Insets bottom="5.0" left="15.0" right="15.0" top="5.0" />
+                        </padding>
+                        <styleClass>
+                            <String fx:value="round" />
+                            <String fx:value="darkGray" />
+                        </styleClass>
+                        <font>
+                            <Font size="14.0" />
+                        </font>
+                  <cursor>
+                     <Cursor fx:constant="HAND" />
+                  </cursor>
+                    </Button>
+                </HBox>
             </VBox>
-         </children>
-      </GridPane>
+        </GridPane>
+        <GridPane fx:id="intensityGridPane" visible="false" GridPane.rowIndex="1">
+            <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints minHeight="10.0" percentHeight="50.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" percentHeight="50.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            </rowConstraints>
+            <VBox fx:id="factorVBox" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="1">
+                <Slider fx:id="glitchSlider" blockIncrement="33.0" majorTickUnit="111.0" max="1000.0" minorTickCount="33" onDragDetected="#changeSliderValue" showTickMarks="true">
+                    <padding>
+                        <Insets left="10.0" right="10.0" />
+                    </padding>
+                    <cursor>
+                        <Cursor fx:constant="OPEN_HAND" />
+                    </cursor>
+                </Slider>
+                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Intensity" textAlignment="CENTER">
+                    <font>
+                        <Font name="Segoe UI" size="14.0" />
+                    </font>
+                </Text>
+            </VBox>
+        </GridPane>
         <HBox alignment="CENTER" GridPane.columnSpan="2147483647" GridPane.rowIndex="2">
-            <Button fx:id="applyFilterButton" alignment="CENTER" mnemonicParsing="false" onAction="#handleApplyFilter" text="Apply">
+            <Button fx:id="applyFilterButton" alignment="CENTER" mnemonicParsing="false" onAction="#handleApplyFilter" text="Apply" textFill="#e8e8e8">
                 <padding>
-                    <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
+                    <Insets bottom="5.0" left="15.0" right="15.0" top="5.0" />
                 </padding>
                 <HBox.margin>
-                    <Insets right="15.0" />
+                    <Insets right="10.0" />
                 </HBox.margin>
                 <font>
-                    <Font name="Segoe UI Semilight" size="12.0" />
+                    <Font name="Segoe UI" size="14.0" />
                 </font>
+                <styleClass>
+                    <String fx:value="darkGray" />
+                    <String fx:value="round" />
+                </styleClass>
+                <cursor>
+                    <Cursor fx:constant="HAND" />
+                </cursor>
             </Button>
-            <Button fx:id="cancelFilterButton" alignment="CENTER_RIGHT" mnemonicParsing="false" onAction="#handleCancelFilter" text="Cancel">
+            <Button fx:id="cancelFilterButton" alignment="CENTER_RIGHT" mnemonicParsing="false" onAction="#handleCancelFilter" text="Cancel" textFill="#e5e5e580">
                 <padding>
-                    <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
+                    <Insets bottom="5.0" left="15.0" right="15.0" top="5.0" />
                 </padding>
                 <HBox.margin>
-                    <Insets left="15.0" />
+                    <Insets left="10.0" />
                 </HBox.margin>
                 <font>
-                    <Font name="Segoe UI Semilight" size="12.0" />
+                    <Font name="Segoe UI" size="14.0" />
                 </font>
+                <styleClass>
+                    <String fx:value="round" />
+                    <String fx:value="darkGray" />
+                </styleClass>
+                <cursor>
+                    <Cursor fx:constant="HAND" />
+                </cursor>
             </Button>
         </HBox>
-    </children>
+    </GridPane>
 </GridPane>

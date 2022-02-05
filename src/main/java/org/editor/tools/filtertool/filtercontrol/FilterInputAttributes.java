@@ -16,19 +16,10 @@ public class FilterInputAttributes {
     private boolean silhouetteToggle = false;
     private List<FilterType> filterTypeList;
     private int runs = 2;
-    private FilterApplicationType appType = FilterApplicationType.STANDARD;
 
     /**
      * Getters and setters
      * */
-
-    public FilterApplicationType getAppType() {
-        return appType;
-    }
-
-    public void setAppType(FilterApplicationType appType) {
-        this.appType = appType;
-    }
 
     public double getFactor() {
         return factor;

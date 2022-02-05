@@ -19,7 +19,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.editor.project.Project;
 import org.editor.tools.imagetool.ImageDimensions;
-import org.editor.tools.imagetool.ImageTool;
 import org.apache.commons.io.FilenameUtils;
 import org.marketplace.gallery.GalleryController;
 
@@ -212,15 +211,6 @@ public class ImportControl {
             fitToEditor = resizedImage;
             IC_LOGGER.debug("Set fitToEditor to: " + resizedImage);
         }
-    }
-    protected ImageTool getImageTool(Canvas editorCanvas){
-        if(fitToEditor != null){
-            ImageTool imgTool = new ImageTool(fitToEditor, editorCanvas, editorCanvas.getGraphicsContext2D());
-            imgTool.createPixelArray();
-            return imgTool;
-        }
-        IC_LOGGER.error("Could not create ImageTool because this.fitToEditorImg is null");
-        return null;
     }
 
     /*  pixel manipulation  */

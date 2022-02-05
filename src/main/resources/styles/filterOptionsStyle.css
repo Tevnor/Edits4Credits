@@ -1,0 +1,24 @@
+.filterTypeChoiceBox {
+    -fx-background-color: #4e4e4e;
+}
+.filterTypeChoiceBox .label {
+    -fx-text-fill: #bebebe;
+}
+
+.filterTypeChoiceBox .context-menu {
+    -fx-background-color: #3e3e3e;
+    -fx-border-radius : 20 20 20 20;
+    -fx-background-radius: 20 20 20 20;
+}
+
+.context-menu .label {
+    -fx-text-fill: #aeaeae;
+}
+
+.glitchToggleButton:selected {
+    -fx-background-color: #4e4e4e;
+    -fx-background-insets: #333333;
+}
+.glitchXYPane:hover {
+    -fx-background-color: #cecece;
+}

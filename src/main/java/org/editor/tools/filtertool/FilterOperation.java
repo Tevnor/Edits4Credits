@@ -45,7 +45,6 @@ public class FilterOperation {
         this.pixelArray = imageGrid.getPixelArray();
         this.pixelArrayNew = new int[pixelArray.length];
         this.filterTypeList = inputAttributes.getFilterTypeList();
-        double factor = inputAttributes.getFactor();
         this.factorX = inputAttributes.getFactorX();
         this.factorY = inputAttributes.getFactorY();
         this.isComplement = inputAttributes.isComplementToggle();
@@ -116,7 +115,11 @@ public class FilterOperation {
 
         @Override
         public void run() {
-            startBlock();
+            try {
+                startBlock();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             blockFinish.countDown();
         }
 

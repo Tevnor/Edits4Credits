@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ColorPicker?>
 <?import javafx.scene.control.Label?>
@@ -76,6 +77,9 @@
                      </color>
                   </DropShadow>
                </effect>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
             </Button>
             <Text fill="#eeeeee" layoutX="115.0" layoutY="250.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Width">
                <font>
@@ -127,6 +131,9 @@
                      </color>
                   </DropShadow>
                </effect>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
             </Button>
             <Button fx:id="openGallery" layoutX="50.0" layoutY="550.0" mnemonicParsing="false" onAction="#handleOpenGallery" opacity="0.7" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #282828; -fx-background-radius: 15px;" text="Gallery" textFill="#eeeeee">
                <font>
@@ -139,14 +146,23 @@
                      </color>
                   </DropShadow>
                </effect>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
             </Button>
-            <ColorPicker fx:id="cpBackgroundColor" disable="true" layoutX="347.0" layoutY="400.0" opacity="0.7" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #282828; -fx-background-radius: 15;" stylesheets="@../styles/settingsStyle.css" />
+            <ColorPicker fx:id="cpBackgroundColor" disable="true" layoutX="347.0" layoutY="400.0" opacity="0.7" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #282828; -fx-background-radius: 15;" stylesheets="@../styles/settingsStyle.css">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor></ColorPicker>
             <Label alignment="CENTER" layoutX="50.0" layoutY="400.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" opacity="0.7" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #282828; -fx-text-fill: #eeeeee; -fx-background-radius: 15px;" text="Transparent">
                <font>
                   <Font name="Segoe UI Semibold" size="18.0" />
                </font>
                <graphic>
-                  <RadioButton fx:id="radioBackground" mnemonicParsing="false" onAction="#handleTransparent" scaleX="0.6" scaleY="0.6" selected="true" />
+                  <RadioButton fx:id="radioBackground" mnemonicParsing="false" onAction="#handleTransparent" scaleX="0.6" scaleY="0.6" selected="true">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor></RadioButton>
                </graphic>
                <opaqueInsets>
                   <Insets />

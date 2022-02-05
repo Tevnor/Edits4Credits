@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ContextMenu?>
 <?import javafx.scene.control.Menu?>
@@ -147,38 +148,41 @@
                   </Button>
               </items>
             </ToolBar>
-            <MenuBar fx:id="menuBar" maxHeight="29.0" maxWidth="270.0" minHeight="29.0" minWidth="270.0" prefHeight="29.0" prefWidth="270.0">
+            <MenuBar fx:id="menuBar" maxHeight="29.0" minHeight="29.0" minWidth="270.0" prefHeight="29.0" prefWidth="330.0">
               <menus>
                   <Menu fx:id="menuBarFile" mnemonicParsing="false" text="File">
-                      <MenuItem fx:id="openFile" mnemonicParsing="false" onAction="#importImageFromExplorer"
-                                text="Open File"/>
+                      <MenuItem fx:id="openFile" mnemonicParsing="false" onAction="#importImageFromExplorer" text="Open File" />
                       <Menu mnemonicParsing="false" text="Save">
-                          <MenuItem fx:id="saveGallery" mnemonicParsing="false" onAction="#handleSaveGallery"
-                                    text="to Gallery"/>
-                          <MenuItem fx:id="saveExtern" mnemonicParsing="false" onAction="#handleSaveExtern"
-                                    text="to Extern"/>
+                          <MenuItem fx:id="saveGallery" mnemonicParsing="false" onAction="#handleSaveGallery" text="to Gallery" />
+                          <MenuItem fx:id="saveExtern" mnemonicParsing="false" onAction="#handleSaveExtern" text="to Extern" />
                       </Menu>
-                      <MenuItem fx:id="deleteFile" mnemonicParsing="false" onAction="#handleDeleteFile"
-                                text="Delete File"/>
+                      <MenuItem fx:id="deleteFile" mnemonicParsing="false" onAction="#handleDeleteFile" text="Delete File" />
                   </Menu>
                   <Menu fx:id="menubarImage" mnemonicParsing="false" text="Image">
-                      <MenuItem fx:id="moveImage" mnemonicParsing="false" onAction="#handleMoveImage"
-                                text="Move Image"/>
-                      <MenuItem fx:id="scaleImage" mnemonicParsing="false" onAction="#handleScaleImage"
-                                text="Scale Image"/>
-                      <MenuItem fx:id="resetImage" mnemonicParsing="false" onAction="#handleResetImage"
-                                text="Reset Image"/>
+                      <MenuItem fx:id="moveImage" mnemonicParsing="false" onAction="#handleMoveImage" text="Move Image" />
+                      <MenuItem fx:id="scaleImage" mnemonicParsing="false" onAction="#handleScaleImage" text="Scale Image" />
+                      <MenuItem fx:id="resetImage" mnemonicParsing="false" onAction="#handleResetImage" text="Reset Image" />
+                     <Menu mnemonicParsing="false" text="Adjustments">
+                       <items>
+                         <MenuItem fx:id="brightnessAdjustmentItem" mnemonicParsing="false" onAction="#handleAdjustBrightness" text="Brightness" />
+                           <MenuItem fx:id="contrastAdjustmentItem" mnemonicParsing="false" onAction="#handleAdjustContrast" text="Contrast" />
+                           <MenuItem fx:id="saturationAdjustmentItem" mnemonicParsing="false" onAction="#handleAdjustSaturation" text="Saturation" />
+                       </items>
+                     </Menu>
                   </Menu>
                   <Menu fx:id="menuBarFilter" mnemonicParsing="false" text="Filter">
-                      <MenuItem fx:id="addNoise" mnemonicParsing="false" onAction="#handleAddNoise" text="Add Noise"/>
-                      <MenuItem fx:id="addGlitch" mnemonicParsing="false" onAction="#handleAddGlitch"
-                                text="Add Glitch"/>
-                      <MenuItem fx:id="addInverse" mnemonicParsing="false" onAction="#handleAddInverse" text="Inverse"/>
-                      <MenuItem fx:id="addGrayscale" mnemonicParsing="false" onAction="#handleAddGrayscale"
-                                text="Add Grayscale"/>
-                      <MenuItem fx:id="checkerboardFilterItem" mnemonicParsing="false"
-                                onAction="#handleApplyCheckerboard" text="Apply Checkerboard"/>
-                      <MenuItem mnemonicParsing="false" text="Filter 4"/>
+                      <MenuItem fx:id="addNoise" mnemonicParsing="false" onAction="#handleAddNoise" text="Add Noise" />
+                      <MenuItem fx:id="addGlitch" mnemonicParsing="false" onAction="#handleAddGlitch" text="Glitch" />
+                      <MenuItem fx:id="addGrayscale" mnemonicParsing="false" onAction="#handleAddGrayscale" text="Grayscale" />
+                      <MenuItem fx:id="addInverse" mnemonicParsing="false" onAction="#handleAddInverse" text="Inverse" />
+                     <MenuItem fx:id="sepiaEffectItem" mnemonicParsing="false" onAction="#handleAddSepia" text="Sepia" />
+                  </Menu>
+                  <Menu fx:id="menuBarFilter1" mnemonicParsing="false" text="Effects">
+                     <items>
+                        <MenuItem fx:id="blurEffectItem" mnemonicParsing="false" onAction="#handleAddBlur" text="Blur" />
+                         <MenuItem fx:id="checkerboardFilterItem" mnemonicParsing="false" onAction="#handleApplyCheckerboard" text="Checkerboard" />
+                        <MenuItem fx:id="displacementEffectItem" mnemonicParsing="false" onAction="#handleAddDisplacement" text="Displace" />
+                     </items>
                   </Menu>
                   <Menu mnemonicParsing="false" text="Gallery">
                     <items>
@@ -191,10 +195,16 @@
                   </items>
                 </Menu>
               </menus>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
             </MenuBar>
             <StackPane fx:id="stack" alignment="TOP_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity">
                <children>
-                  <Button fx:id="importButton" mnemonicParsing="false" onAction="#importImageFromExplorer" text="Import Image" textAlignment="CENTER" StackPane.alignment="CENTER" />
+                  <Button fx:id="importButton" mnemonicParsing="false" onAction="#importImageFromExplorer" text="Import Image" textAlignment="CENTER" StackPane.alignment="CENTER">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor></Button>
                </children>
             </StackPane>
          </children>
