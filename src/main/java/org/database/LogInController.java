@@ -26,6 +26,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import org.launcher.ModeSelectionController;
+import org.marketplace.gallery.GalleryController;
 import org.screencontrol.ControlScreen;
 import org.screencontrol.ScreenName;
 import org.screencontrol.ScreensController;
@@ -159,6 +160,7 @@ public class LogInController implements Initializable, ControlScreen {
         loader = screensController.getLoader();
         screensController.loadScreen(ScreenName.PROJECT_SETTINGS);
         screensController.loadScreen(ScreenName.GALLERY);
+        ((GalleryController)screensController.getController(ScreenName.GALLERY)).init();
         screensController.loadScreen(ScreenName.EDITOR);
         screensController.setScreen(ScreenName.MODE_SELECTION);
     }

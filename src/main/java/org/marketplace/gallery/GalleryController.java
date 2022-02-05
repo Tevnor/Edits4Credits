@@ -1,15 +1,11 @@
 package org.marketplace.gallery;
 
 import javafx.embed.swing.SwingFXUtils;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -36,9 +32,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class GalleryController implements Initializable, ControlScreen {
     public static final Logger GC_LOGGER = LogManager.getLogger(GalleryController.class);
@@ -61,11 +55,9 @@ public class GalleryController implements Initializable, ControlScreen {
     private ScreensController screensController;
     private Window window;
 
-    private final List<Image> imgs = new ArrayList<>();
-    private final List<File> e4cFiles = new ArrayList<>();
-    private final List<Image> tmp = new ArrayList<>();
+    private final Map<Image,File> imgTree = new HashMap<>();
     private int page = 0;
-    private boolean atEnd = false, fromEditor = false, isTmp = false;
+    private boolean atEnd = false, fromEditor = false, delete = false;
     private Popup zoom = new Popup();
     private Image selImg = null;
 
@@ -73,73 +65,63 @@ public class GalleryController implements Initializable, ControlScreen {
     private void handleForwards(){
         if(!atEnd){
             page++;
-            populateDisplays(isTmp);
+            populateDisplays();
         }
     }
     @FXML
     private void handleBackwards(){
         if(page > 0){
             page--;
-            populateDisplays(isTmp);
+            populateDisplays();
             atEnd = false;
         }
     }
     @FXML
+    private void handleFirst(){
+        page = 0;
+        populateDisplays();
+    }
+    @FXML
+    private void handleLast(){
+        page = (imgTree.size() - 1) / 9;
+        populateDisplays();
+    }
+    @FXML
     private void handleLoadDir(){
         GC_LOGGER.debug("entered load directory");
-        isTmp = true;
         DirectoryChooser directoryChooser = new DirectoryChooser();
         directoryChooser.setTitle("Choose Directory");
         File directory = directoryChooser.showDialog(null);
 
         if(directory != null){
-            page = 0;
-            tmp.clear();
-            loadImagesDir(directory,true, true);
-            populateDisplays(isTmp);
+            page = (imgTree.size() - 1) / 9;
+            loadImagesDir(directory,true, false);
+            populateDisplays();
             GC_LOGGER.debug("succesfully loaded new imgs");
         }
 
     }
     @FXML
     private void handleLoadOther(){
-        GC_LOGGER.debug("entered load multiple");
-        isTmp = true;
+        GC_LOGGER.debug("entered import multiple");
         List<File> files = getFileChooser().showOpenMultipleDialog(null);
-
-        if(files != null && files.size() > 0){
-            page = 0;
-            tmp.clear();
-            loadImages(files.toArray(new File[files.size()]),true, true);
-            populateDisplays(isTmp);
-            GC_LOGGER.debug("succesfully loaded new imgs");
-        }
-    }
-    @FXML
-    private void handleImport() {
-        GC_LOGGER.debug("entered import");
-        isTmp = false;
-        page = (imgs.size() - 1) / 9;
-        List<File> files = getFileChooser().showOpenMultipleDialog(null);
-
         files.forEach(file -> {
             try {
                 Path copy = findFileName(galleryPath, FilenameUtils.removeExtension(file.getName()),
                         FilenameUtils.getExtension(file.getName()));
                 Files.copy(file.toPath(), copy, StandardCopyOption.REPLACE_EXISTING);
-                e4cFiles.add(copy.toFile());
                 loadImage(copy.toFile(), false);
             } catch (IOException exception) {
                 GC_LOGGER.warn("File could not be imported");
             }
         });
-        populateDisplays(isTmp);
+        populateDisplays();
     }
     @FXML
     private void handlePopup(MouseEvent e){
         Image img = ((ImageView) e.getSource()).getImage();
         if(img != null){
-            initPopup(img);
+            getPopup(delete, img);
         }
     }
     @FXML
@@ -154,15 +136,29 @@ public class GalleryController implements Initializable, ControlScreen {
     private void handleToEditor(){
         screensController.setScreen(ScreenName.EDITOR);
     }
+    @FXML
+    private void handleUse(){
+        this.delete = false;
+    }
+    @FXML
+    private void handleDelete(){
+        this.delete = true;
+    }
 
     /* helper */
-    public boolean loadImagesDir(File dir, boolean descend, boolean temp){
-        if(dir.exists() && dir.isDirectory()){
-            return loadImages(dir.listFiles(), descend, temp);
-        }else{
-            GC_LOGGER.debug("'" + dir.getName() + "' does not exist or is not a directory" );
+    public boolean loadImagesDir(File dir, boolean descend, boolean init){
+        try {
+            if(dir.exists() && dir.isDirectory() && dir.listFiles().length > 0){
+                return loadImages(dir.listFiles(), descend, init);
+            }else{
+                GC_LOGGER.debug("'" + dir.getName() + "' does not exist or is not a directory" );
+                return false;
+            }
+        }catch (SecurityException e){
+            GC_LOGGER.debug("You have no access to dir: '" + dir.getPath() + "'" );
             return false;
         }
+
     }
     /**
      * Loads all images from files
@@ -170,15 +166,19 @@ public class GalleryController implements Initializable, ControlScreen {
      * @param descend boolean if subdirectories should be loaded
      * @return true if all images are loaded successfully or files is empty - false otherwise
      */
-    private boolean loadImages(File[] files, boolean descend, boolean temp){
+    private boolean loadImages(File[] files, boolean descend, boolean init){
         if(files != null && files.length > 0){
             boolean importOk = true;
             for(File file : files){
                 if(file != null){
                     if(descend && file.isDirectory()){
-                        loadImages(file.listFiles(),true, temp);
+                        try{
+                            loadImages(file.listFiles(),true, init);
+                        }catch (SecurityException e){
+                            GC_LOGGER.warn("You have no access to sub-dir: '" + file.getPath() + "'");
+                        }
                     }else{
-                        importOk = loadImage(file, temp);
+                        importOk = loadImage(file, init);
                     }
                 }
             }
@@ -191,28 +191,42 @@ public class GalleryController implements Initializable, ControlScreen {
     /**
      * Loads an image from file
      * @param file File instance of to be loaded image
-     * @return false if import is corrupted - true otherwise
+     * @return true if image is imported successfully - false otherwise
      */
-    private boolean loadImage(File file, boolean temp){
-        String name = file.getName().toLowerCase();
-        if(!file.isDirectory() && name.endsWith(".jpeg") || name.endsWith(".jpg") ||
-                name.endsWith(".gif") || name.endsWith(".png") || name.endsWith(".tif")){
+    private boolean loadImage(File file, boolean init){
+        File img = file;
+        if(!init){
+            img = copyToGalleryDir(file);
+        }
+        if(img != null){
             try {
-                if(!temp){
-                    imgs.add(SwingFXUtils.toFXImage(ImageIO.read(file),null));
-                    e4cFiles.add(file);
-                }else{
-                    tmp.add(SwingFXUtils.toFXImage(ImageIO.read(file),null));
-                }
-
+                Image i = SwingFXUtils.toFXImage(ImageIO.read(img),null);
+                imgTree.put(i,img);
+                GC_LOGGER.debug("Image read successfully");
                 return true;
             } catch (IOException exception) {
-                GC_LOGGER.error("Could not read image from '~\\.edits4credits_gallery': " + exception.getMessage());
+                GC_LOGGER.warn("Could not read image from '~\\.edits4credits_gallery\\" + img.getName());
                 return false;
             }
         }
-        GC_LOGGER.debug("File is a directory or not an image");
-        return true;
+        return false;
+    }
+    private File copyToGalleryDir(File file){
+        String ex = FilenameUtils.getExtension(file.getName()).toLowerCase();
+        if(ex.equals("jpeg") || ex.equals("jpg") ||
+                ex.equals("gif") || ex.equals("png") || ex.equals("tif")) {
+            Path copy = findFileName(galleryPath, FilenameUtils.removeExtension(file.getName()),
+                    FilenameUtils.getExtension(file.getName()));
+            try {
+                Files.copy(file.toPath(), copy, StandardCopyOption.REPLACE_EXISTING);
+                return copy.toFile();
+            }catch (IOException e){
+                GC_LOGGER.warn("Copying file to '~\\.edits4credits_gallery\\" + file.getName()  + "' failed");
+                return null;
+            }
+        }
+        GC_LOGGER.debug("File is not an image");
+        return null;
     }
     private void createGalleryDir(){
         File gallery = new File(galleryPath);
@@ -241,40 +255,41 @@ public class GalleryController implements Initializable, ControlScreen {
         }
         throw new IllegalStateException("What the...");
     }
+    private boolean deleteImage(Image img){
+        try{
+            if(imgTree.get(img).delete()){
+                imgTree.remove(img);
+                populateDisplays();
+                return true;
+            }
+        }catch (SecurityException e){
+            GC_LOGGER.warn("Could not delete image, cause: " + e.getMessage());
+        }
+        return false;
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         displays = new ImageView[]{img0,img1,img2,img3,img4,img5,img6,img7,img8};
         cases = new BorderPane[]{case0,case1,case2,case3,case4,case5,case6,case7,case8};
     }
-    @Override
     public void setScreenParent(ScreensController screenPage)  {
         this.screensController = screenPage;
     }
-    @Override
     public void setWindow(Window window)  {
         this.window = window;
     }
-
-    /* layout */
-    public void init(boolean fromEditor){
-        this.fromEditor = fromEditor;
+    public void init(){
         setLayout();
         initCases();
         initDisplays();
         createGalleryDir();
-        loadImagesDir(new File(galleryPath),true, false);
-        populateDisplays(false);
+        loadImagesDir(new File(galleryPath),true, true);
     }
-    private void setLayout(){
-        grid.setPrefWidth(window.getScreenWidth());
-        grid.setPrefHeight(window.getScreenHeight());
-        display.setPrefHeight(window.getScreenHeight() - menuBar.getPrefHeight() - 75);
-        display.setPrefWidth(display.getPrefHeight() * window.getScreenRatio());
-        display.getColumnConstraints().forEach(col -> col.setPrefWidth(display.getPrefWidth()/3));
-        display.getRowConstraints().forEach(row -> row.setPrefHeight(display.getPrefHeight()/3));
-        region.setPrefWidth(grid.getPrefWidth());
-        region.setPrefHeight(grid.getPrefHeight());
+
+    /* layout */
+    public void setOpen(boolean fromEditor){
+        this.fromEditor = fromEditor;
         if(fromEditor){
             toProject.setVisible(false);
             toEditor.setVisible(true);
@@ -282,29 +297,40 @@ public class GalleryController implements Initializable, ControlScreen {
             toProject.setVisible(true);
             toEditor.setVisible(false);
         }
+        populateDisplays();
+    }
+    private void setLayout(){
+        grid.setPrefWidth(window.getScreenWidth());
+        grid.setPrefHeight(window.getScreenHeight());
+        display.setPrefHeight(window.getScreenHeight() - grid.getRowConstraints().get(0).getPrefHeight() - grid.getRowConstraints().get(2).getPrefHeight());
+        display.setPrefWidth(display.getPrefHeight() * window.getScreenRatio());
+        display.getColumnConstraints().forEach(col -> col.setPrefWidth(display.getPrefWidth()/3));
+        display.getRowConstraints().forEach(row -> row.setPrefHeight(display.getPrefHeight()/3));
+        region.setPrefWidth(grid.getPrefWidth());
+        region.setPrefHeight(grid.getPrefHeight());
     }
     private void initDisplays(){
         for(int i = 0; i < displays.length; i++){
             int row = i / 3;
             int col = i % 3;
-            displays[i].setFitWidth(display.getColumnConstraints().get(col).getPrefWidth()-50);
-            displays[i].setFitHeight(display.getRowConstraints().get(row).getPrefHeight()-50);
+            displays[i].setFitWidth(display.getColumnConstraints().get(col).getPrefWidth()-30);
+            displays[i].setFitHeight(display.getRowConstraints().get(row).getPrefHeight()-30 / window.getScreenRatio());
         }
     }
     private void initCases(){
         for(int i = 0; i < cases.length; i++){
             int row = i / 3;
             int col = i % 3;
-            cases[i].setPrefWidth(display.getColumnConstraints().get(col).getPrefWidth()-15);
-            cases[i].setPrefHeight(display.getRowConstraints().get(row).getPrefHeight()-15);
+            cases[i].setPrefWidth(display.getColumnConstraints().get(col).getPrefWidth());
+            cases[i].setPrefHeight(display.getRowConstraints().get(row).getPrefHeight());
         }
     }
-    private void initPopup(Image img){
+    private void getPopup(boolean delete, Image img){
         if(!zoom.isShowing()){
             selImg = img;
             BorderPane bp = new BorderPane();
             zoom = new Popup();
-            bp.setBottom(getButton());
+            bp.setBottom(getButton(delete,img));
             bp.setCenter(getPopView(img));
 
             region.setVisible(true);
@@ -318,22 +344,35 @@ public class GalleryController implements Initializable, ControlScreen {
             zoom.show(grid.getScene().getWindow());
         }
     }
-    private Button getButton(){
+    private Button getButton(boolean delete,Image img){
         Button btn = new Button();
-        btn.setText("Use");
-        if(fromEditor){
+        if(delete) {
+            btn.setText("Delete");
             btn.setOnAction(event -> {
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to delete this Image permanently?");
+                alert.showAndWait().ifPresent(response -> {
+                    if (response == ButtonType.OK) {
+                        deleteImage(img);
+                    }
+                });
                 zoom.hide();
-                ((EditorController)screensController.getController(ScreenName.EDITOR))
-                        .setImportedImage(selImg);
-                screensController.setScreen(ScreenName.EDITOR);
             });
-        }else{
-            btn.setOnAction(event -> {
-                ((SettingsController)screensController.getController(ScreenName.PROJECT_SETTINGS))
-                        .setBaseImage(selImg);
-                screensController.setScreen(ScreenName.PROJECT_SETTINGS);
-            });
+        }else {
+            btn.setText("Use");
+            if (fromEditor) {
+                btn.setOnAction(event -> {
+                    zoom.hide();
+                    ((EditorController) screensController.getController(ScreenName.EDITOR))
+                            .setImportedImage(selImg);
+                    screensController.setScreen(ScreenName.EDITOR);
+                });
+            } else {
+                btn.setOnAction(event -> {
+                    ((SettingsController) screensController.getController(ScreenName.PROJECT_SETTINGS))
+                            .setBaseImage(selImg);
+                    screensController.setScreen(ScreenName.PROJECT_SETTINGS);
+                });
+            }
         }
         btn.setStyle("-fx-background-color: #282828;" +
                 "-fx-text-fill: #eeeeee;" +
@@ -359,27 +398,21 @@ public class GalleryController implements Initializable, ControlScreen {
         VBox.setMargin(view, new Insets(15));
         return vBox;
     }
-    private void populateDisplays(boolean temp){
+    private void populateDisplays(){
         int imgCount = (page*9);
-        List<Image> list;
-        if(!temp){
-            list = imgs;
-        }else{
-            list = tmp;
-        }
-            int imgSize = list.size();
-
-            for(ImageView view : displays){
-                if(imgCount < imgSize){
-                    view.setImage(list.get(imgCount));
-                }else{
-                    view.setImage(null);
-                    atEnd = true;
-                }
-                imgCount++;
+        int imgSize = imgTree.size();
+        List<Image> imgs = List.copyOf(imgTree.keySet());
+        for(ImageView view : displays){
+            if(imgCount < imgSize){
+                view.setImage(imgs.get(imgCount));
+                view.getParent().setVisible(true);
+            }else{
+                view.setImage(null);
+                view.getParent().setVisible(false);
+                atEnd = true;
             }
-
-
+            imgCount++;
+        }
     }
 
 }

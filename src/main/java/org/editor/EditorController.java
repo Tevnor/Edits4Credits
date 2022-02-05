@@ -141,7 +141,7 @@ public class EditorController implements Initializable, ControlScreen {
     public void setProject(Project project){
         this.project = project;
     }
-    public void initEC(){
+    public void setOpen(){
         initStackPane();
         initDrawTool();
         initDrawOptions();
@@ -523,7 +523,6 @@ public class EditorController implements Initializable, ControlScreen {
     /**
      * Drawing to Canvas
      * */
-    //TODO duplicate code
     public void drawFilteredImage(){
         gc = editorCanvasImage.getGraphicsContext2D();
         gc.drawImage(editorImageObject.getFilteredImage(), editorImageObject.getCurrentXPosition(), editorImageObject.getCurrentYPosition(), editorImageObject.getCurrentWidth(), editorImageObject.getCurrentHeight());
@@ -656,7 +655,7 @@ public class EditorController implements Initializable, ControlScreen {
     }
     @FXML
     private void handleGallery() {
-        ((GalleryController)screensController.getController(ScreenName.GALLERY)).init(true);
+        ((GalleryController)screensController.getController(ScreenName.GALLERY)).setOpen(true);
         screensController.setScreen(ScreenName.GALLERY);
     }
 
