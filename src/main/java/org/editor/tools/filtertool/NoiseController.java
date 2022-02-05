@@ -38,6 +38,7 @@ public class NoiseController implements Initializable {
     private EditorController editorController;
     private Stage stage;
     private Point2D delta;
+    private boolean applied = false;
 
     public void handleApplyNoiseOnlyOnImage(ActionEvent event) {
         noiseStrength = noiseSlider.getValue();
@@ -50,6 +51,8 @@ public class NoiseController implements Initializable {
 
         editorController.getOriginalImageObject().setFilteredImage(filteredOriginalImage);
         editorController.drawFilteredOriginalImage();
+        applied = true;
+        stage.close();
 
     }
 
@@ -85,8 +88,14 @@ public class NoiseController implements Initializable {
 
     public void handleCloseNoiseOptions(ActionEvent event) {
         stage = (Stage) closeNoiseOptions.getScene().getWindow();
+        if (!applied){
         editorController.drawUnfilteredCanvasImage();
+        }
         stage.close();
+    }
+
+    public void setApplied(){
+        this.applied = false;
     }
 
     @FXML
@@ -103,7 +112,7 @@ public class NoiseController implements Initializable {
             @Override
             public void changed(ObservableValue<? extends Number> observableValue, Number number, Number t1) {
                 noiseStrength = noiseSlider.getValue();
-                filteredImage = addNoiseToImage(editorController.getOriginalImageObject().createWritableOriginalImage(), noiseStrength);
+                filteredImage = addNoiseToImage(editorController.getEditorImageObject().createWritableOriginalImage(), noiseStrength);
                 editorController.getEditorImageObject().setFilteredImage(filteredImage);
                 editorController.drawFilteredImage();
             }

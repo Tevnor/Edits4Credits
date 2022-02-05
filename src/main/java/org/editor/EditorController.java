@@ -142,7 +142,7 @@ public class EditorController implements Initializable, ControlScreen {
     public void setProject(Project project){
         this.project = project;
     }
-    public void initEC(){
+    public void setOpen(){
         initStackPane();
         initDrawTool();
         initDrawOptions();
@@ -447,6 +447,7 @@ public class EditorController implements Initializable, ControlScreen {
         openNoiseOptions();
     }
     public void openNoiseOptions(){
+        noiseController.setApplied();
         noiseOptStage.show();
     }
 
@@ -535,7 +536,6 @@ public class EditorController implements Initializable, ControlScreen {
     /**
      * Drawing to Canvas
      * */
-    //TODO duplicate code
     public void drawFilteredImage(){
         graphicsContext = editorCanvasImage.getGraphicsContext2D();
         graphicsContext.drawImage(
@@ -675,7 +675,7 @@ public class EditorController implements Initializable, ControlScreen {
     }
     @FXML
     private void handleGallery() {
-        ((GalleryController)screensController.getController(ScreenName.GALLERY)).init(true);
+        ((GalleryController)screensController.getController(ScreenName.GALLERY)).setOpen(true);
         screensController.setScreen(ScreenName.GALLERY);
     }
 
@@ -708,7 +708,7 @@ public class EditorController implements Initializable, ControlScreen {
     public void drawUnfilteredCanvasImage(){
         GraphicsContext gc = editorCanvasImage.getGraphicsContext2D();
         gc.clearRect(0, 0, editorCanvasImage.getWidth(), editorCanvasImage.getHeight());
-        gc.drawImage(editorImageObject.getOriginalImage(), editorImageObject.getCurrentXPosition(), editorImageObject.getCurrentYPosition(), editorImageObject.getCurrentWidth(), editorImageObject.getCurrentHeight());
+        gc.drawImage(editorImageObject.getFilteredImage(), editorImageObject.getCurrentXPosition(), editorImageObject.getCurrentYPosition(), editorImageObject.getCurrentWidth(), editorImageObject.getCurrentHeight());
     }
 
     @FXML

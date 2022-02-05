@@ -28,6 +28,21 @@ public class ScaleOptionsController implements Initializable {
     private Point2D delta;
 
     public void handleApplyScale(ActionEvent event) {
+        scaleFactor = Double.parseDouble(scaleFactorInput.getText());
+
+        double newWidth = editorController.getEditorImageObject().getScaledWidth(scaleFactor);
+        double newHeight = editorController.getEditorImageObject().getScaledHeight(scaleFactor);
+        editorController.getEditorImageObject().setCurrentWidth(newWidth);
+        editorController.getEditorImageObject().setCurrentHeight(newHeight);
+
+        double newOriginalWidth = editorController.getOriginalImageObject().getScaledWidth(scaleFactor);
+        double newOriginalHeight = editorController.getOriginalImageObject().getScaledHeight(scaleFactor);
+        editorController.getOriginalImageObject().setCurrentWidth(newOriginalWidth);
+        editorController.getOriginalImageObject().setCurrentHeight(newOriginalHeight);
+
+
+        editorController.drawScaledOriginalImage(newOriginalWidth, newOriginalHeight);
+        editorController.drawScaledImage(newWidth, newHeight);
 
     }
 

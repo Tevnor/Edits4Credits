@@ -30,23 +30,23 @@
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
               </columnConstraints>
               <rowConstraints>
-                <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="29.0" vgrow="NEVER" />
+                <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="44.0" vgrow="NEVER" />
                 <RowConstraints minHeight="10.0" prefHeight="990.0" vgrow="SOMETIMES" />
                 <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="75.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <MenuBar fx:id="menuBar" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="29.0" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
+                  <MenuBar fx:id="menuBar" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="29.0" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.valignment="TOP" GridPane.vgrow="NEVER">
                     <menus>
                       <Menu mnemonicParsing="false" text="Gallery">
                         <items>
-                              <MenuItem mnemonicParsing="false" text="Main" />
-                              <Menu mnemonicParsing="false" text="Load">
+                              <MenuItem mnemonicParsing="false" onAction="#handleUse" text="Use" />
+                              <MenuItem mnemonicParsing="false" onAction="#handleDelete" text="Delete" />
+                              <Menu mnemonicParsing="false" text="Import">
                                 <items>
                                   <MenuItem mnemonicParsing="false" onAction="#handleLoadDir" text="Folder" />
                                     <MenuItem mnemonicParsing="false" onAction="#handleLoadOther" text="Multiple" />
                                 </items>
                               </Menu>
-                              <MenuItem mnemonicParsing="false" onAction="#handleImport" text="Import" />
                         </items>
                       </Menu>
                       <Menu mnemonicParsing="false" text="Exit">
@@ -58,7 +58,7 @@
                       </Menu>
                     </menus>
                   </MenuBar>
-                  <GridPane fx:id="display" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
+                  <GridPane fx:id="display" hgap="15.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" vgap="15.0" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
                     <columnConstraints>
                       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="33.0" />
                       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="34.0" />
@@ -72,7 +72,7 @@
                      <children>
                         <BorderPane fx:id="case8" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" styleClass="case" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="2" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
                            <GridPane.margin>
-                              <Insets bottom="10.0" right="10.0" />
+                              <Insets />
                            </GridPane.margin>
                            <center>
                               <ImageView fx:id="img8" fitHeight="150.0" fitWidth="100.0" onMouseClicked="#handlePopup" pickOnBounds="true" preserveRatio="true">
@@ -84,7 +84,7 @@
                         </BorderPane>
                         <BorderPane fx:id="case6" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" styleClass="case" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="2" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
                            <GridPane.margin>
-                              <Insets bottom="10.0" left="10.0" />
+                              <Insets />
                            </GridPane.margin>
                            <center>
                               <ImageView fx:id="img6" fitHeight="150.0" fitWidth="100.0" onMouseClicked="#handlePopup" pickOnBounds="true" preserveRatio="true">
@@ -96,7 +96,7 @@
                         </BorderPane>
                         <BorderPane fx:id="case0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" styleClass="case" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
                            <GridPane.margin>
-                              <Insets left="10.0" top="10.0" />
+                              <Insets />
                            </GridPane.margin>
                            <center>
                               <ImageView fx:id="img0" fitHeight="150.0" fitWidth="100.0" onMouseClicked="#handlePopup" pickOnBounds="true" preserveRatio="true">
@@ -108,7 +108,7 @@
                         </BorderPane>
                         <BorderPane fx:id="case2" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" styleClass="case" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
                            <GridPane.margin>
-                              <Insets right="10.0" top="10.0" />
+                              <Insets />
                            </GridPane.margin>
                            <center>
                               <ImageView fx:id="img2" fitHeight="150.0" fitWidth="100.0" onMouseClicked="#handlePopup" pickOnBounds="true" preserveRatio="true">
@@ -120,7 +120,7 @@
                         </BorderPane>
                         <BorderPane fx:id="case7" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" styleClass="case" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="2" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
                            <GridPane.margin>
-                              <Insets bottom="10.0" left="7.5" right="7.5" />
+                              <Insets />
                            </GridPane.margin>
                            <center>
                               <ImageView fx:id="img7" fitHeight="150.0" fitWidth="100.0" onMouseClicked="#handlePopup" pickOnBounds="true" preserveRatio="true">
@@ -132,7 +132,7 @@
                         </BorderPane>
                         <BorderPane fx:id="case1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" styleClass="case" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
                            <GridPane.margin>
-                              <Insets left="7.5" right="7.5" top="10.0" />
+                              <Insets />
                            </GridPane.margin>
                            <center>
                               <ImageView fx:id="img1" fitHeight="150.0" fitWidth="100.0" onMouseClicked="#handlePopup" pickOnBounds="true" preserveRatio="true">
@@ -144,7 +144,7 @@
                         </BorderPane>
                         <BorderPane fx:id="case4" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" styleClass="case" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
                            <GridPane.margin>
-                              <Insets bottom="7.5" left="7.5" right="7.5" top="7.5" />
+                              <Insets />
                            </GridPane.margin>
                            <center>
                               <ImageView fx:id="img4" fitHeight="150.0" fitWidth="100.0" onMouseClicked="#handlePopup" pickOnBounds="true" preserveRatio="true">
@@ -156,7 +156,7 @@
                         </BorderPane>
                         <BorderPane fx:id="case5" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" styleClass="case" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
                            <GridPane.margin>
-                              <Insets bottom="7.5" right="10.0" top="7.5" />
+                              <Insets />
                            </GridPane.margin>
                            <center>
                               <ImageView fx:id="img5" fitHeight="150.0" fitWidth="100.0" onMouseClicked="#handlePopup" pickOnBounds="true" preserveRatio="true">
@@ -168,7 +168,7 @@
                         </BorderPane>
                         <BorderPane fx:id="case3" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" styleClass="case" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
                            <GridPane.margin>
-                              <Insets bottom="7.5" left="10.0" top="7.5" />
+                              <Insets />
                            </GridPane.margin>
                            <center>
                               <ImageView fx:id="img3" fitHeight="150.0" fitWidth="100.0" onMouseClicked="#handlePopup" pickOnBounds="true" preserveRatio="true">
@@ -180,8 +180,17 @@
                         </BorderPane>
                      </children>
                   </GridPane>
-                  <ButtonBar buttonOrder="BUTTON_ORDER_WINDOWS" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="43.0" prefWidth="162.0" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="2" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
+                  <ButtonBar buttonOrder="BUTTON_ORDER_WINDOWS" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="43.0" prefWidth="331.0" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="2" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
                     <buttons>
+                        <Button fx:id="first" alignment="CENTER" contentDisplay="GRAPHIC_ONLY" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleFirst" prefHeight="45.0" prefWidth="70.0">
+                           <graphic>
+                              <ImageView fitHeight="30" fitWidth="36.0" nodeOrientation="INHERIT" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../images/icon/first_icon_50x50.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Button>
                       <Button fx:id="backward" alignment="CENTER" contentDisplay="GRAPHIC_ONLY" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleBackwards" prefHeight="45.0" prefWidth="70.0">
                           <graphic>
                               <ImageView fitHeight="30" fitWidth="30" preserveRatio="true">
@@ -195,6 +204,15 @@
                                     <Image url="@../images/icon/forward_icon_50x50.png" />
                                 </ImageView>
                             </graphic>
+                        </Button>
+                        <Button fx:id="last" alignment="CENTER" contentDisplay="GRAPHIC_ONLY" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleLast" prefHeight="45.0" prefWidth="70.0">
+                           <graphic>
+                              <ImageView fitHeight="30" fitWidth="36.0" nodeOrientation="INHERIT" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../images/icon/last_icon_50x50.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
                         </Button>
                     </buttons>
                      <GridPane.margin>

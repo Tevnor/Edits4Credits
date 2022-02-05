@@ -8,6 +8,7 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.editor.EditorController;
@@ -108,17 +109,15 @@ public class SettingsController implements Initializable, ControlScreen {
     }
 
     @FXML
-    private void handleOpenGallery(ActionEvent event) {
+    private void handleOpenGallery() {
         screensController.setScreen(ScreenName.GALLERY);
         GalleryController gc = (GalleryController)screensController.getController(ScreenName.GALLERY);
-        gc.init(false);
+        gc.setOpen(false);
     }
-
     @FXML
-    private void handleLogOut(ActionEvent event) {
-        //TODO
+    private void handleLogOut() {
+        ((Stage)this.createProject.getScene().getWindow()).close();
     }
-
     public void setBaseImage(Image img){
         base = img;
         widthInput.setText(Integer.toString((int)img.getWidth()));
@@ -126,11 +125,10 @@ public class SettingsController implements Initializable, ControlScreen {
         widthInput.setDisable(true);
         heightInput.setDisable(true);
     }
-
     private void setEditorPresets(){
         EditorController ec = (EditorController)screensController.getController(ScreenName.EDITOR);
         ec.setProject(project);
-        ec.initEC();
+        ec.setOpen();
         if(base != null){
             ec.setImportedImage(base);
         }
