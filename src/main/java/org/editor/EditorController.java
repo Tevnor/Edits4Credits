@@ -94,7 +94,6 @@ public class EditorController implements Initializable, ControlScreen {
     private FXMLLoader moveOptLoader;
     private PositionOptionsController moveOptions;
 
-
     private GraphicsContext graphicsContext;
     private Parent scaleOptRoot;
     private FXMLLoader scaleOptLoader;
@@ -185,15 +184,7 @@ public class EditorController implements Initializable, ControlScreen {
         } catch (IOException exception) {
             exception.printStackTrace();
         }
-        noiseOptStage = new Stage();
-        Scene noiseOptScene = new Scene(noiseOptRoot);
-        noiseOptScene.setFill(Color.TRANSPARENT);
-        noiseOptStage.centerOnScreen();
-        noiseOptStage.initStyle(StageStyle.UNDECORATED);
-        noiseOptStage.initStyle(StageStyle.TRANSPARENT);
-        noiseOptStage.setResizable(false);
-        noiseOptStage.initModality(Modality.APPLICATION_MODAL);
-        noiseOptStage.setScene(noiseOptScene);
+        noiseOptStage = initStage(noiseOptRoot);
 
         noiseController.setEditorController(this);
     }
@@ -222,15 +213,7 @@ public class EditorController implements Initializable, ControlScreen {
     }
     private void initDrawOptions(){
         loadDrawOptions();
-        drawOptStage = new Stage();
-        Scene drawOptScene = new Scene(drawOptRoot);
-        drawOptScene.setFill(Color.TRANSPARENT);
-        drawOptStage.setScene(drawOptScene);
-        drawOptStage.centerOnScreen();
-        drawOptStage.initStyle(StageStyle.UNDECORATED);
-        drawOptStage.initStyle(StageStyle.TRANSPARENT);
-        drawOptStage.setResizable(false);
-        drawOptStage.initModality(Modality.APPLICATION_MODAL);
+        drawOptStage = initStage(drawOptRoot);
         drawOptStage.setOnHiding( w -> {
             if(options.getTmpHandler() != HandlerFactory.DrawHandler.MOVE){
                 drawer = handlerFactory.getHandler(dt, options.getTmpHandler());
@@ -422,9 +405,15 @@ public class EditorController implements Initializable, ControlScreen {
         filterOptStage = initStage(filterOptRoot);
     }
     private Stage initStage(Parent root) {
-        Stage stage = new Stage();
         Scene scene = new Scene(root);
         scene.setFill(Color.TRANSPARENT);
+
+        Stage stage = new Stage();
+        stage.setScene(scene);
+        stage.initStyle(StageStyle.UNDECORATED);
+        stage.initStyle(StageStyle.TRANSPARENT);
+        stage.setResizable(false);
+        stage.initModality(Modality.APPLICATION_MODAL);
         stage.setScene(scene);
         stage.centerOnScreen();
 
@@ -587,14 +576,7 @@ public class EditorController implements Initializable, ControlScreen {
         try{
             moveOptLoader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/fxml/moveOptions.fxml")));
             moveOptRoot = moveOptLoader.load();
-            Stage moveOptStage = new Stage();
-            Scene moveOptScene = new Scene(moveOptRoot);
-            moveOptScene.setFill(Color.TRANSPARENT);
-            moveOptStage.setScene(moveOptScene);
-            moveOptStage.initStyle(StageStyle.UNDECORATED);
-            moveOptStage.initStyle(StageStyle.TRANSPARENT);
-            moveOptStage.setResizable(false);
-            moveOptStage.initModality(Modality.APPLICATION_MODAL);
+            Stage moveOptStage = initStage(moveOptRoot);
             moveOptStage.show();
             moveOptions = moveOptLoader.getController();
             moveOptions.setEditorController(this);
@@ -612,14 +594,7 @@ public class EditorController implements Initializable, ControlScreen {
         try {
             scaleOptLoader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/fxml/scaleOptions.fxml")));
             scaleOptRoot = scaleOptLoader.load();
-            Stage scaleOptStage = new Stage();
-            Scene scaleOptScene = new Scene(scaleOptRoot);
-            scaleOptScene.setFill(Color.TRANSPARENT);
-            scaleOptStage.setScene(scaleOptScene);
-            scaleOptStage.initStyle(StageStyle.UNDECORATED);
-            scaleOptStage.initStyle(StageStyle.TRANSPARENT);
-            scaleOptStage.setResizable(false);
-            scaleOptStage.initModality(Modality.APPLICATION_MODAL);
+            Stage scaleOptStage = initStage(scaleOptRoot);
             scaleOptStage.show();
             scaleOptions = scaleOptLoader.getController();
             scaleOptions.setEditorController(this);
