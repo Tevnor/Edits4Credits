@@ -24,6 +24,7 @@ import org.marketplace.gallery.GalleryController;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.awt.image.ImageObserver;
 import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
@@ -134,7 +135,6 @@ public class ImportControl {
         }
     }
     private void saveToExtern(Image writableImage, Project project) {
-        createGalleryDir();
         FileChooser chooser = getChooser(project.getProjectName(), false);
         File file = chooser.showSaveDialog(null);
 
@@ -159,8 +159,16 @@ public class ImportControl {
     }
 
     private void writeImage(Image img, File file) throws IOException {
-        BufferedImage outImg = SwingFXUtils.fromFXImage(img, null);
         String ext = FilenameUtils.getExtension(file.toString());
+        BufferedImage outImg;
+        if(ext.equals("jpg")||ext.equals("jpeg")){
+            BufferedImage bi = SwingFXUtils.fromFXImage(img, null);
+            outImg = new BufferedImage((int)img.getWidth(),(int)img.getHeight(),BufferedImage.TYPE_INT_RGB);
+            outImg.getGraphics().drawImage(bi,0,0,java.awt.Color.WHITE,null);
+        }else{
+            outImg = SwingFXUtils.fromFXImage(img, null);
+        }
+        IC_LOGGER.debug("Writing image with ext: "+ext+" to: " + file);
         ImageIO.write(outImg,ext,file);
     }
 
