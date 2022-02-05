@@ -685,6 +685,12 @@ public class EditorController implements Initializable, ControlScreen {
         gc.clearRect(0, 0, editorCanvasImage.getWidth(), editorCanvasImage.getHeight());
         gc.drawImage(editorImageObject.getFilteredImage(), editorImageObject.getCurrentXPosition(), editorImageObject.getCurrentYPosition(), editorImageObject.getCurrentWidth(), editorImageObject.getCurrentHeight());
     }
+    public void drawPreviewImage(){
+        GraphicsContext gc = editorCanvasImage.getGraphicsContext2D();
+        gc.clearRect(0, 0, editorCanvasImage.getWidth(), editorCanvasImage.getHeight());
+        gc.drawImage(editorImageObject.getPreviewImage(), editorImageObject.getCurrentXPosition(), editorImageObject.getCurrentYPosition(), editorImageObject.getCurrentWidth(), editorImageObject.getCurrentHeight());
+
+    }
 
     @FXML
     private void handleResetImage(ActionEvent actionEvent) {
