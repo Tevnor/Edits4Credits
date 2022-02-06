@@ -1,6 +1,5 @@
 package org.database;
 
-
 import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -20,6 +19,8 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.launcher.GuiDriver;
 import org.launcher.ModeSelectionController;
 import org.marketplace.gallery.GalleryController;
@@ -27,15 +28,16 @@ import org.screencontrol.ControlScreen;
 import org.screencontrol.ScreenName;
 import org.screencontrol.ScreensController;
 import org.screencontrol.Window;
-
 import java.net.URL;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class LogInController implements Initializable, ControlScreen {
+
+    public static final Logger LI_LOGGER = LogManager.getLogger(LogInController.class);
+
 
     private ScreensController screensController;
     private Stage loginStage;
@@ -79,23 +81,24 @@ public class LogInController implements Initializable, ControlScreen {
         rootPane.setLayoutY(yCenter - 300);
     }
 
-
-
     @FXML
     private void enterMainApp() {
         loginStage = (Stage) logInButton.getScene().getWindow();
         user = new User(username.getText());
         if (username!=null && password != null) {
+            LI_LOGGER.info("User {} successfully logged in.", username);
             createApp();
             startClosingAnimation();
         } else {
             loginError.setText("Invalid login. Please try again.");
+            LI_LOGGER.error("Login unsuccessful.");
         }
     }
     @FXML
     private void cancelLogin() {
         loginStage = (Stage) cancelButton.getScene().getWindow();
         closeLoginStage(1000);
+        LI_LOGGER.info("App exited via {}.", cancelButton.getId());
     }
 //    public void userLogIn(ActionEvent event) throws IOException {
 //        //validateLogin();
@@ -148,6 +151,7 @@ public class LogInController implements Initializable, ControlScreen {
         screensController.loadScreen(ScreenName.PROJECT_SETTINGS);
         screensController.loadScreen(ScreenName.EDITOR);
         screensController.setScreen(ScreenName.MODE_SELECTION);
+        LI_LOGGER.info("Finished loading all screens.");
     }
     private void initAppStages(){
         ImageView iv = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/e4c-bg.png")), window.getScreenWidth(), window.getScreenHeight(), false, true));
@@ -160,7 +164,7 @@ public class LogInController implements Initializable, ControlScreen {
         appStage.initStyle(StageStyle.TRANSPARENT);
         appStage.setMaximized(true);
         appStage.setScene(scene);
-        if(GuiDriver.getIcon() != null){
+        if (GuiDriver.getIcon() != null) {
             appStage.getIcons().add(GuiDriver.getIcon());
         }
     }
@@ -175,7 +179,7 @@ public class LogInController implements Initializable, ControlScreen {
                 modeSelector.setRootAnchorPane();
                 modeSelector.initModeSelectionElements();
                 modeSelector.hideElements();
-
+                LI_LOGGER.info("Instantiated Controller for {}", ScreenName.MODE_SELECTION);
             } catch (Exception e) {
                 e.printStackTrace();
                 e.getCause();
@@ -198,6 +202,7 @@ public class LogInController implements Initializable, ControlScreen {
         hideElements();
         preloadScreens();
         initAppStages();
+        LI_LOGGER.info("Finished loading login.");
     }
     private void initLoginElements() {
         loginImageView.setCache(true);
@@ -224,6 +229,7 @@ public class LogInController implements Initializable, ControlScreen {
      * NEW OPENING SEQUENCE
      * */
     public void startLoginAnimation() {
+        LI_LOGGER.info("Starting login animation sequence.");
         // Scale back to regular size
         ScaleTransition iconScale = getScale(loginImageView, 1000, 0, 1.0, 1.0);
 

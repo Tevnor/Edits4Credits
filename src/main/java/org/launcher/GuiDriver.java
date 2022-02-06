@@ -22,7 +22,7 @@ public class GuiDriver  extends Application {
   private static final Logger GD_LOGGER = LogManager.getLogger(GuiDriver.class);
   private static Image icon = null;
   private Window window;
-  private ScreensController sc;
+  private ScreensController screensController;
   private double screenWidth;
   private double screenHeight;
 
@@ -31,9 +31,9 @@ public class GuiDriver  extends Application {
   public void start(Stage primaryStage) {
 
     Thread thread = new Thread(() -> {
-      sc = new ScreensController();
-      sc.getMonitorInfo();
-      this.window = sc.getWindow();
+      screensController = new ScreensController();
+      screensController.getMonitorInfo();
+      this.window = screensController.getWindow();
       screenWidth = window.getScreenWidth();
       screenHeight = window.getScreenHeight();
 
@@ -55,7 +55,7 @@ public class GuiDriver  extends Application {
             Parent loginRoot = loginLoader.load();
 
             LogInController logInController = loginLoader.getController();
-            logInController.setScreenParent(sc);
+            logInController.setScreenParent(screensController);
             logInController.setWindow(window);
             logInController.initLogin();
 
