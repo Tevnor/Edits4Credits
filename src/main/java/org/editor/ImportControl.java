@@ -177,8 +177,7 @@ public class ImportControl {
         return new ImageDimensions(importedImg,0,0,importedImg.getWidth(),importedImg.getHeight());
     }
     protected Canvas getEditorImageCanvas(StackPane stack){
-        Canvas canvas = new Canvas(stack.getPrefWidth(),stack.getPrefHeight());
-        return canvas;
+        return new Canvas(stack.getPrefWidth(),stack.getPrefHeight());
     }
     protected Canvas getOriginalImageCanvas(Project project){
         return new Canvas(project.getProjectWidth(),project.getProjectHeight());
