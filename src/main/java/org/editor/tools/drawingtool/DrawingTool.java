@@ -91,16 +91,18 @@ public class DrawingTool{
         return dc;
     }
 
-    public void clear(){
+    public void clearShapes(){
         db.clearBoard();
-        DT_LOGGER.debug("cleared succesfully");
+        DT_LOGGER.debug("cleared shapes succesfully");
     }
-
+    public void clearBrush(){
+        gcBrush.clearRect(0,0,canvasBrush.getWidth(),canvasBrush.getHeight());
+        DT_LOGGER.debug("cleared shapes succesfully");
+    }
     public void backward() {
         db.undo();
         DT_LOGGER.debug("undid succesfully");
     }
-
     public void forward() {
         db.redo();
         DT_LOGGER.debug("redid succesfully");

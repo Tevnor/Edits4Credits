@@ -138,17 +138,24 @@
                       </graphic>
                       <tooltip><Tooltip text="Redo" /></tooltip>
                   </Button>
-                  <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleClear" prefHeight="45.0" prefWidth="45.0">
+                  <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleClearShapes" prefHeight="45.0" prefWidth="45.0">
                       <graphic>
                           <ImageView fitHeight="35" fitWidth="35" preserveRatio="true">
                               <Image url="@../images/icon/clear_50x50.png" />
                           </ImageView>
                       </graphic>
                       <tooltip><Tooltip text="Clear" /></tooltip>
+                     <contextMenu>
+                        <ContextMenu>
+                          <items>
+                            <MenuItem mnemonicParsing="false" onAction="#handleClearBrush" text="clear brush layer" />
+                          </items>
+                        </ContextMenu>
+                     </contextMenu>
                   </Button>
               </items>
             </ToolBar>
-            <MenuBar fx:id="menuBar" maxHeight="29.0" minHeight="29.0" minWidth="270.0" prefHeight="29.0" prefWidth="330.0">
+            <MenuBar fx:id="menuBar" maxHeight="29.0" maxWidth="-Infinity" minHeight="29.0" minWidth="360.0" prefHeight="29.0" prefWidth="360.0">
               <menus>
                   <Menu fx:id="menuBarFile" mnemonicParsing="false" text="File">
                       <Menu mnemonicParsing="false" text="Save">

@@ -1,6 +1,5 @@
 package org.editor;
 
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -369,8 +368,12 @@ public class EditorController implements Initializable, ControlScreen {
         }
     }
     @FXML
-    private void handleClear(){
-        dt.clear();
+    private void handleClearShapes(){
+        dt.clearShapes();
+    }
+    @FXML
+    private void handleClearBrush(){
+        dt.clearBrush();
     }
     @FXML
     private void handleDrawUndo(){
@@ -581,7 +584,7 @@ public class EditorController implements Initializable, ControlScreen {
      * Image Transforms
      * */
     private void toggleImageMenuItems(boolean setDisabled) {
-        menuBarImage.getItems().forEach(menuItem -> menuItem.setDisable(setDisabled));
+        menuBarImage.getItems().stream().skip(1).forEach(menuItem -> menuItem.setDisable(setDisabled));
     }
 
     @FXML
@@ -708,7 +711,7 @@ public class EditorController implements Initializable, ControlScreen {
         loadEffectOptions();
     }
     private void toggleFileMenuItems(boolean setDisabled) {
-        menuBarFile.getItems().stream().skip(1).forEach(menuItem -> menuItem.setDisable(setDisabled));
+        menuBarFile.getItems().stream().forEach(menuItem -> menuItem.setDisable(setDisabled));
     }
     public void setImportedImage(Image img){
         if(ic.setImageFromGallery(img)){
