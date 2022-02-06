@@ -70,7 +70,7 @@ public class PositionOptionsController implements Initializable {
         if(e.getSource().equals(xPositionInput)){
             moveTmp(xPositionInput, true);
         }else if(e.getSource().equals(yPositionInput)) {
-            moveTmp(yPositionInput, false);;
+            moveTmp(yPositionInput, false);
         }
 
     }
