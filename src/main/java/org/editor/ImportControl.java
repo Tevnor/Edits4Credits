@@ -35,11 +35,11 @@ public class ImportControl {
     private static final String galleryPath = GalleryController.galleryPath;
 
     private Image importedImg;
-    private Image fitToEditor;
     private boolean isSet = false;
 
     /*  file manipulation   */
     private FileChooser getChooser(String name, boolean isOpen){
+
         FileChooser chooser = new FileChooser();
         if(isOpen){
             FileChooser.ExtensionFilter all = new FileChooser.ExtensionFilter("Image Types","*.jpg","*.jpeg","*.gif","*.png","*.tif");
@@ -56,6 +56,7 @@ public class ImportControl {
             chooser.setInitialFileName(name);
         }
         chooser.setTitle("Choose image");
+        IC_LOGGER.debug("FileChooser for Image im-/export created");
         return chooser;
     }
     private void createGalleryDir(){
@@ -67,7 +68,6 @@ public class ImportControl {
     }
     protected void reset(){
         importedImg = null;
-        fitToEditor = null;
         isSet = false;
         IC_LOGGER.debug("ImportControl reset()");
     }
@@ -215,10 +215,6 @@ public class ImportControl {
         // Draw resized image onto editorCanvasImage
         gc.drawImage(resizedImage,0, 0, resizedImage.getWidth(), resizedImage.getHeight());
         IC_LOGGER.debug("Drawed imported image with dims: x= " + resizedImage.getWidth() + " y= " + resizedImage.getHeight() + " ratio= " + ratio);
-        if(!isOriginal){
-            fitToEditor = resizedImage;
-            IC_LOGGER.debug("Set fitToEditor to: " + resizedImage);
-        }
     }
 
     /*  pixel manipulation  */
@@ -231,19 +227,19 @@ public class ImportControl {
         IntStream range = IntStream.range(0,length).parallel();
         if(project.isTransparent()) {
             if(imageBuffer == null){
-                range.forEach(i -> pw.setArgb(i % projectWidth, i / projectWidth, drawingBuffer[i]));
+                range.parallel().forEach(i -> pw.setArgb(i % projectWidth, i / projectWidth, drawingBuffer[i]));
                 IC_LOGGER.debug("final image: drawing layer");
             }else{
-                range.forEach(i -> pw.setArgb(i % projectWidth, i / projectWidth, srcOverArgb(drawingBuffer[i], imageBuffer[i])));
+                range.parallel().forEach(i -> pw.setArgb(i % projectWidth, i / projectWidth, srcOverArgb(drawingBuffer[i], imageBuffer[i])));
                 IC_LOGGER.debug("final image: image layer < drawing layer");
             }
         }else{
             if(imageBuffer == null){
-                range.forEach(i -> pw.setArgb(i % projectWidth, i / projectWidth,
+                range.parallel().forEach(i -> pw.setArgb(i % projectWidth, i / projectWidth,
                         srcOverArgb(drawingBuffer[i], convertColor(project.getBackgroundColor()))));
                 IC_LOGGER.debug("final image: background layer < drawing layer");
             }else{
-                range.forEach(i -> pw.setArgb(i % projectWidth, i / projectWidth,
+                range.parallel().forEach(i -> pw.setArgb(i % projectWidth, i / projectWidth,
                         srcOverArgb(drawingBuffer[i], srcOverArgb(imageBuffer[i],convertColor(project.getBackgroundColor())))));
                 IC_LOGGER.debug("final image: background layer < image layer < drawing layer");
             }
@@ -261,6 +257,7 @@ public class ImportControl {
         canvas.snapshot(sp,null).getPixelReader()
                 .getPixels(0,0,(int)canvas.getWidth(),(int)canvas.getHeight(),
                         WritablePixelFormat.getIntArgbInstance(), export, 0, (int)canvas.getWidth());
+        IC_LOGGER.debug("created pixel int[] of ImageCanvas");
         return export;
     }
     private int convertColor(Color color){
