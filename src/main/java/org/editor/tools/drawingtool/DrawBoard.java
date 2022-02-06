@@ -41,8 +41,8 @@ public class DrawBoard {
     /**
      * temporary Canvas used to get determine changed pixels
      */
-    private Canvas cTmp;
-    private GraphicsContext gcTmp;
+    private final Canvas cTmp;
+    private final GraphicsContext gcTmp;
 
 
     /**

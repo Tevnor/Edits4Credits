@@ -53,7 +53,7 @@ public class GalleryController implements Initializable, ControlScreen {
     private ImageView[] displays;
     private ScreensController screensController;
     private Window window;
-    private FutureTask<Boolean> loadImgs = new FutureTask(() -> loadImagesDir(new File(galleryPath),true, true));
+    private final FutureTask<Boolean> loadImgs = new FutureTask(() -> loadImagesDir(new File(galleryPath),true, true));
 
     private final Map<Image,File> imgTree = new HashMap<>();
     private int page = 0;
@@ -272,17 +272,15 @@ public class GalleryController implements Initializable, ControlScreen {
         }
         throw new IllegalStateException("What the...");
     }
-    private boolean deleteImage(Image img){
+    private void deleteImage(Image img){
         try{
             if(imgTree.get(img).delete()){
                 imgTree.remove(img);
                 populateDisplays();
-                return true;
             }
         }catch (SecurityException e){
             GC_LOGGER.warn("Could not delete image, cause: " + e.getMessage());
         }
-        return false;
     }
 
     @Override

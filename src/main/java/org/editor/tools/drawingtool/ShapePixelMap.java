@@ -8,7 +8,7 @@ import java.util.*;
 public class ShapePixelMap extends HashMap<Integer,Integer> {
     private static final Logger SPM_LOGGER = LogManager.getLogger(ShapePixelMap.class.getName());
 
-    private Set<Integer> locked = new HashSet<>();
+    private final Set<Integer> locked = new HashSet<>();
     public ShapePixelMap(){}
     public ShapePixelMap(ShapePixelMap input){
         super(input);

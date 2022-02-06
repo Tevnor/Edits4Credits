@@ -2,7 +2,6 @@ package org.editor.tools.imagetool;
 
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.image.Image;
-import org.junit.Rule;
 import org.junit.Test;
 
 import static org.junit.Assert.*;

@@ -9,7 +9,7 @@ import java.util.Objects;
 
 
 public class Project {
-    private String projectName;
+    private final String projectName;
     private final int projectWidth;
     private final int projectHeight;
     private final double projectAspectRatio;

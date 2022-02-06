@@ -7,10 +7,10 @@ import java.util.Set;
 
 public class ShapePixelMapTest extends TestCase {
 
-    ShapePixelMap spm = new ShapePixelMap();
-    ShapePixelMap test = new ShapePixelMap();
-    ShapePixelMap testControl = new ShapePixelMap();
-    Set<Integer> locks = new HashSet<>();
+    final ShapePixelMap spm = new ShapePixelMap();
+    final ShapePixelMap test = new ShapePixelMap();
+    final ShapePixelMap testControl = new ShapePixelMap();
+    final Set<Integer> locks = new HashSet<>();
 
     public void testAddLockPixels() {
         set();

@@ -1,13 +1,9 @@
 package org.editor.tools.filtertool;
 
-import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
-import javafx.fxml.FXML;
 import javafx.scene.image.*;
 import javafx.scene.paint.Color;
-import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.fail;
 
 import static org.junit.Assert.*;
 

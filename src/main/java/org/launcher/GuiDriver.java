@@ -17,8 +17,6 @@ import org.database.LogInController;
 import org.screencontrol.ScreensController;
 import org.screencontrol.Window;
 
-import java.util.Objects;
-
 
 public class GuiDriver  extends Application {
   private static final Logger GD_LOGGER = LogManager.getLogger(GuiDriver.class);

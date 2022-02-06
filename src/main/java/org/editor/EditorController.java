@@ -10,8 +10,6 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
-import javafx.scene.control.Button;
-import javafx.scene.control.MenuBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -84,7 +82,7 @@ public class EditorController implements Initializable, ControlScreen {
     private DrawOptionsController options;
     private Stage drawOptStage = new Stage();
 
-    private ImportControl ic = new ImportControl();
+    private final ImportControl ic = new ImportControl();
     private Canvas editorCanvasImage;
     private Parent noiseOptRoot;
     private NoiseController noiseController;

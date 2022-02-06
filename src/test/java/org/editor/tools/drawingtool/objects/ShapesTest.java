@@ -10,17 +10,19 @@ import junit.framework.TestCase;
 import org.editor.tools.drawingtool.attributes.*;
 
 public class ShapesTest extends TestCase {
-    private General general = new General(0, BlendMode.SRC_OVER,1, Color.BLACK,1,true);
-    private double[] dims = new double[]{0,0,100,100}, x = new double[]{0,50,100}, y = new double[]{100,0,100};
-    private Arc arc = new Arc(0,0,100,100,new ArcAttributes(general, ArcType.ROUND,0,180));
-    private Circle circle = new Circle(0,0,50,general);
-    private Ellipses ellipses = new Ellipses(0,0,100,50,general);
-    private Line line = new Line(0,0,100,100,general);
-    private Polygon poly = new Polygon(dims,x,y,3,new PolygonAttributes(general,true));
-    private RoundedRectangle roundedRectangle = new RoundedRectangle(0,0,100,100,new RoundRectAttributes(general,10,20));
-    private Text txt = new Text(50,50,new TextAttributes(general,"HELLLOOO",new Font("System",50), TextAlignment.CENTER));
-    private Point2D mid = new Point2D(50,50);
-    private Point2D out = new Point2D(200,100);
+    private final General general = new General(0, BlendMode.SRC_OVER,1, Color.BLACK,1,true);
+    private final double[] dims = new double[]{0,0,100,100};
+    private final double[] x = new double[]{0,50,100};
+    private final double[] y = new double[]{100,0,100};
+    private final Arc arc = new Arc(0,0,100,100,new ArcAttributes(general, ArcType.ROUND,0,180));
+    private final Circle circle = new Circle(0,0,50,general);
+    private final Ellipses ellipses = new Ellipses(0,0,100,50,general);
+    private final Line line = new Line(0,0,100,100,general);
+    private final Polygon poly = new Polygon(dims,x,y,3,new PolygonAttributes(general,true));
+    private final RoundedRectangle roundedRectangle = new RoundedRectangle(0,0,100,100,new RoundRectAttributes(general,10,20));
+    private final Text txt = new Text(50,50,new TextAttributes(general,"HELLLOOO",new Font("System",50), TextAlignment.CENTER));
+    private final Point2D mid = new Point2D(50,50);
+    private final Point2D out = new Point2D(200,100);
     public void testPointInsideArc() {
         assertTrue(arc.pointInside(mid));
         assertFalse(arc.pointInside(out));

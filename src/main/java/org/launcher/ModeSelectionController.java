@@ -1,10 +1,8 @@
 package org.launcher;
 
 import javafx.animation.*;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.CacheHint;
 import javafx.scene.Node;
@@ -12,7 +10,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
-import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.database.User;
 import org.screencontrol.ControlScreen;
@@ -21,10 +18,7 @@ import org.screencontrol.ScreensController;
 import org.screencontrol.Window;
 
 import java.net.URL;
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.ResourceBundle;
-import java.util.Set;
 
 /**
  * The first full screen view.
