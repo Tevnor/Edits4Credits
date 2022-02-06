@@ -5,6 +5,7 @@ import javafx.scene.effect.Effect;
 import javafx.scene.paint.Paint;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public abstract class AbstractGeneral {
 
@@ -12,7 +13,7 @@ public abstract class AbstractGeneral {
     private final BlendMode bm;
     private final Paint color;
     private final boolean fill;
-    private final ArrayList<Effect> effects;
+    private final List<Effect> effects;
 
     protected AbstractGeneral(double rotation, BlendMode bm, double lineWidth, Paint color, double alpha, boolean fill) {
         this.rotation = rotation;

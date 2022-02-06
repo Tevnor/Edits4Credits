@@ -95,7 +95,7 @@ public abstract class DrawOp {
     protected void setVisible(boolean vis){
         this.visible = vis;
     }
-    protected void setReference(int i){
+    protected void setMoveReference(int i){
         this.moveReference = i;
     }
 

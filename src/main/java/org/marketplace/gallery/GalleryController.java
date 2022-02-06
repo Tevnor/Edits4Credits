@@ -40,7 +40,7 @@ public class GalleryController implements Initializable, ControlScreen {
     public static final String galleryPath = System.getProperty("user.home") + "\\.edits4credits_gallery";
 
     @FXML
-    private MenuItem toProject, toEditor;
+    private MenuItem toProject, toEditor, toMode;
     @FXML
     private ImageView img0, img1,img2,img3,img4,img5,img6,img7,img8;
     @FXML
@@ -56,8 +56,8 @@ public class GalleryController implements Initializable, ControlScreen {
     private final FutureTask<Boolean> loadImgs = new FutureTask(() -> loadImagesDir(new File(galleryPath),true, true));
 
     private final Map<Image,File> imgTree = new HashMap<>();
-    private int page = 0;
-    private boolean atEnd = false, fromEditor = false, delete = false;
+    private int page = 0, source = 0;
+    private boolean atEnd = false, delete = false;
     private Popup zoom = new Popup();
     private Image selImg = null;
 
@@ -135,6 +135,10 @@ public class GalleryController implements Initializable, ControlScreen {
     @FXML
     private void handleToEditor(){
         screensController.setScreen(ScreenName.EDITOR);
+    }
+    @FXML
+    private void handleToMode(){
+        screensController.setScreen(ScreenName.MODE_SELECTION);
     }
     @FXML
     private void handleUse(){
@@ -306,16 +310,23 @@ public class GalleryController implements Initializable, ControlScreen {
     }
 
     /* layout */
-    public boolean setOpen(boolean fromEditor){
+    public boolean setOpen(int source){
         if(loadIsDone()){
-            this.fromEditor = fromEditor;
-            if(fromEditor){
+            this.source = source;
+            if(source == 1){
                 toProject.setVisible(false);
                 toEditor.setVisible(true);
-            }else{
+                toMode.setVisible(false);
+            }else if(source == 0){
                 toProject.setVisible(true);
                 toEditor.setVisible(false);
+                toMode.setVisible(false);
+            }else{
+                toProject.setVisible(false);
+                toEditor.setVisible(false);
+                toMode.setVisible(true);
             }
+            delete = false;
             populateDisplays();
             return true;
         }
@@ -369,6 +380,8 @@ public class GalleryController implements Initializable, ControlScreen {
     private Button getButton(boolean delete,Image img){
         Button btn = new Button();
         if(delete) {
+            btn.setVisible(true);
+            btn.setDisable(false);
             btn.setText("Delete");
             btn.setOnAction(event -> {
                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to delete this Image permanently?");
@@ -381,19 +394,26 @@ public class GalleryController implements Initializable, ControlScreen {
             });
         }else {
             btn.setText("Use");
-            if (fromEditor) {
+            if (source == 1) {
+                btn.setVisible(true);
+                btn.setDisable(false);
                 btn.setOnAction(event -> {
                     zoom.hide();
                     ((EditorController) screensController.getController(ScreenName.EDITOR))
                             .setImportedImage(selImg);
                     screensController.setScreen(ScreenName.EDITOR);
                 });
-            } else {
+            } else if(source == 0){
+                btn.setVisible(true);
+                btn.setDisable(false);
                 btn.setOnAction(event -> {
                     ((SettingsController) screensController.getController(ScreenName.PROJECT_SETTINGS))
                             .setBaseImage(selImg);
                     screensController.setScreen(ScreenName.PROJECT_SETTINGS);
                 });
+            } else{
+                btn.setVisible(false);
+                btn.setDisable(true);
             }
         }
         btn.setStyle("-fx-background-color: #282828;" +

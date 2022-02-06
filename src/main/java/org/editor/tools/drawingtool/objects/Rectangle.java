@@ -12,7 +12,7 @@ public class Rectangle extends Shapes {
     public Rectangle(double minX, double minY, double width, double height, AbstractGeneral attributes){
         super(minX,minY,width,height,attributes);
         setRotation(attributes.getRotation());
-        this.type = Type.RECTANGLE;
+        this.shapeType = ShapeType.RECTANGLE;
     }
     Rectangle(double minX, double minY, double width, double height) {
         super(minX, minY, width, height);
@@ -49,7 +49,7 @@ public class Rectangle extends Shapes {
         }
     }
     @Override
-    public void setRotation(double angle) {
+    protected void setRotation(double angle) {
         this.r = new Rotate(angle, getMinX()+(getWidth()/2), getMinY()+(getHeight()/2));
     }
     @Override

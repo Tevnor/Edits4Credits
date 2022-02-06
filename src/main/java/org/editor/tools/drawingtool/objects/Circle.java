@@ -5,13 +5,11 @@ import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import org.editor.tools.drawingtool.attributes.AbstractGeneral;
 
-import static org.editor.tools.drawingtool.objects.Shapes.Type.CIRCLE;
+import static org.editor.tools.drawingtool.objects.Shapes.ShapeType.CIRCLE;
 
 public class Circle extends Shapes {
 
     private final double radius, diameter;
-
-
     private Point2D getCenter(){
         return new Point2D(getMinX()+radius,getMinY()+radius);
     }
@@ -19,7 +17,7 @@ public class Circle extends Shapes {
         super(minX,minY,2*radius,2*radius, attributes);
         this.radius = radius;
         this.diameter = 2*radius;
-        this.type = CIRCLE;
+        this.shapeType = CIRCLE;
     }
 
 
@@ -28,14 +26,11 @@ public class Circle extends Shapes {
         setAttributesOfGc(gc);
         gc.strokeOval(getMinX(), getMinY(), diameter, diameter);
     }
-
     private void drawFill(GraphicsContext gc) {
         gc.setFill(getDirectAttributes().getColor());
         setAttributesOfGc(gc);
         gc.fillOval(getMinX(), getMinY(), diameter, diameter);
     }
-
-
     @Override
     protected void draw(GraphicsContext gc, GraphicsContext tmp) {
         int[] before = getPixelsBefore(gc);
@@ -48,7 +43,6 @@ public class Circle extends Shapes {
         }
         writePixelsBelow(tmp, before);
     }
-
     @Override
     protected void drawAfterMove(GraphicsContext gc) {
         if(getDirectAttributes().isFill()){
@@ -57,15 +51,13 @@ public class Circle extends Shapes {
             drawStroke(gc);
         }
     }
-
     @Override
-    public void setRotation(double angle) {
+    protected void setRotation(double angle) {
     }
-
+    @Override
     public javafx.scene.shape.Circle getShapeRepresentation(){
         return new javafx.scene.shape.Circle(radius, getDirectAttributes().getColor());
     }
-
     @Override
     public Shapes reposition(Point2D point) {
         Circle c = new Circle(point.getX(),point.getY(), radius, getAttributes());

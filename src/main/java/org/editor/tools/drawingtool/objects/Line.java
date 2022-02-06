@@ -16,7 +16,7 @@ public class Line extends Shapes {
         this.xTwo = xTwo;
         this.yTwo = yTwo;
         setRotation(attributes.getRotation());
-        this.type = Type.LINE;
+        this.shapeType = ShapeType.LINE;
     }
 
     @Override
@@ -86,7 +86,7 @@ public class Line extends Shapes {
         gc.strokeLine(xOne, yOne, xTwo, yTwo);
     }
     @Override
-    public void setRotation(double angle) {
+    protected void setRotation(double angle) {
 
         double xMid = getMinX()+getWidth()/2;
         double yMid = getMinY()+getHeight()/2;

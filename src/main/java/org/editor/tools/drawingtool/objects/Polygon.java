@@ -41,7 +41,7 @@ public class Polygon extends Shapes {
         this.nPoints = nPoints;
         this.attributes = attributes;
         setRotation(attributes.getRotation());
-        this.type = Type.POLYGON;
+        this.shapeType = ShapeType.POLYGON;
     }
 
     private void drawStroke(GraphicsContext gc) {
@@ -81,7 +81,7 @@ public class Polygon extends Shapes {
         }
     }
     @Override
-    public void setRotation(double angle) {
+    protected void setRotation(double angle) {
         this.r = new Rotate(angle, getMinX()+(getWidth()/2), getMinY()+(getHeight()/2));
     }
     @Override

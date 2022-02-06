@@ -13,7 +13,7 @@ public class Ellipses extends Shapes {
     public Ellipses(double minX, double minY, double width, double height, AbstractGeneral attributes) {
         super(minX,minY,width,height,attributes);
         setRotation(attributes.getRotation());
-        this.type = Type.ELLIPSES;
+        this.shapeType = ShapeType.ELLIPSES;
     }
 
     private Point2D getCenter(){
@@ -52,7 +52,7 @@ public class Ellipses extends Shapes {
         }
     }
     @Override
-    public void setRotation(double angle) {
+    protected void setRotation(double angle) {
         this.r = new Rotate(angle, getMinX()+(getWidth()/2), getMinY()+(getHeight()/2));
     }
     @Override

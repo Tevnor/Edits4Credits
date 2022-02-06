@@ -137,7 +137,7 @@ public class DrawBoard {
     private void draw(DrawOp op) {
         DB_LOGGER.debug("draw() entered");
         addToOperations(op);
-        op.setReference(historyIndex);
+        op.setMoveReference(historyIndex);
     }
 
     /**
@@ -223,7 +223,7 @@ public class DrawBoard {
      * @param ref index of the Shape in the operations history
      * @return ArrayList of shapes which lay over the ref in ascending order
      */
-    private ArrayList<Shapes> getShapesOver(int ref) {
+    private List<Shapes> getShapesOver(int ref) {
         ArrayList<Shapes> over = new ArrayList<>();
         try {
             Shapes base = (Shapes) operations.get(ref);

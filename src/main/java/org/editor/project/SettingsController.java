@@ -98,7 +98,7 @@ public class SettingsController implements Initializable, ControlScreen {
     }
     @FXML
     private void handleOpenGallery() {
-        if(((GalleryController)screensController.getController(ScreenName.GALLERY)).setOpen(false)){
+        if(((GalleryController)screensController.getController(ScreenName.GALLERY)).setOpen(0)){
             screensController.setScreen(ScreenName.GALLERY);
         }else{
             Alert alert = new Alert(Alert.AlertType.WARNING,"Images did not finish loading please wait.");

@@ -689,7 +689,7 @@ public class EditorController implements Initializable, ControlScreen {
     }
     @FXML
     private void handleGallery() {
-        if(((GalleryController)screensController.getController(ScreenName.GALLERY)).setOpen(true)){
+        if(((GalleryController)screensController.getController(ScreenName.GALLERY)).setOpen(1)){
             screensController.setScreen(ScreenName.GALLERY);
         }else{
             Alert alert = new Alert(Alert.AlertType.WARNING,"Images did not finish loading please wait.");

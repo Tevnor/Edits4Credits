@@ -6,7 +6,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.shape.Shape;
 import org.editor.tools.drawingtool.attributes.RoundRectAttributes;
 
-import static org.editor.tools.drawingtool.objects.Shapes.Type.ROUNDED_RECT;
+import static org.editor.tools.drawingtool.objects.Shapes.ShapeType.ROUNDED_RECT;
 
 public class RoundedRectangle extends Rectangle{
 
@@ -16,7 +16,7 @@ public class RoundedRectangle extends Rectangle{
         super(minX, minY, width, height);
         this.attributes = attributes;
         setRotation(attributes.getRotation());
-        this.type = ROUNDED_RECT;
+        this.shapeType = ROUNDED_RECT;
     }
 
     @Override

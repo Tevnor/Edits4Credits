@@ -179,7 +179,7 @@ public class MovingControl {
         MC_LOGGER.debug("getPostSelectedShape() entered");
             if(preSelectedShape != null) {
             Shapes shape = preSelectedShape.reposition(end);
-            shape.setReference(moveRef);
+            shape.setMoveReference(moveRef);
             this.moveRef = 0;
             return shape;
             }

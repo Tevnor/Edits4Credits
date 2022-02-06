@@ -52,7 +52,8 @@
                       <Menu mnemonicParsing="false" text="Exit">
                         <items>
                           <MenuItem fx:id="toProject" mnemonicParsing="false" onAction="#handleToProject" text="To Project" />
-                              <MenuItem fx:id="toEditor" mnemonicParsing="false" onAction="#handleToEditor" text="To Editor" />
+                            <MenuItem fx:id="toEditor" mnemonicParsing="false" onAction="#handleToEditor" text="To Editor" />
+                            <MenuItem fx:id="toMode" mnemonicParsing="false" onAction="#handleToMode" text="To Mode Selection" />
                               <MenuItem mnemonicParsing="false" onAction="#handleLogOut" text="Log Out" />
                         </items>
                       </Menu>

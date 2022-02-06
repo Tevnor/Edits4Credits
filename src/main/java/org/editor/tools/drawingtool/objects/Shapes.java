@@ -15,22 +15,22 @@ import org.editor.tools.drawingtool.attributes.General;
 
 public abstract class Shapes extends DrawOp {
     private static final Logger SH_LOGGER = LogManager.getLogger(Shapes.class.getName());
-    public enum Type{
+    public enum ShapeType {
         ARC, CIRCLE, ELLIPSES, LINE, POLYGON, RECTANGLE, ROUNDED_RECT, TEXT
     }
     private final double minX, minY, width, height;
     protected Rotate r = new Rotate(0,0,0);
-    protected Type type;
+    protected ShapeType shapeType;
     private AbstractGeneral attributes;
 
-    public Shapes(double minX, double minY, double width, double height, AbstractGeneral attributes){
+    protected Shapes(double minX, double minY, double width, double height, AbstractGeneral attributes){
         this.minX = minX;
         this.minY = minY;
         this.width = width;
         this.height = height;
         this.attributes = attributes;
     }
-    public Shapes(double minX, double minY, double width, double height){
+    protected Shapes(double minX, double minY, double width, double height){
         this.minX = minX;
         this.minY = minY;
         this.width = width;
@@ -68,7 +68,7 @@ public abstract class Shapes extends DrawOp {
     public AbstractGeneral getAttributes(){
         return new General(attributes);
     }
-    public Type getType(){return type;}
+    public ShapeType getType(){return shapeType;}
     public Rotate getR(){
         return new Rotate(r.getAngle(),r.getPivotX(),r.getPivotY());
     }

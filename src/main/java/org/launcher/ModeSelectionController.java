@@ -6,12 +6,14 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.CacheHint;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 import org.database.User;
+import org.marketplace.gallery.GalleryController;
 import org.screencontrol.ControlScreen;
 import org.screencontrol.ScreenName;
 import org.screencontrol.ScreensController;
@@ -113,10 +115,14 @@ public class ModeSelectionController implements Initializable, ControlScreen {
 
     /**
      * Open the gallery.
-     *
-     * @param ae the ae
      */
-    public void openMarketplace(ActionEvent ae) {
+    public void openMarketplace() {
+        if(((GalleryController)screensController.getController(ScreenName.GALLERY)).setOpen(-1)){
+            screensController.setScreen(ScreenName.GALLERY);
+        }else{
+            Alert alert = new Alert(Alert.AlertType.WARNING,"Images did not finish loading please wait.");
+            alert.show();
+        }
     }
 
     /**

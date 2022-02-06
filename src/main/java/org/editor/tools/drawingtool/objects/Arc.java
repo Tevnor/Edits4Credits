@@ -7,7 +7,7 @@ import javafx.scene.shape.Shape;
 import javafx.scene.transform.Rotate;
 import org.editor.tools.drawingtool.attributes.ArcAttributes;
 
-import static org.editor.tools.drawingtool.objects.Shapes.Type.ARC;
+import static org.editor.tools.drawingtool.objects.Shapes.ShapeType.ARC;
 
 public class Arc extends Shapes {
 
@@ -20,7 +20,7 @@ public class Arc extends Shapes {
         super(minX,minY,width,height);
         this.attributes = attributes;
         setRotation(attributes.getRotation());
-        this.type = ARC;
+        this.shapeType = ARC;
     }
 
     private void drawFill(GraphicsContext gc) {

@@ -7,7 +7,7 @@ import javafx.scene.shape.Shape;
 import javafx.scene.transform.Rotate;
 import org.editor.tools.drawingtool.attributes.TextAttributes;
 
-import static org.editor.tools.drawingtool.objects.Shapes.Type.TEXT;
+import static org.editor.tools.drawingtool.objects.Shapes.ShapeType.TEXT;
 
 public class Text extends Shapes {
 
@@ -18,7 +18,7 @@ public class Text extends Shapes {
                 attributes.getFm().getLineHeight());
         this.attributes = attributes;
         setRotation(attributes.getRotation());
-        this.type = TEXT;
+        this.shapeType = TEXT;
     }
 
     private void drawStroke(GraphicsContext gc) {
@@ -62,7 +62,7 @@ public class Text extends Shapes {
         }
     }
     @Override
-    public void setRotation(double angle) {
+    protected void setRotation(double angle) {
         this.r = new Rotate(angle, getMidX(),getMidY());
     }
     @Override
