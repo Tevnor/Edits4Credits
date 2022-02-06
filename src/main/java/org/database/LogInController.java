@@ -84,12 +84,13 @@ public class LogInController implements Initializable, ControlScreen {
     private void enterMainApp() {
         loginStage = (Stage) logInButton.getScene().getWindow();
         user = new User(username.getText());
-        if (username!=null && password != null) {
-            LI_LOGGER.info("User {} successfully logged in.", username);
+        if (!(username.getText().equals(""))) {
+            loginError.setVisible(false);
+            LI_LOGGER.info("User {} successfully logged in.", username.getText());
             createApp();
             startClosingAnimation();
         } else {
-            loginError.setText("Invalid login. Please try again.");
+            loginError.setText("Please enter username.");
             LI_LOGGER.error("Login unsuccessful.");
         }
     }
