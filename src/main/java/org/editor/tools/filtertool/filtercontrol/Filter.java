@@ -21,6 +21,8 @@ public interface Filter {
      *
      * @param color the color
      * @return the int
+     * @see Math#round(double)
+     * @see Color
      */
     default int convertColorToARGB(Color color) {
         int a = (int) Math.round(color.getOpacity() * 255);
@@ -36,6 +38,7 @@ public interface Filter {
      *
      * @param argb the argb
      * @return the color
+     * @see Color
      */
     default Color convertARGBtoColor(int argb) {
         int a = ((argb >> 24) & 0xff) / 255;

@@ -6,6 +6,13 @@ import org.apache.logging.log4j.Logger;
 
 import java.nio.IntBuffer;
 
+/**
+ * ImageGrid objects handle the conversion of Images into integer arrays of pixels and vice versa.
+ * @see WritableImage
+ * @see PixelReader
+ * @see PixelWriter
+ * @see WritablePixelFormat
+ * */
 public class ImageGrid {
 
     private final Logger IG_LOGGER = LogManager.getLogger(this.getClass());
@@ -40,6 +47,8 @@ public class ImageGrid {
 
     /**
      * Write new pixel array onto image
+     * @param pixelArrayNew the array of the pixels after processing
+     * @return the newly overwritten WriteableImage
      * */
     public WritableImage writeNewPixelArray(int[] pixelArrayNew) {
         pixelWriter.setPixels(0, 0, width, height, writablePixelFormat, pixelArrayNew, 0, width);

@@ -14,35 +14,41 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * The actual filter operations on a pixel level.
- * Mapping of filter selections to their respective functionalities.
- * Calculation of panel size, position, and array index hops to enable concurrency by geometric partition.
- *
- * To determine the starting index of each panel within a certain block:
- * Notation:
- * W_t = width of the total image
- * W_p = width of a panel
- * H_p = height of a panel
- * i_s = starting index of the block
- * i_0 = starting index of the top-left panel
- * i_1 = starting index of the top-right panel
- * i_2 = starting index of the bottom-left panel
- * i_3 = starting index of the bottom-right panel
- *
- * i_0 = i_s
- * i_1 = W_p + i_s
- * i_2 = W_t * H_p + i_s
- * i_3 = W_t * H_p + W_p + i_s
- *
- *
- * The of calculations to determine the dimensions of the last panel summarized in one equation:
- * Notation:
- * P_last = width|height of the last panel of the column/row
- * T_dim = width|height of the total image
- * N_p = Total amount of panels in column/row
- *
- * P_last = T_dim - ⌊(T_dim / N_p)⌉ * (N_p - 1)
- *
+ * <p>
+ *     The actual filter operations on a pixel level.
+ *     Mapping of filter selections to their respective functionalities.
+ *     Calculation of panel size, position, and array index hops to enable concurrency by geometric partition.
+ * </p>
+ *     To determine the starting index of each panel within a certain block:
+ *     Notation:
+ * <ul>
+ *     <li>W_t = width of the total image</li>
+ *     <li>W_p = width of a panel</li>
+ *     <li>H_p = height of a panel</li>
+ *     <li>i_s = starting index of the block</li>
+ *     <li>i_0 = starting index of the top-left panel</li>
+ *     <li>i_1 = starting index of the top-right panel</li>
+ *     <li>i_2 = starting index of the bottom-left panel</li>
+ *     <li>i_3 = starting index of the bottom-right panel</li>
+ * </ul>
+ * <p>
+ *     i_0 = i_s
+ *     i_1 = W_p + i_s
+ *     i_2 = W_t * H_p + i_s
+ *     i_3 = W_t * H_p + W_p + i_s
+ * </p>
+ * <p>
+ *     The of calculations to determine the dimensions of the last panel summarized in one equation:
+ *     Notation:
+ * </p>
+ * <ul>
+ *     P_last = width|height of the last panel of the column/row
+ *     T_dim = width|height of the total image
+ *     N_p = Total amount of panels in column/row
+ * </ul>
+ * <p>
+ *     P_last = T_dim - ⌊(T_dim / N_p)⌉ * (N_p - 1)
+ * </p>
  */
 public class FilterOperation {
 
@@ -70,6 +76,8 @@ public class FilterOperation {
      *
      * @param imageGrid       the image grid
      * @param inputAttributes the input attributes
+     * @see ImageGrid
+     * @see FilterInputAttributes
      */
     public FilterOperation(ImageGrid imageGrid, FilterInputAttributes inputAttributes) {
         runs = inputAttributes.getRuns();
@@ -98,18 +106,22 @@ public class FilterOperation {
     }
 
     /**
-     * Checks if image dimensions are cleanly divisible by the number of panels on each axis.
-     * Calculates the dimensions for each panel but the last by rounding the division of the total dimension by the amount of panels on the axis.
-     *
+     * <p>
+     *     Checks if image dimensions are cleanly divisible by the number of panels on each axis.
+     *     Calculates the dimensions for each panel but the last by rounding the division of the total dimension by the amount of panels on the axis.
+     * </p>
      * @param dimension int value for either the total width or the total height of the image
      * @param panelsOnAxis int value for the number of panels on the x or y axis
      * @return the rounded integer for the dimensions of all panels but the last
+     * @see Math#round(double)
      * */
     public int calculatePanelDimension(int dimension, int panelsOnAxis) {
         return (int) Math.round((double) dimension / panelsOnAxis);
     }
     /**
-     * Calculate the dimensions of the last panel by subtracting the combined dimension of all panels but the last from the dimension of the total image.
+     * <p>
+     *     Calculate the dimensions of the last panel by subtracting the combined dimension of all panels but the last from the dimension of the total image.
+     * </p>
      * @param dimension int value for either the total width or the total height of the image
      * @param panelDimension the previously calculated dimensions of all panels but the last
      * @param panelsOnAxis int value for the number of panels on the x or y axis
@@ -119,17 +131,26 @@ public class FilterOperation {
         return dimension - (panelDimension * (panelsOnAxis - 1));
     }
     /**
-     *
+     * <p>
+     *     Calculate the dimensions for all blocks.
+     * </p>
+     * @param panelDimension the dimensions of the inherent panels
+     * @return the dimensions of a block
      * */
     public int calculateBlockDimension(int panelDimension) {
         return panelDimension * 2;
     }
 
     /**
-     * Start the filter process by dividing the grid into the chosen number of partitions 'blocks'.
-     * Set up and manage multi-threading functionalities via ExecutorServices, Runnable Lists, and CountDownLatches.
-     *
+     * <p>
+     *     Start the filter process by dividing the grid into the chosen number of partitions 'blocks'.
+     *     Set up and manage multi-threading functionalities via ExecutorServices, Runnable Lists, and CountDownLatches.
+     * </p>
      * @return the integer array containing the new argb values
+     * @see CountDownLatch
+     * @see ExecutorService
+     * @see ArrayList
+     * @see Runnable
      */
     public int[] startFilter() {
         int index = 0;
@@ -171,9 +192,10 @@ public class FilterOperation {
     }
 
     /**
-     * Operations within each mid-level partition/block are managed here.
-     * Further multi-threading management is set up to facilitate dynamic, fine-grained concurrency.
-     *
+     * <p>
+     *     Operations within each mid-level partition/block are managed here.
+     *     Further multi-threading management is set up to facilitate dynamic, fine-grained concurrency.
+     * </p>
      * Dimensions and index positions of the low-level are set according to the amount of partitions to be made.
      */
     public class BlockOperation implements Runnable {
