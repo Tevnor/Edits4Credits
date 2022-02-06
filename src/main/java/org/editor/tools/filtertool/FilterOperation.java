@@ -1,5 +1,7 @@
 package org.editor.tools.filtertool;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.editor.tools.filtertool.filtercontrol.Filter;
 import org.editor.tools.filtertool.filtercontrol.FilterInputAttributes;
 import org.editor.tools.filtertool.filtercontrol.filter.FilterType;
@@ -19,6 +21,8 @@ import java.util.concurrent.Executors;
  */
 public class FilterOperation {
 
+    private final Logger FO_LOGGER = LogManager.getLogger(this.getClass());
+
     private final int runs;
     private final int width;
     private final int blockWidth;
@@ -33,6 +37,9 @@ public class FilterOperation {
     private final double factorY;
     private final boolean isComplement;
     private final boolean isSilhouette;
+
+    private int mainThreadCount = 0;
+    private int subThreadCount = 0;
 
     /**
      * Instantiates a new Filter operation.
@@ -56,6 +63,8 @@ public class FilterOperation {
         this.blockHeight = height / runs;
         this.panelWidth = width / (runs * 2);
         this.panelHeight = height / (runs * 2);
+
+        FO_LOGGER.debug("New FilterOperation object instantiated.");
     }
 
     /**
@@ -76,6 +85,7 @@ public class FilterOperation {
                 Runnable blockRunnable = new BlockOperation(blockFinish, index);
                 blockRunnableList.add(blockRunnable);
                 index += blockWidth;
+                mainThreadCount++;
             }
 
             for (Runnable r: blockRunnableList) {
@@ -140,6 +150,7 @@ public class FilterOperation {
                 Runnable panelRunnable = new PanelOperation(panelIndex, filter, panelFinish);
                 panelRunnableList.add(panelRunnable);
                 listIndex++;
+                subThreadCount++;
             }
 
             for (Runnable rP: panelRunnableList) {

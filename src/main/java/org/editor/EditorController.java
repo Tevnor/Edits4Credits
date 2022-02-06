@@ -53,7 +53,7 @@ import static org.editor.tools.filtertool.filtercontrol.filter.FilterType.*;
 
 public class EditorController implements Initializable, ControlScreen {
 
-    private static final Logger EC_LOGGER = LogManager.getLogger(EditorController.class.getName());
+    private final Logger EC_LOGGER = LogManager.getLogger(this.getClass());
 
     @FXML
     private Button importButton;
@@ -163,6 +163,24 @@ public class EditorController implements Initializable, ControlScreen {
         handlerFactory = new HandlerFactory();
         this.importButton.toFront();
     }
+
+    // Method shared by all options controllers to set their stage
+    private Stage initStage(Parent root) {
+        Scene scene = new Scene(root);
+        scene.setFill(Color.TRANSPARENT);
+
+        Stage stage = new Stage();
+        stage.setScene(scene);
+        stage.initStyle(StageStyle.UNDECORATED);
+        stage.initStyle(StageStyle.TRANSPARENT);
+        stage.setResizable(false);
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.setScene(scene);
+        stage.centerOnScreen();
+
+        return stage;
+    }
+
     //initializes controls and fits them to the screen
     private void initControls(){
         double viewCenterY = (((window.getScreenHeight() - menuBar.getPrefHeight()) / 2d) + menuBar.getPrefHeight());
@@ -404,21 +422,7 @@ public class EditorController implements Initializable, ControlScreen {
 
         filterOptStage = initStage(filterOptRoot);
     }
-    private Stage initStage(Parent root) {
-        Scene scene = new Scene(root);
-        scene.setFill(Color.TRANSPARENT);
 
-        Stage stage = new Stage();
-        stage.setScene(scene);
-        stage.initStyle(StageStyle.UNDECORATED);
-        stage.initStyle(StageStyle.TRANSPARENT);
-        stage.setResizable(false);
-        stage.initModality(Modality.APPLICATION_MODAL);
-        stage.setScene(scene);
-        stage.centerOnScreen();
-
-        return stage;
-    }
     private void initFilterOptionsController() {
         filterOptLoader.setController(new FilterOptionsController(
                 originalImageObject.getFilteredImage(),

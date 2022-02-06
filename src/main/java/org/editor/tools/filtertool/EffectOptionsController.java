@@ -8,6 +8,8 @@ import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.editor.EditorController;
 import org.editor.tools.filtertool.filtercontrol.Effect;
 import org.editor.tools.filtertool.filtercontrol.effects.EffectType;
@@ -15,6 +17,8 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class EffectOptionsController implements Initializable {
+
+    private final Logger EOC_LOGGER = LogManager.getLogger(this.getClass());
 
     @FXML
     private Label effectOptionsLabel;
@@ -45,6 +49,8 @@ public class EffectOptionsController implements Initializable {
         this.originalImage = originalImage;
         this.editorImage = editorImage;
         this.editorController = editorController;
+
+        EOC_LOGGER.debug("New EffectOptionsController object instantiated: {}.", this);
     }
 
     @Override
@@ -67,11 +73,15 @@ public class EffectOptionsController implements Initializable {
         editorController.setFilteredImages(originalPostEffectImage, editorPostEffectImage);
         // Draw both to their respective canvas
         editorController.drawFilteredImages();
+
+        EOC_LOGGER.debug("Applying effect {} on {} and {}.", effect, originalImage, editorImage);
     }
 
     private void previewEffect() {
         Image effectPreviewImage = effect.applyEffect(editorImage, factor);
         editorController.drawPreviewImage(effectPreviewImage);
+
+        EOC_LOGGER.debug("Creating preview for {}.", effect);
     }
 
     /**
@@ -81,11 +91,15 @@ public class EffectOptionsController implements Initializable {
     private void handleEffectSlider() {
         factor = (effectSlider.getValue());
         previewEffect();
+
+        EOC_LOGGER.debug("Value of {} set to: {}.", effectSlider.getId(), factor);
     }
     @FXML
     private void handleAdjustmentSlider() {
         factor = (adjustmentSlider.getValue());
         previewEffect();
+
+        EOC_LOGGER.debug("Value of {} set to: {}.", adjustmentSlider.getId(), factor);
     }
 
     @FXML
@@ -93,6 +107,8 @@ public class EffectOptionsController implements Initializable {
         applyEffect();
         stage = (Stage) applyEffectButton.getScene().getWindow();
         stage.close();
+
+        EOC_LOGGER.debug("Stage closed via {}.", applyEffectButton.getId());
     }
 
     @FXML
@@ -101,6 +117,8 @@ public class EffectOptionsController implements Initializable {
 
         stage = (Stage) cancelEffectButton.getScene().getWindow();
         stage.close();
+
+        EOC_LOGGER.debug("Stage closed via {}.", cancelEffectButton.getId());
     }
 
     public void setEffectView(EffectType effectType) {
@@ -137,5 +155,6 @@ public class EffectOptionsController implements Initializable {
                 break;
             default:
         }
+        EOC_LOGGER.debug("Stage set to {}.", effectType);
     }
 }

@@ -22,6 +22,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Objects;
 
+import static org.screencontrol.ScreenName.*;
+
 /**
  * Switching between the application's GUI screens is facilitated here.
  * Coordination between screen names and FXML files is done via HashMaps
@@ -32,10 +34,10 @@ public class ScreensController extends StackPane {
 
     private static final Logger SC_LOGGER = LogManager.getLogger(ScreensController.class);
 
-    private final HashMap<ScreenName, Node> screenToNodeMap = new HashMap<>();
-    private final HashMap<ScreenName,ControlScreen> screenToController = new HashMap<>();
+    private final HashMap<ScreenName, Node> SCREEN_TO_NODE_MAP = new HashMap<>();
+    private final HashMap<ScreenName, ControlScreen> SCREEN_TO_CONTROLLER_MAP = new HashMap<>();
     private Window window;
-    private FXMLLoader loader;
+    private FXMLLoader screenLoader;
 
 
     /**
@@ -52,7 +54,7 @@ public class ScreensController extends StackPane {
      * @param screen the screen
      */
     private void addScreen(ScreenName name, Node screen) {
-        screenToNodeMap.put(name, screen);
+        SCREEN_TO_NODE_MAP.put(name, screen);
     }
 
     /**
@@ -62,7 +64,7 @@ public class ScreensController extends StackPane {
      * @return the screen's node
      */
     private Node getScreen(ScreenName name) {
-        return screenToNodeMap.get(name);
+        return SCREEN_TO_NODE_MAP.get(name);
     }
 
     /**
@@ -94,33 +96,41 @@ public class ScreensController extends StackPane {
      * Retrieves path of the FXML file from SCREEN_NAME_TO_PATH_MAP belonging via name as key.
      * Puts screen onto screenToController stack to make it available for setting.
      *
-     * @param name the name
+     * @param screenName the name
      * @return the boolean
      */
 // Load FXML file, use addScreen(), get controller from parent tree structure, and inject screen into controller
-    public boolean loadScreen(ScreenName name){
+    public boolean loadScreen(ScreenName screenName){
         try {
-            loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource(ScreenName.SCREEN_NAME_TO_PATH_MAP.get(name))));
-            Parent loadScreen = loader.load();
-            ControlScreen controlScreen = loader.getController();
+            screenLoader = new FXMLLoader(Objects.requireNonNull(getClass().getResource(SCREEN_NAME_TO_PATH_MAP.get(screenName))));
+            //TODO NEW
+//            initController(screenName);
+
+            Parent loadScreen = screenLoader.load();
+            ControlScreen controlScreen = screenLoader.getController();
             controlScreen.setScreenParent(this);
             controlScreen.setWindow(getWindow());
-            screenToController.put(name,controlScreen);
+            SCREEN_TO_CONTROLLER_MAP.put(screenName,controlScreen);
 
             // add scene excluding background
             AnchorPane ap = (AnchorPane) loadScreen;
             Pane loadPane = (Pane) ap.getChildren().get(1);
 
-            addScreen(name, loadPane);
+            addScreen(screenName, loadPane);
 
-            SC_LOGGER.debug("Screen '" + name + "' loaded.");
+            SC_LOGGER.debug("Screen '" + screenName + "' loaded.");
             return true;
         } catch (IOException e) {
             e.printStackTrace();
-            SC_LOGGER.error("Screen '" + name + "' could not be loaded.");
+            SC_LOGGER.error("Screen '" + screenName + "' could not be loaded.");
             return false;
         }
     }
+//
+//    private void initController(ScreenName screenName) {
+//
+//        screenLoader.setController(new SCREEN_NAME_TO_CONTROLLER_MAP.get(screenName));
+//    }
 
     /**
      * Gets loader.
@@ -128,8 +138,8 @@ public class ScreensController extends StackPane {
      * @return the FXML loader
      */
     @FXML
-    public FXMLLoader getLoader() {
-        return loader;
+    public FXMLLoader getScreenLoader() {
+        return screenLoader;
     }
 
     /**
@@ -139,7 +149,7 @@ public class ScreensController extends StackPane {
      * @return the ControlScreen object
      */
     public ControlScreen getController(ScreenName name){
-        return screenToController.get(name);
+        return SCREEN_TO_CONTROLLER_MAP.get(name);
     }
 
     /**
@@ -172,7 +182,7 @@ public class ScreensController extends StackPane {
      * @return the boolean depending on successful execution
      */
     public boolean setScreen(final ScreenName name) {
-        if (screenToNodeMap.get(name) != null) {
+        if (SCREEN_TO_NODE_MAP.get(name) != null) {
             final DoubleProperty opacity = opacityProperty();
 
             // In case of one more active screens
@@ -181,7 +191,7 @@ public class ScreensController extends StackPane {
                         new KeyFrame(Duration.ZERO, new KeyValue(opacity, 1.0)),
                         new KeyFrame(new Duration(1000), actionEvent -> {
                             getChildren().remove(0);
-                            getChildren().add(0, screenToNodeMap.get(name));
+                            getChildren().add(0, SCREEN_TO_NODE_MAP.get(name));
                             SC_LOGGER.debug("Screen set to: " + name);
 
                             Timeline screenFadeIn = new Timeline(
@@ -197,7 +207,7 @@ public class ScreensController extends StackPane {
             // In case of no active screens
             } else {
                 setOpacity(0.0);
-                getChildren().add(screenToNodeMap.get(name));
+                getChildren().add(SCREEN_TO_NODE_MAP.get(name));
                 setCenter(name);
 
                 Timeline screenFadeIn = new Timeline(
@@ -221,7 +231,7 @@ public class ScreensController extends StackPane {
      * @return the boolean depending on successful execution
      */
     private boolean unloadScreen(ScreenName name) {
-        if (screenToNodeMap.remove(name) != null) {
+        if (SCREEN_TO_NODE_MAP.remove(name) != null) {
             SC_LOGGER.debug(name + " screen unloaded.");
             return true;
         } else {

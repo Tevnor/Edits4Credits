@@ -21,7 +21,10 @@ import org.screencontrol.ScreensController;
 import org.screencontrol.Window;
 
 import java.net.URL;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 /**
  * The first full screen view.

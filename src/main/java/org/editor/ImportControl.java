@@ -214,7 +214,7 @@ public class ImportControl {
         imgDims.setCurrentHeight(resizedImage.getHeight());
         // Draw resized image onto editorCanvasImage
         gc.drawImage(resizedImage,0, 0, resizedImage.getWidth(), resizedImage.getHeight());
-        IC_LOGGER.debug("Drawed imported image with dims: x= " + resizedImage.getWidth() + " y= " + resizedImage.getHeight() + " ratio= " + ratio);
+        IC_LOGGER.debug("Drew imported image with dims: x= " + resizedImage.getWidth() + " y= " + resizedImage.getHeight() + " ratio= " + ratio);
         if(!isOriginal){
             fitToEditor = resizedImage;
             IC_LOGGER.debug("Set fitToEditor to: " + resizedImage);

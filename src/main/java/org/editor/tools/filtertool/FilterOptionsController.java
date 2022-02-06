@@ -20,14 +20,13 @@ import org.editor.tools.imagetool.ImageGrid;
 import java.net.URL;
 import java.util.*;
 
-import static org.editor.tools.filtertool.filtercontrol.FilterApplicationType.CHECKERBOARD;
 
 /**
  * Pop-up window for users to set filter input settings.
  */
 public class FilterOptionsController implements Initializable {
 
-    private static final Logger FOC_LOGGER = LogManager.getLogger(FilterOptionsController.class.getName());
+    private final Logger FOC_LOGGER = LogManager.getLogger(this.getClass());
 
     @FXML
     private Button closeFilterButton;
@@ -39,7 +38,6 @@ public class FilterOptionsController implements Initializable {
     private Button cancelFilterButton;
     @FXML
     private GridPane intensityGridPane;
-    private Stage stage;
 
     /**
      * Checkerboard Nodes
@@ -87,6 +85,8 @@ public class FilterOptionsController implements Initializable {
         this.resizedImageGrid = new ImageGrid(resized);
         originalImageGrid.readPixelsIntoArray();
         resizedImageGrid.readPixelsIntoArray();
+
+        FOC_LOGGER.debug("New FilterOptionsController object instantiated.");
     }
 
     @Override
@@ -103,6 +103,7 @@ public class FilterOptionsController implements Initializable {
 
         panelIncreaseButton.setOnAction(actionEvent -> handlePanelIncrease());
         panelDecreaseButton.setOnAction(actionEvent -> handlePanelDecrease());
+
     }
 
     /**
@@ -151,6 +152,8 @@ public class FilterOptionsController implements Initializable {
         editorController.setFilteredImages(originalImage, editorImage);
         // Draw both to their respective canvas
         editorController.drawFilteredImages();
+
+        FOC_LOGGER.debug("{} applied on {} and {}", filterType, resizedImageGrid, originalImageGrid);
     }
 
     /**
@@ -161,6 +164,8 @@ public class FilterOptionsController implements Initializable {
         int[] pixelArrayNew = preview.startFilter();
         Image pi = (resizedImageGrid.writeNewPixelArray(pixelArrayNew));
         editorController.drawPreviewImage(pi);
+
+        FOC_LOGGER.debug("Created preview for {} filter.", filterType);
     }
 
     /**
@@ -169,7 +174,7 @@ public class FilterOptionsController implements Initializable {
     @FXML
     private void handleApplyFilter() {
         applyFilter();
-        stage = (Stage) applyFilterButton.getScene().getWindow();
+        Stage stage = (Stage) applyFilterButton.getScene().getWindow();
         stage.close();
     }
 
@@ -181,6 +186,8 @@ public class FilterOptionsController implements Initializable {
     private void handleSilhouette() {
         inputAttributes.setSilhouetteToggle(silhouetteToggleButton.isSelected());
         previewFilter();
+
+        FOC_LOGGER.debug("Toggled {}.", silhouetteToggleButton);
     }
 
     /**
@@ -190,6 +197,8 @@ public class FilterOptionsController implements Initializable {
     private void handleComplement() {
         inputAttributes.setComplementToggle(complementToggleButton.isSelected());
         previewFilter();
+
+        FOC_LOGGER.debug("Toggled {}.", complementToggleButton);
     }
 
     /**
@@ -200,9 +209,16 @@ public class FilterOptionsController implements Initializable {
      */
     @FXML
     private void handleCoordinates(MouseEvent mouseEvent) {
-        inputAttributes.setFactorX(mouseEvent.getX());
-        inputAttributes.setFactorY(mouseEvent.getY() * 1000);
+        double offset = 1000.0;
+
+        double xFactor = mouseEvent.getX();
+        double yFactor = mouseEvent.getY();
+        inputAttributes.setFactorX(xFactor);
+        inputAttributes.setFactorY(yFactor * offset);
+
         previewFilter();
+
+        FOC_LOGGER.debug("Applying {} filter with xFactor = {} and yFactor = {} * {}", filterType, xFactor, yFactor, offset);
     }
 
     /**
@@ -211,8 +227,13 @@ public class FilterOptionsController implements Initializable {
      */
     @FXML
     private void changeSliderValue() {
-        inputAttributes.setFactor(glitchSlider.getValue() / 10000);
+        double sliderOffset = 10000;
+        double sliderValue = glitchSlider.getValue();
+
+        inputAttributes.setFactor(sliderValue / sliderOffset);
         previewFilter();
+
+        FOC_LOGGER.debug("Applying {} with new slider value: {} * {}", filterType, sliderValue, sliderOffset);
     }
 
     // FIXME: 01.02.2022 disable apply filter with empty selection
@@ -244,6 +265,8 @@ public class FilterOptionsController implements Initializable {
         inputAttributes.setFilterTypeList(filterTypeList);
 
         previewFilter();
+
+        FOC_LOGGER.debug("Filter {} added to checkerboard index: {}", filterTypeChoice.getValue(), index);
     }
 
     /**
@@ -253,6 +276,8 @@ public class FilterOptionsController implements Initializable {
     private void handlePanelIncrease() {
         inputAttributes.increaseRuns();
         previewFilter();
+
+        FOC_LOGGER.debug("Panels increased.");
     }
 
     /**
@@ -262,6 +287,8 @@ public class FilterOptionsController implements Initializable {
     private void handlePanelDecrease() {
         inputAttributes.decreaseRuns();
         previewFilter();
+
+        FOC_LOGGER.debug("Panels decreased.");
     }
 
     /**
@@ -271,8 +298,10 @@ public class FilterOptionsController implements Initializable {
     private void handleCancelFilter() {
         editorController.drawPreviousImage();
 
-        stage = (Stage) cancelFilterButton.getScene().getWindow();
+        Stage stage = (Stage) cancelFilterButton.getScene().getWindow();
         stage.close();
+
+        FOC_LOGGER.debug("Filter stage closed via {}", cancelFilterButton.getId());
     }
 
     /**
@@ -289,18 +318,22 @@ public class FilterOptionsController implements Initializable {
         glitchGridPane.setVisible(false);
         intensityGridPane.setVisible(false);
 
-        if (appType == CHECKERBOARD) {
+        if (appType == FilterApplicationType.CHECKERBOARD) {
             filterOptionsLabel.setText(appType.toString());
             initCheckerBoard();
+
+            FOC_LOGGER.debug("FilterOptionsController view set to {}.", appType);
         } else {
             filterOptionsLabel.setText(filterType.toString());
             switch (filterType) {
                 case GLITCH:
                     initGlitchFilter();
+
                     break;
                 default:
                     initStandardFilter();
             }
+            FOC_LOGGER.debug("FilterOptionsController view set to {}", filterType);
         }
     }
 
@@ -372,5 +405,7 @@ public class FilterOptionsController implements Initializable {
         filterTypeList.add(filterTypeOne);
         filterTypeList.add(filterTypeOne);
         filterTypeList.add(filterTypeOne);
+
+        FOC_LOGGER.debug("List sized maximized to {}", filterTypeList.size());
     }
 }

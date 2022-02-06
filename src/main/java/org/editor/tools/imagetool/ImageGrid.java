@@ -8,7 +8,7 @@ import java.nio.IntBuffer;
 
 public class ImageGrid {
 
-    private static final Logger IG_LOGGER = LogManager.getLogger(ImageGrid.class);
+    private final Logger IG_LOGGER = LogManager.getLogger(this.getClass());
 
     private final int width;
     private final int height;
@@ -26,6 +26,8 @@ public class ImageGrid {
         this.pixelWriter = writableImage.getPixelWriter();
         this.writablePixelFormat = WritablePixelFormat.getIntArgbInstance();
         this.pixelArray = new int[width * height];
+
+        IG_LOGGER.debug("New ImageGrid instantiated.");
     }
 
     /**
@@ -41,6 +43,8 @@ public class ImageGrid {
      * */
     public WritableImage writeNewPixelArray(int[] pixelArrayNew) {
         pixelWriter.setPixels(0, 0, width, height, writablePixelFormat, pixelArrayNew, 0, width);
+
+        IG_LOGGER.debug("Finished writing pixel array into image.");
         return writableImage;
     }
 

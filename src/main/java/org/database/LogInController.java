@@ -2,9 +2,7 @@ package org.database;
 
 
 import javafx.animation.*;
-import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -34,13 +32,10 @@ import org.screencontrol.Window;
 
 import java.net.URL;
 
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class LogInController implements Initializable, ControlScreen {
 
@@ -157,7 +152,7 @@ public class LogInController implements Initializable, ControlScreen {
 
     private void preloadScreens() {
         screensController.loadScreen(ScreenName.MODE_SELECTION);
-        loader = screensController.getLoader();
+        loader = screensController.getScreenLoader();
         screensController.loadScreen(ScreenName.PROJECT_SETTINGS);
         screensController.loadScreen(ScreenName.GALLERY);
         ((GalleryController)screensController.getController(ScreenName.GALLERY)).init();

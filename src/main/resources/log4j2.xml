@@ -16,6 +16,12 @@
         <File name="FileHandlingLog" fileName="/log/FileHandling.log" append="false">
             <PatternLayout pattern="[%t] %-5p %c{2} - %m%n"/>
         </File>
+        <File name="FilterLog" fileName="/log/Filter.log" append="false">
+            <PatternLayout pattern="[%t] %-5p %c{2} - %m%n"/>
+        </File>
+        <File name="ImageLog" fileName="/log/Image.log" append="false">
+            <PatternLayout pattern="[%t] %-5p %c{2} - %m%n"/>
+        </File>
         <File name="ScreenLog" fileName="/log/Screen.log" append="false">
             <PatternLayout pattern="[%t] %-5p %c{2} - %m%n"/>
         </File>
@@ -50,6 +56,22 @@
         <Logger name="org.editor.tools.drawingtool.handlers.HandlerFactory" level="debug">
             <AppenderRef ref="DrawLog"/>
         </Logger>
+
+        <Logger name="org.editor.tools.filtertool.FilterOptionsController" level="debug">
+            <AppenderRef ref="FilterLog"/>
+        </Logger>
+        <Logger name="org.editor.tools.filtertool.FilterOperation" level="debug">
+            <AppenderRef ref="FilterLog"/>
+        </Logger>
+        <Logger name="org.editor.tools.filtertool.EffectOptionsController" level="debug">
+            <AppenderRef ref="FilterLog"/>
+        </Logger>
+
+        <Logger name="org.editor.tools.imagetool.ImageGrid" level="debug">
+            <AppenderRef ref="ImageLog"/>
+        </Logger>
+
+
         <Logger name="org.marketplace.gallery.GalleryController" level="debug">
             <AppenderRef ref="EditorLog"/>
         </Logger>
