@@ -688,8 +688,12 @@ public class EditorController implements Initializable, ControlScreen {
     }
     @FXML
     private void handleGallery() {
-        ((GalleryController)screensController.getController(ScreenName.GALLERY)).setOpen(true);
-        screensController.setScreen(ScreenName.GALLERY);
+        if(((GalleryController)screensController.getController(ScreenName.GALLERY)).setOpen(true)){
+            screensController.setScreen(ScreenName.GALLERY);
+        }else{
+            Alert alert = new Alert(Alert.AlertType.WARNING,"Images did not finish loading please wait.");
+            alert.show();
+        }
     }
     @FXML
     private void handleResetImage() {

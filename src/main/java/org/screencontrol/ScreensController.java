@@ -37,7 +37,6 @@ public class ScreensController extends StackPane {
     private final HashMap<ScreenName, Node> SCREEN_TO_NODE_MAP = new HashMap<>();
     private final HashMap<ScreenName, ControlScreen> SCREEN_TO_CONTROLLER_MAP = new HashMap<>();
     private Window window;
-    private FXMLLoader screenLoader;
 
 
     /**
@@ -102,7 +101,7 @@ public class ScreensController extends StackPane {
 // Load FXML file, use addScreen(), get controller from parent tree structure, and inject screen into controller
     public boolean loadScreen(ScreenName screenName){
         try {
-            screenLoader = new FXMLLoader(Objects.requireNonNull(getClass().getResource(SCREEN_NAME_TO_PATH_MAP.get(screenName))));
+            FXMLLoader screenLoader = new FXMLLoader(Objects.requireNonNull(getClass().getResource(SCREEN_NAME_TO_PATH_MAP.get(screenName))));
             //TODO NEW
 //            initController(screenName);
 
@@ -132,15 +131,6 @@ public class ScreensController extends StackPane {
 //        screenLoader.setController(new SCREEN_NAME_TO_CONTROLLER_MAP.get(screenName));
 //    }
 
-    /**
-     * Gets loader.
-     *
-     * @return the FXML loader
-     */
-    @FXML
-    public FXMLLoader getScreenLoader() {
-        return screenLoader;
-    }
 
     /**
      * Get ControlScreen object via corresponding screen's name

@@ -3,9 +3,7 @@ package org.database;
 
 import javafx.animation.*;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.CacheHint;
 import javafx.scene.Group;
@@ -19,10 +17,10 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
+import org.launcher.GuiDriver;
 import org.launcher.ModeSelectionController;
 import org.marketplace.gallery.GalleryController;
 import org.screencontrol.ControlScreen;
@@ -44,14 +42,11 @@ public class LogInController implements Initializable, ControlScreen {
     private Stage appStage;
     private User user;
     private Window window;
-    private FXMLLoader loader;
     private ModeSelectionController modeSelector;
 
     public LogInController(){
     }
 
-    @FXML
-    private Rectangle loginBackground;
     @FXML
     private TextField username;
     @FXML
@@ -70,16 +65,6 @@ public class LogInController implements Initializable, ControlScreen {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
     }
-
-    public void initLogin() {
-        setCenter();
-        initLoginElements();
-        hideElements();
-        preloadScreens();
-        initAppStages();
-    }
-
-    @Override
     public void setScreenParent(ScreensController screenPage) {
         this.screensController = screenPage;
     }
@@ -94,8 +79,10 @@ public class LogInController implements Initializable, ControlScreen {
         rootPane.setLayoutY(yCenter - 300);
     }
 
+
+
     @FXML
-    private void enterMainApp(ActionEvent event) {
+    private void enterMainApp() {
         loginStage = (Stage) logInButton.getScene().getWindow();
         user = new User(username.getText());
         if (username!=null && password != null) {
@@ -105,7 +92,11 @@ public class LogInController implements Initializable, ControlScreen {
             loginError.setText("Invalid login. Please try again.");
         }
     }
-
+    @FXML
+    private void cancelLogin() {
+        loginStage = (Stage) cancelButton.getScene().getWindow();
+        closeLoginStage(1000);
+    }
 //    public void userLogIn(ActionEvent event) throws IOException {
 //        //validateLogin();
 //        replacementLogin();
@@ -151,11 +142,10 @@ public class LogInController implements Initializable, ControlScreen {
 //    }
 
     private void preloadScreens() {
-        screensController.loadScreen(ScreenName.MODE_SELECTION);
-        loader = screensController.getScreenLoader();
-        screensController.loadScreen(ScreenName.PROJECT_SETTINGS);
         screensController.loadScreen(ScreenName.GALLERY);
         ((GalleryController)screensController.getController(ScreenName.GALLERY)).init();
+        screensController.loadScreen(ScreenName.MODE_SELECTION);
+        screensController.loadScreen(ScreenName.PROJECT_SETTINGS);
         screensController.loadScreen(ScreenName.EDITOR);
         screensController.setScreen(ScreenName.MODE_SELECTION);
     }
@@ -170,13 +160,16 @@ public class LogInController implements Initializable, ControlScreen {
         appStage.initStyle(StageStyle.TRANSPARENT);
         appStage.setMaximized(true);
         appStage.setScene(scene);
+        if(GuiDriver.getIcon() != null){
+            appStage.getIcons().add(GuiDriver.getIcon());
+        }
     }
     private void createApp() {
 
         Platform.runLater(() -> {
             try {
                 // Pass logged in user to menu class
-                modeSelector = loader.getController();
+                modeSelector = (ModeSelectionController) screensController.getController(ScreenName.MODE_SELECTION);
                 modeSelector.initUserData(user);
                 modeSelector.setWindow(window);
                 modeSelector.setRootAnchorPane();
@@ -190,12 +183,6 @@ public class LogInController implements Initializable, ControlScreen {
         });
     }
 
-    @FXML
-    private void cancelLogin(ActionEvent event) {
-        loginStage = (Stage) cancelButton.getScene().getWindow();
-        closeLoginStage(1000);
-    }
-
     private void closeLoginStage(double duration){
         FadeTransition fadeToClose = getFade(rootPane, 0, duration, 0);
         fadeToClose.play();
@@ -205,6 +192,13 @@ public class LogInController implements Initializable, ControlScreen {
     /**
      * Initiating Login Node Elements
      */
+    public void initLogin() {
+        setCenter();
+        initLoginElements();
+        hideElements();
+        preloadScreens();
+        initAppStages();
+    }
     private void initLoginElements() {
         loginImageView.setCache(true);
         loginImageView.setCacheHint(CacheHint.SCALE);

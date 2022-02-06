@@ -33,6 +33,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.*;
 import java.util.*;
+import java.util.concurrent.*;
 
 public class GalleryController implements Initializable, ControlScreen {
     public static final Logger GC_LOGGER = LogManager.getLogger(GalleryController.class);
@@ -52,6 +53,7 @@ public class GalleryController implements Initializable, ControlScreen {
     private ImageView[] displays;
     private ScreensController screensController;
     private Window window;
+    private FutureTask<Boolean> loadImgs = new FutureTask(() -> loadImagesDir(new File(galleryPath),true, true));
 
     private final Map<Image,File> imgTree = new HashMap<>();
     private int page = 0;
@@ -295,24 +297,31 @@ public class GalleryController implements Initializable, ControlScreen {
         this.window = window;
     }
     public void init(){
+        ExecutorService ex = Executors.newSingleThreadExecutor();
+        ex.submit(loadImgs);
+        ex.shutdown();
         setLayout();
         initCases();
         initDisplays();
         createGalleryDir();
-        loadImagesDir(new File(galleryPath),true, true);
+        //loadImagesDir(new File(galleryPath),true, true);
     }
 
     /* layout */
-    public void setOpen(boolean fromEditor){
-        this.fromEditor = fromEditor;
-        if(fromEditor){
-            toProject.setVisible(false);
-            toEditor.setVisible(true);
-        }else{
-            toProject.setVisible(true);
-            toEditor.setVisible(false);
+    public boolean setOpen(boolean fromEditor){
+        if(loadIsDone()){
+            this.fromEditor = fromEditor;
+            if(fromEditor){
+                toProject.setVisible(false);
+                toEditor.setVisible(true);
+            }else{
+                toProject.setVisible(true);
+                toEditor.setVisible(false);
+            }
+            populateDisplays();
+            return true;
         }
-        populateDisplays();
+        return false;
     }
     private void setLayout(){
         grid.setPrefWidth(window.getScreenWidth());
@@ -430,4 +439,15 @@ public class GalleryController implements Initializable, ControlScreen {
         }
     }
 
+    public boolean loadIsDone(){
+        return loadImgs.isDone();
+    }
+    public boolean loadedCorrectly(){
+        try {
+            return loadImgs.get();
+        } catch (Exception e) {
+           GC_LOGGER.error("Error on loading images");
+           return false;
+        }
+    }
 }
