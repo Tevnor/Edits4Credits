@@ -18,7 +18,7 @@ import java.util.ResourceBundle;
 
 public class EffectOptionsController implements Initializable {
 
-    private final Logger EOC_LOGGER = LogManager.getLogger(this.getClass());
+    private static final Logger EOC_LOGGER = LogManager.getLogger(EffectOptionsController.class);
 
     @FXML
     private Label effectOptionsLabel;

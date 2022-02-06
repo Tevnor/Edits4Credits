@@ -25,7 +25,7 @@ import java.util.*;
  */
 public class FilterOptionsController implements Initializable {
 
-    private final Logger FOC_LOGGER = LogManager.getLogger(this.getClass());
+    private static final Logger FOC_LOGGER = LogManager.getLogger(FilterOptionsController.class);
 
     @FXML
     private Button closeFilterButton;

@@ -38,7 +38,6 @@ public class LogInController implements Initializable, ControlScreen {
 
     public static final Logger LI_LOGGER = LogManager.getLogger(LogInController.class);
 
-
     private ScreensController screensController;
     private Stage loginStage;
     private Stage appStage;

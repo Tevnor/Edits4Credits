@@ -15,7 +15,7 @@ import java.nio.IntBuffer;
  * */
 public class ImageGrid {
 
-    private final Logger IG_LOGGER = LogManager.getLogger(this.getClass());
+    private static final Logger IG_LOGGER = LogManager.getLogger(ImageGrid.class);
 
     private final int width;
     private final int height;

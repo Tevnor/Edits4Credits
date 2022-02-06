@@ -6,7 +6,6 @@ import org.editor.tools.filtertool.filtercontrol.Filter;
 import org.editor.tools.filtertool.filtercontrol.FilterInputAttributes;
 import org.editor.tools.filtertool.filtercontrol.filter.FilterType;
 import org.editor.tools.imagetool.ImageGrid;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -52,7 +51,7 @@ import java.util.concurrent.Executors;
  */
 public class FilterOperation {
 
-    private final Logger FO_LOGGER = LogManager.getLogger(this.getClass());
+    private static final Logger FO_LOGGER = LogManager.getLogger(FilterOperation.class);
 
     private final int runs;
     private final int totalWidth;

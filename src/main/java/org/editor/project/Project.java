@@ -4,11 +4,17 @@ import javafx.scene.Node;
 import javafx.scene.image.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.editor.tools.imagetool.ImageGrid;
 
 import java.util.Objects;
 
 
 public class Project {
+
+    private static final Logger P_LOGGER = LogManager.getLogger(Project.class);
+
     private final String projectName;
     private final int projectWidth;
     private final int projectHeight;
@@ -20,9 +26,9 @@ public class Project {
 
 
     public Project(String projectName, int projectWidth, int projectHeight, boolean isTransparent, Color backgroundColor) {
-        if(projectName == null || projectName.equals("")){
+        if (projectName == null || projectName.equals("")) {
             this.projectName = "no_name";
-        }else{
+        } else {
             this.projectName = projectName;
         }
         this.projectWidth = projectWidth;
@@ -30,18 +36,19 @@ public class Project {
         this.projectAspectRatio = (double) projectWidth / projectHeight;
         this.isTransparent = isTransparent;
 
-        if(isTransparent){
+        if (isTransparent){
             this.bgTransparent = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/transparent_bg.png"))));
             bgTransparent.setPreserveRatio(false);
-        }else{
-            if(backgroundColor != null){
+        } else {
+            if (backgroundColor != null) {
                 this.backgroundColor = backgroundColor;
                 this.bgColor = new Rectangle(projectWidth,projectHeight,backgroundColor);
-            }else{
+            } else {
                 this.backgroundColor = Color.WHITE;
                 this.bgColor = new Rectangle(projectWidth,projectHeight,Color.WHITE);
             }
         }
+        P_LOGGER.info("New project {} created", projectName);
     }
 
 
