@@ -29,14 +29,14 @@
          <GridPane.margin>
             <Insets left="10.0" />
          </GridPane.margin></Text>
-      <TextField onAction="#handleXPositionInput" promptText="Change X Position..." style="-fx-background-color: #282828; -fx-background-radius: 20px; -fx-prompt-text-fill: #e8e8e8; -fx-text-fill: #e8e8e8;" GridPane.rowIndex="2" fx:id="xPositionInput">
+      <TextField onAction="#handlePositionInput" promptText="Change X Position..." style="-fx-background-color: #282828; -fx-background-radius: 20px; -fx-prompt-text-fill: #e8e8e8; -fx-text-fill: #e8e8e8;" GridPane.rowIndex="2" fx:id="xPositionInput">
          <GridPane.margin>
             <Insets left="20.0" right="20.0" />
          </GridPane.margin>
          <font>
             <Font name="Segoe UI Semibold" size="15.0" />
          </font></TextField>
-      <TextField fx:id="yPositionInput" onAction="#handleYPositionInput" promptText="Change Y Position..." style="-fx-background-color: #282828; -fx-background-radius: 20px; -fx-prompt-text-fill: #e8e8e8; -fx-text-fill: #e8e8e8;" GridPane.rowIndex="3">
+      <TextField fx:id="yPositionInput" onAction="#handlePositionInput" promptText="Change Y Position..." style="-fx-background-color: #282828; -fx-background-radius: 20px; -fx-prompt-text-fill: #e8e8e8; -fx-text-fill: #e8e8e8;" GridPane.rowIndex="3">
          <GridPane.margin>
             <Insets left="20.0" right="20.0" />
          </GridPane.margin>

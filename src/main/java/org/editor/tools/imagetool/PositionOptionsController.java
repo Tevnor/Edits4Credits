@@ -10,12 +10,15 @@ import javafx.scene.control.ButtonBar;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.editor.EditorController;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class PositionOptionsController implements Initializable {
+    private static final Logger PO_LOGGER = LogManager.getLogger(PositionOptionsController.class);
 
     @FXML
     private TextField xPositionInput;
@@ -32,9 +35,14 @@ public class PositionOptionsController implements Initializable {
     private Stage stage;
     private Point2D delta;
 
-
-    public void handleApplyPositionChange(ActionEvent event) {
-
+    @FXML
+    private void handleCloseMoveOptions() {
+        stage = (Stage) closeMoveOptions.getScene().getWindow();
+        editorController.drawUnfilteredCanvasImage();
+        stage.close();
+    }
+    @FXML
+    private void handleApplyPositionChange() {
         if (xPositionInput.getText().equals("")){
             xPosition = 0;
         }
@@ -54,42 +62,35 @@ public class PositionOptionsController implements Initializable {
         editorController.getOriginalImageObject().setCurrentXPosition(xPosition * editorController.getOriginalAndEditorCanvasRatio());
         editorController.getOriginalImageObject().setCurrentYPosition(yPosition * editorController.getOriginalAndEditorCanvasRatio());
         editorController.drawChangedOriginalPosition();
+        PO_LOGGER.debug("applied position change");
+    }
+    @FXML
+    private void handlePositionInput(ActionEvent e){
+
+        if(e.getSource().equals(xPositionInput)){
+            moveTmp(xPositionInput, true);
+        }else if(e.getSource().equals(yPositionInput)) {
+            moveTmp(yPositionInput, false);;
+        }
 
     }
-    public void handleXPositionInput(ActionEvent e){
-        if(!xPositionInput.getText().equals("")){
+    private void moveTmp(TextField field, boolean isX) {
+        if(!field.getText().equals("")){
             try {
-                if (xPositionInput.getText().equals("")){
-                    xPosition = 0;
+                if(field.getText() != null){
+                    if(isX){
+                        xPosition = Double.parseDouble(field.getText());
+                    }else{
+                        yPosition = Double.parseDouble(field.getText());
+                    }
+                    editorController.drawChangedPosition(xPosition, yPosition);
                 }
-                else if(xPositionInput.getText() != null){
-                    xPosition = Double.parseDouble(xPositionInput.getText());
-                }
-                editorController.drawChangedPosition(xPosition, yPosition);
-
             } catch (NumberFormatException exception){
-                exception.printStackTrace();
+                PO_LOGGER.warn("Could not read number from input field");
             }
         }
+
     }
-    public void handleYPositionInput(ActionEvent e){
-        if(!xPositionInput.getText().equals("")){
-            try {
-                if (yPositionInput.getText().equals("")){
-                    yPosition = 0;
-                }
-                else if(yPositionInput.getText() != null){
-                    yPosition = Double.parseDouble(yPositionInput.getText());
-                }
-                editorController.drawChangedPosition(xPosition, yPosition);
-
-            } catch (NumberFormatException exception){
-                exception.printStackTrace();
-            }
-        }
-    }
-
-
     public void setEditorController(EditorController editorController) {
         this.editorController = editorController;
     }
@@ -111,11 +112,6 @@ public class PositionOptionsController implements Initializable {
         initButtons();
     }
 
-    public void handleCloseMoveOptions(ActionEvent event) {
-        stage = (Stage) closeMoveOptions.getScene().getWindow();
-        editorController.drawUnfilteredCanvasImage();
-        stage.close();
-    }
     private void initButtons(){
         bar.addEventHandler(MouseEvent.ANY, event -> {
             stage = (Stage) bar.getScene().getWindow();
