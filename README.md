@@ -6,7 +6,7 @@
 Dieses Programm bietet eine simple Lösung einfache Bildbearbeitung vorzunehmen. Eine einfache GUI soll unerfahrenen Benutzen einen leichten Einstieg in die Welt des Grafikdesigns bieten. Unsere Architektur erlaubt eine einfache Erweiterung von benötigten Werkzeugen. 
 
 ## Programmstart und Login
-Das Programm wird über dieK lasse `org.launcher.GuiDriver.java` gestartert.
+Das Programm wird über die Klasse `org.launcher.GuiDriver.java` gestartet.
 Wenn man das Programm startet gelangt man zuerst zu einem **Login** Screen. Wenn man den Login Button drückt gelangt man zu einer Auswahl, bei der man entscheiden kann, ob man den **Editor** oder die **Galerie** öffnen möchte. Die Hauptfunktion unseres Editors besteht darin, Projekte bzw. Bilder zu erstellen und diese dann entweder in der Programm internen Galerie oder extern zu speichern. 
 
 ## Editor
