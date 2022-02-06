@@ -14,10 +14,9 @@ import javafx.scene.transform.Transform;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.editor.project.Project;
-import org.editor.tools.EditingTools;
 
 
-public class DrawingTool implements EditingTools {
+public class DrawingTool{
     private static final Logger DT_LOGGER = LogManager.getLogger(DrawingTool.class.getName());
 
     private final Canvas canvasShapes;
@@ -97,16 +96,11 @@ public class DrawingTool implements EditingTools {
         DT_LOGGER.debug("cleared succesfully");
     }
 
-    @Override
-    public void apply() {
-        DT_LOGGER.info("applied succesfully");
-    }
-    @Override
     public void backward() {
         db.undo();
         DT_LOGGER.debug("undid succesfully");
     }
-    @Override
+
     public void forward() {
         db.redo();
         DT_LOGGER.debug("redid succesfully");

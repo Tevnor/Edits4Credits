@@ -645,7 +645,6 @@ public class EditorController implements Initializable, ControlScreen {
     public void drawFilteredOriginalImage(){
         graphicsContext = originalCanvas.getGraphicsContext2D();
         graphicsContext.drawImage(originalImageObject.getOriginalImage(),originalImageObject.getCurrentXPosition(), originalImageObject.getCurrentYPosition(), originalImageObject.getCurrentWidth(), originalImageObject.getCurrentHeight());
-        //initImageTool(filteredOriginalImage);
     }
     public ImageDimensions getOriginalImageObject(){
         return this.originalImageObject;
