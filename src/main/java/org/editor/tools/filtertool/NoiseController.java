@@ -11,12 +11,12 @@ import javafx.scene.control.Button;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
-import javafx.scene.input.DragEvent;
 import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
-import javafx.scene.canvas.Canvas;
 import javafx.stage.Stage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.editor.EditorController;
 
 import java.net.URL;
@@ -24,6 +24,7 @@ import java.util.ResourceBundle;
 
 
 public class NoiseController implements Initializable {
+    private static final Logger NC_LOGGER = LogManager.getLogger(NoiseController.class);
     @FXML
     private Slider noiseSlider;
     @FXML
@@ -40,7 +41,16 @@ public class NoiseController implements Initializable {
     private Point2D delta;
     private boolean applied = false;
 
-    public void handleApplyNoiseOnlyOnImage(ActionEvent event) {
+    @FXML
+    private void handleCloseNoiseOptions() {
+        stage = (Stage) closeNoiseOptions.getScene().getWindow();
+        if (!applied){
+            editorController.drawUnfilteredCanvasImage();
+        }
+        stage.close();
+    }
+    @FXML
+    private void handleApplyNoiseOnlyOnImage() {
         noiseStrength = noiseSlider.getValue();
 
         filteredImage = addNoiseToImage(editorController.getOriginalImageObject().createWritableOriginalImage(), noiseStrength);
@@ -53,13 +63,12 @@ public class NoiseController implements Initializable {
         editorController.drawFilteredOriginalImage();
         applied = true;
         stage.close();
-
+        NC_LOGGER.debug("applied noise to image");
     }
 
     public void setEditorController(EditorController editorController) {
         this.editorController = editorController;
     }
-
     public WritableImage addNoiseToImage(WritableImage inputImage, double noiseStrength){
         PixelReader pixelReader = inputImage.getPixelReader();
 
@@ -85,37 +94,17 @@ public class NoiseController implements Initializable {
         }
         return image;
     }
-
-    public void handleCloseNoiseOptions(ActionEvent event) {
-        stage = (Stage) closeNoiseOptions.getScene().getWindow();
-        if (!applied){
-        editorController.drawUnfilteredCanvasImage();
-        }
-        stage.close();
-    }
-
     public void setApplied(){
         this.applied = false;
     }
 
-    @FXML
-    public void handleAddNoisePreview(MouseDragEvent event) {
-        noiseSlider.valueProperty().addListener((observableValue, oldValue, newValue) -> {
-
-        });
-    }
-
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        noiseSlider.valueProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observableValue, Number number, Number t1) {
-                noiseStrength = noiseSlider.getValue();
-                filteredImage = addNoiseToImage(editorController.getEditorImageObject().createWritableOriginalImage(), noiseStrength);
-                editorController.getEditorImageObject().setPreviewImage(filteredImage);;
-                editorController.drawPreviewImage();
-            }
+        noiseSlider.valueProperty().addListener((observableValue, number, t1) -> {
+            noiseStrength = noiseSlider.getValue();
+            filteredImage = addNoiseToImage(editorController.getEditorImageObject().createWritableOriginalImage(), noiseStrength);
+            editorController.getEditorImageObject().setPreviewImage(filteredImage);;
+            editorController.drawPreviewImage();
         });
         initButtons();
     }
