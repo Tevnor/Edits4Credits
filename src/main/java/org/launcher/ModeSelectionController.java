@@ -14,10 +14,10 @@ import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 import org.database.User;
 import org.marketplace.gallery.GalleryController;
-import org.screencontrol.ControlScreen;
-import org.screencontrol.ScreenName;
-import org.screencontrol.ScreensController;
-import org.screencontrol.Window;
+import org.screenControl.ControlScreen;
+import org.screenControl.ScreenName;
+import org.screenControl.ScreensController;
+import org.screenControl.Window;
 
 import java.net.URL;
 import java.util.ResourceBundle;

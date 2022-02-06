@@ -14,8 +14,8 @@ import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.database.LogInController;
-import org.screencontrol.ScreensController;
-import org.screencontrol.Window;
+import org.screenControl.ScreensController;
+import org.screenControl.Window;
 
 
 public class GuiDriver  extends Application {

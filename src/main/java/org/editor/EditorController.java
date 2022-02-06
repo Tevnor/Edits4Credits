@@ -21,33 +21,33 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.editor.layout.EditorControllerLayoutManager;
 import org.editor.project.Project;
-import org.editor.tools.drawingtool.DrawOptionsController;
-import org.editor.tools.drawingtool.DrawingTool;
-import org.editor.tools.drawingtool.handlers.EraserDrawer;
-import org.editor.tools.drawingtool.handlers.HandlerFactory;
-import org.editor.tools.drawingtool.handlers.PolygonDrawer;
+import org.editor.tools.drawingTool.DrawOptionsController;
+import org.editor.tools.drawingTool.DrawingTool;
+import org.editor.tools.drawingTool.handlers.EraserDrawer;
+import org.editor.tools.drawingTool.handlers.HandlerFactory;
+import org.editor.tools.drawingTool.handlers.PolygonDrawer;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
-import org.editor.tools.filtertool.EffectOptionsController;
-import org.editor.tools.filtertool.FilterOptionsController;
-import org.editor.tools.filtertool.NoiseController;
-import org.editor.tools.imagetool.ImageDimensions;
-import org.editor.tools.imagetool.PositionOptionsController;
-import org.editor.tools.imagetool.ScaleOptionsController;
+import org.editor.tools.filterTool.EffectOptionsController;
+import org.editor.tools.filterTool.FilterOptionsController;
+import org.editor.tools.filterTool.NoiseController;
+import org.editor.tools.imageTool.ImageDimensions;
+import org.editor.tools.imageTool.PositionOptionsController;
+import org.editor.tools.imageTool.ScaleOptionsController;
 import org.launcher.GuiDriver;
 import org.marketplace.gallery.GalleryController;
-import org.screencontrol.ControlScreen;
-import org.screencontrol.ScreenName;
-import org.screencontrol.ScreensController;
-import org.screencontrol.Window;
+import org.screenControl.ControlScreen;
+import org.screenControl.ScreenName;
+import org.screenControl.ScreensController;
+import org.screenControl.Window;
 
-import static org.editor.tools.filtertool.filtercontrol.FilterApplicationType.CHECKERBOARD;
-import static org.editor.tools.filtertool.filtercontrol.FilterApplicationType.STANDARD;
-import static org.editor.tools.filtertool.filtercontrol.effects.EffectType.*;
-import static org.editor.tools.filtertool.filtercontrol.filter.FilterType.*;
+import static org.editor.tools.filterTool.filterControl.FilterApplicationType.CHECKERBOARD;
+import static org.editor.tools.filterTool.filterControl.FilterApplicationType.STANDARD;
+import static org.editor.tools.filterTool.filterControl.effects.EffectType.*;
+import static org.editor.tools.filterTool.filterControl.filter.FilterType.*;
 
 public class EditorController implements Initializable, ControlScreen {
 
@@ -71,11 +71,11 @@ public class EditorController implements Initializable, ControlScreen {
     private ToolBar toolBar;
 
     private Project project;
-    private org.screencontrol.Window window;
+    private org.screenControl.Window window;
     private ScreensController screensController;
 
     private EventHandler<MouseEvent> mover;
-    private org.editor.tools.drawingtool.handlers.DrawHandler drawer;
+    private org.editor.tools.drawingTool.handlers.DrawHandler drawer;
     private DrawingTool dt;
     private HandlerFactory handlerFactory;
     private Parent drawOptRoot;

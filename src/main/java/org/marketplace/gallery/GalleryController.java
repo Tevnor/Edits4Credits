@@ -22,10 +22,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.editor.EditorController;
 import org.editor.project.SettingsController;
-import org.screencontrol.ControlScreen;
-import org.screencontrol.ScreenName;
-import org.screencontrol.ScreensController;
-import org.screencontrol.Window;
+import org.screenControl.ControlScreen;
+import org.screenControl.ScreenName;
+import org.screenControl.ScreensController;
+import org.screenControl.Window;
 
 import javax.imageio.ImageIO;
 import java.io.File;

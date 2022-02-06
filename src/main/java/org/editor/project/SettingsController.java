@@ -11,10 +11,10 @@ import org.apache.logging.log4j.Logger;
 import org.editor.EditorController;
 import org.launcher.GuiDriver;
 import org.marketplace.gallery.GalleryController;
-import org.screencontrol.ControlScreen;
-import org.screencontrol.ScreenName;
-import org.screencontrol.ScreensController;
-import org.screencontrol.Window;
+import org.screenControl.ControlScreen;
+import org.screenControl.ScreenName;
+import org.screenControl.ScreensController;
+import org.screenControl.Window;
 
 import java.net.URL;
 import java.util.Arrays;

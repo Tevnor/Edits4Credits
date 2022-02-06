@@ -18,7 +18,7 @@ import javafx.stage.FileChooser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.editor.project.Project;
-import org.editor.tools.imagetool.ImageDimensions;
+import org.editor.tools.imageTool.ImageDimensions;
 import org.apache.commons.io.FilenameUtils;
 import org.marketplace.gallery.GalleryController;
 

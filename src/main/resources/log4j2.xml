@@ -49,13 +49,13 @@
         <Logger name="org.editor.project" level="debug">
             <AppenderRef ref="EditorLog"/>
         </Logger>
-        <Logger name="org.editor.tools.drawingtool" level="debug">
+        <Logger name="org.editor.tools.drawingTool" level="debug">
             <AppenderRef ref="DrawLog"/>
         </Logger>
-        <Logger name="org.editor.tools.filtertool" level="debug">
+        <Logger name="org.editor.tools.filterTool" level="debug">
             <AppenderRef ref="FilterLog"/>
         </Logger>
-        <Logger name="org.editor.tools.imagetool" level="debug">
+        <Logger name="org.editor.tools.imageTool" level="debug">
             <AppenderRef ref="ImageLog"/>
         </Logger>
         <Logger name="org.marketplace.gallery" level="debug">
@@ -64,7 +64,7 @@
         <Logger name="org.database" level="debug">
             <AppenderRef ref="DatabaseLog"/>
         </Logger>
-        <Logger name="org.screencontrol" level="debug">
+        <Logger name="org.screenControl" level="debug">
             <AppenderRef ref="ScreenLog"/>
         </Logger>
         <Root level="info">
