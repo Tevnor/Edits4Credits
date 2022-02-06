@@ -186,6 +186,7 @@ public class FilterOperation {
             blockRunnableList.clear();
             index = (blockRow + 1) * (blockHeight * totalWidth);
             isLastHorizontalBlock = false;
+            blockExecs.shutdown();
         }
         return pixelArrayNew;
     }
@@ -254,6 +255,7 @@ public class FilterOperation {
                 ep.printStackTrace();
             }
             panelRunnableList.clear();
+            panelExecs.shutdown();
         }
 
         /**

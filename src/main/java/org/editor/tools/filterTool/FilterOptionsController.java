@@ -3,6 +3,7 @@ package org.editor.tools.filterTool;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Point2D;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
@@ -27,6 +28,8 @@ public class FilterOptionsController implements Initializable {
 
     private static final Logger FOC_LOGGER = LogManager.getLogger(FilterOptionsController.class);
 
+    @FXML
+    private ButtonBar filterButtonBar;
     @FXML
     private Button closeFilterButton;
     @FXML
@@ -70,6 +73,8 @@ public class FilterOptionsController implements Initializable {
     @FXML
     private ToggleButton silhouetteToggleButton;
 
+    private Stage stage;
+    private Point2D delta;
     private final EditorController editorController;
     private final ImageGrid originalImageGrid;
     private final ImageGrid resizedImageGrid;
@@ -113,6 +118,15 @@ public class FilterOptionsController implements Initializable {
         panelIncreaseButton.setOnAction(actionEvent -> handlePanelIncrease());
         panelDecreaseButton.setOnAction(actionEvent -> handlePanelDecrease());
 
+        filterButtonBar.addEventHandler(MouseEvent.ANY, mouseEvent -> {
+            stage = (Stage) filterButtonBar.getScene().getWindow();
+            if (mouseEvent.getEventType().equals(MouseEvent.MOUSE_PRESSED)) {
+                delta = new Point2D(stage.getX() - mouseEvent.getScreenX(),stage.getY() - mouseEvent.getScreenY());
+            }else if(mouseEvent.getEventType().equals(MouseEvent.MOUSE_DRAGGED)){
+                stage.setX(mouseEvent.getScreenX() + delta.getX());
+                stage.setY(mouseEvent.getScreenY() + delta.getY());
+            }
+        });
     }
 
 
@@ -216,6 +230,8 @@ public class FilterOptionsController implements Initializable {
         double sliderOffset = 10000;
         double sliderValue = glitchSlider.getValue();
 
+        System.out.println(sliderValue / sliderOffset);
+
         inputAttributes.setFactor(sliderValue / sliderOffset);
         previewFilter();
 
@@ -311,13 +327,10 @@ public class FilterOptionsController implements Initializable {
             FOC_LOGGER.debug("FilterOptionsController view set to {}.", appType);
         } else {
             filterOptionsLabel.setText(filterType.toString());
-            switch (filterType) {
-                case GLITCH:
-                    initGlitchFilter();
-
-                    break;
-                default:
-                    initStandardFilter();
+            if (filterType == FilterType.GLITCH) {
+                initGlitchFilter();
+            } else {
+                initStandardFilter();
             }
             FOC_LOGGER.debug("FilterOptionsController view set to {}", filterType);
         }
@@ -380,6 +393,7 @@ public class FilterOptionsController implements Initializable {
         inputAttributes.setFilterTypeList(filterTypeList);
         inputAttributes.setRuns(2);
     }
+
 
     /**
      * Maximize filter list for panel quarters
