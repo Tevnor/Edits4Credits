@@ -60,6 +60,7 @@ public abstract class DrawOp {
         //write pixels array
         pr.getPixels(0, 0, getCanWidth(gc), getCanHeight(gc),
                 WritablePixelFormat.getIntArgbInstance(), pixels,0 , getCanWidth(gc));
+        DO_LOGGER.debug("returned pixels of canvas");
         return pixels;
     }
 
