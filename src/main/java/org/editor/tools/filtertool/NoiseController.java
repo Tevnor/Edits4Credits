@@ -113,8 +113,8 @@ public class NoiseController implements Initializable {
             public void changed(ObservableValue<? extends Number> observableValue, Number number, Number t1) {
                 noiseStrength = noiseSlider.getValue();
                 filteredImage = addNoiseToImage(editorController.getEditorImageObject().createWritableOriginalImage(), noiseStrength);
-                editorController.getEditorImageObject().setFilteredImage(filteredImage);
-                editorController.drawFilteredImage();
+                editorController.getEditorImageObject().setPreviewImage(filteredImage);;
+                editorController.drawPreviewImage();
             }
         });
         initButtons();

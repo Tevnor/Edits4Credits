@@ -435,33 +435,35 @@ public class EditorController implements Initializable, ControlScreen {
     private void toggleFilterMenuItems(boolean setDisabled) {
         menuBarFilter.getItems().forEach(menuItem -> menuItem.setDisable(setDisabled));
     }
-
-    public void handleAddNoise(ActionEvent event) {
+    @FXML
+    private void handleAddNoise() {
         openNoiseOptions();
     }
-    public void openNoiseOptions(){
+    private void openNoiseOptions(){
         noiseController.setApplied();
         noiseOptStage.show();
     }
 
     // Checkerboard mode
-    public void handleApplyCheckerboard() {
+    @FXML
+    private void handleApplyCheckerboard() {
         filterOptionsController.setFilterView(CHECKERBOARD, null);
         filterOptStage.show();
     }
 
     // Singular filter
-    public void handleAddGlitch() {
+    @FXML
+    private void handleAddGlitch() {
         filterOptionsController.setFilterView(STANDARD, GLITCH);
         filterOptStage.show();
     }
-    public void handleAddInverse() {
+    @FXML
+    private void handleAddInverse() {
         filterOptionsController.setFilterView(STANDARD, INVERTED);
         filterOptStage.show();
     }
-
     @FXML
-    public void handleAddGrayscale() {
+    private void handleAddGrayscale() {
         filterOptionsController.setFilterView(STANDARD, GRAYSCALE);
         filterOptStage.show();
     }
@@ -500,28 +502,34 @@ public class EditorController implements Initializable, ControlScreen {
     }
 
     // Effects
-    public void handleAddBlur(ActionEvent event) {
+    @FXML
+    private void handleAddBlur() {
         effectOptionsController.setEffectView(BLUR);
         effectOptStage.show();
     }
-    public void handleAddSepia(ActionEvent event) {
+    @FXML
+    private void handleAddSepia() {
         effectOptionsController.setEffectView(SEPIA);
         effectOptStage.show();
     }
-    public void handleAddDisplacement(ActionEvent event) {
+    @FXML
+    private void handleAddDisplacement() {
         effectOptionsController.setEffectView(DISPLACE);
         effectOptStage.show();
     }
     // Adjustments
-    public void handleAdjustBrightness(ActionEvent event) {
+    @FXML
+    private void handleAdjustBrightness() {
         effectOptionsController.setEffectView(BRIGHTNESS);
         effectOptStage.show();
     }
-    public void handleAdjustContrast(ActionEvent event) {
+    @FXML
+    private void handleAdjustContrast() {
         effectOptionsController.setEffectView(CONTRAST);
         effectOptStage.show();
     }
-    public void handleAdjustSaturation(ActionEvent event) {
+    @FXML
+    private void handleAdjustSaturation() {
         effectOptionsController.setEffectView(SATURATION);
         effectOptStage.show();
     }
@@ -576,7 +584,8 @@ public class EditorController implements Initializable, ControlScreen {
         menuBarImage.getItems().forEach(menuItem -> menuItem.setDisable(setDisabled));
     }
 
-    public void handleMoveImage(ActionEvent event) {
+    @FXML
+    private void handleMoveImage() {
         try{
             moveOptLoader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/fxml/moveOptions.fxml")));
             moveOptRoot = moveOptLoader.load();
@@ -588,13 +597,8 @@ public class EditorController implements Initializable, ControlScreen {
             exception.printStackTrace();
         }
     }
-
-    public void drawChangedPosition(double newXPosition, double newYPosition){
-        GraphicsContext gc = editorCanvasImage.getGraphicsContext2D();
-        gc.clearRect(0, 0, editorCanvasImage.getWidth(), editorCanvasImage.getHeight());
-        gc.drawImage(editorImageObject.getFilteredImage(), newXPosition, newYPosition, editorImageObject.getCurrentWidth(), editorImageObject.getCurrentHeight());
-    }
-    public void handleScaleImage(ActionEvent event){
+    @FXML
+    private void handleScaleImage(){
         try {
             scaleOptLoader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/fxml/scaleOptions.fxml")));
             scaleOptRoot = scaleOptLoader.load();
@@ -606,6 +610,11 @@ public class EditorController implements Initializable, ControlScreen {
             exception.printStackTrace();
         }
     }
+    public void drawChangedPosition(double newXPosition, double newYPosition){
+        GraphicsContext gc = editorCanvasImage.getGraphicsContext2D();
+        gc.clearRect(0, 0, editorCanvasImage.getWidth(), editorCanvasImage.getHeight());
+        gc.drawImage(editorImageObject.getFilteredImage(), newXPosition, newYPosition, editorImageObject.getCurrentWidth(), editorImageObject.getCurrentHeight());
+    }
     public ImageDimensions getEditorImageObject(){
         return this.editorImageObject;
     }
@@ -614,7 +623,6 @@ public class EditorController implements Initializable, ControlScreen {
         gc.clearRect(0, 0, editorCanvasImage.getWidth(), editorCanvasImage.getHeight());
         gc.drawImage(editorImageObject.getFilteredImage(), editorImageObject.getCurrentXPosition(), editorImageObject.getCurrentYPosition(), scaledWidth, scaledHeight);
     }
-
     public void setFilteredImages(Image originalImage, Image editorImage) {
         originalImageObject.setFilteredImage(originalImage);
         editorImageObject.setFilteredImage(editorImage);
@@ -624,18 +632,44 @@ public class EditorController implements Initializable, ControlScreen {
         loadEffectOptions();
     }
 
+    public double getOriginalAndEditorCanvasRatio(){
+        double ratio = originalCanvas.getHeight()/ editorCanvasImage.getHeight();
+        return ratio;
+    }
+    public void drawChangedOriginalPosition(){
+        GraphicsContext gc = originalCanvas.getGraphicsContext2D();
+        gc.clearRect(0, 0, originalCanvas.getWidth(), originalCanvas.getHeight());
+        gc.drawImage(originalImageObject.getFilteredImage(), originalImageObject.getCurrentXPosition(), originalImageObject.getCurrentYPosition(), originalImageObject.getCurrentWidth(),originalImageObject.getCurrentHeight());
+    }
+    public void drawScaledOriginalImage(double newWidth, double newHeight){
+        GraphicsContext gc = originalCanvas.getGraphicsContext2D();
+        gc.clearRect(0, 0, originalCanvas.getWidth(), originalCanvas.getHeight());
+        gc.drawImage(originalImageObject.getFilteredImage(), originalImageObject.getCurrentXPosition(), originalImageObject.getCurrentYPosition(), newWidth, newHeight);
+    }
+    public void drawFilteredOriginalImage(){
+        graphicsContext = originalCanvas.getGraphicsContext2D();
+        graphicsContext.drawImage(originalImageObject.getOriginalImage(),originalImageObject.getCurrentXPosition(), originalImageObject.getCurrentYPosition(), originalImageObject.getCurrentWidth(), originalImageObject.getCurrentHeight());
+    }
+    public ImageDimensions getOriginalImageObject(){
+        return this.originalImageObject;
+    }
+    public void drawUnfilteredCanvasImage(){
+        GraphicsContext gc = editorCanvasImage.getGraphicsContext2D();
+        gc.clearRect(0, 0, editorCanvasImage.getWidth(), editorCanvasImage.getHeight());
+        gc.drawImage(editorImageObject.getFilteredImage(), editorImageObject.getCurrentXPosition(), editorImageObject.getCurrentYPosition(), editorImageObject.getCurrentWidth(), editorImageObject.getCurrentHeight());
+    }
+    public void drawPreviewImage(){
+        GraphicsContext gc = editorCanvasImage.getGraphicsContext2D();
+        gc.clearRect(0, 0, editorCanvasImage.getWidth(), editorCanvasImage.getHeight());
+        gc.drawImage(editorImageObject.getPreviewImage(), editorImageObject.getCurrentXPosition(), editorImageObject.getCurrentYPosition(), editorImageObject.getCurrentWidth(), editorImageObject.getCurrentHeight());
+
+    }
     /**
      * File
      * */
     @FXML
     private void importImageFromExplorer(){
         if(ic.setImageFromExplorer()){
-            initImage();
-        }
-        orderStack();
-    }
-    public void setImportedImage(Image img){
-        if(ic.setImageFromGallery(img)){
             initImage();
         }
         orderStack();
@@ -657,41 +691,8 @@ public class EditorController implements Initializable, ControlScreen {
         ((GalleryController)screensController.getController(ScreenName.GALLERY)).setOpen(true);
         screensController.setScreen(ScreenName.GALLERY);
     }
-
-    public void toggleFileMenuItems(boolean setDisabled) {
-        menuBarFile.getItems().stream().skip(1).forEach(menuItem -> menuItem.setDisable(setDisabled));
-    }
-
-    public double getOriginalAndEditorCanvasRatio(){
-        double ratio = originalCanvas.getHeight()/ editorCanvasImage.getHeight();
-        return ratio;
-    }
-    public void drawChangedOriginalPosition(){
-        GraphicsContext gc = originalCanvas.getGraphicsContext2D();
-        gc.clearRect(0, 0, originalCanvas.getWidth(), originalCanvas.getHeight());
-        gc.drawImage(originalImageObject.getFilteredImage(), originalImageObject.getCurrentXPosition(), originalImageObject.getCurrentYPosition(), originalImageObject.getCurrentWidth(),originalImageObject.getCurrentHeight());
-    }
-    public void drawScaledOriginalImage(double newWidth, double newHeight){
-        GraphicsContext gc = originalCanvas.getGraphicsContext2D();
-        gc.clearRect(0, 0, originalCanvas.getWidth(), originalCanvas.getHeight());
-        gc.drawImage(originalImageObject.getFilteredImage(), originalImageObject.getCurrentXPosition(), originalImageObject.getCurrentYPosition(), newWidth, newHeight);
-    }
-    public void drawFilteredOriginalImage(){
-        graphicsContext = originalCanvas.getGraphicsContext2D();
-        graphicsContext.drawImage(originalImageObject.getOriginalImage(),originalImageObject.getCurrentXPosition(), originalImageObject.getCurrentYPosition(), originalImageObject.getCurrentWidth(), originalImageObject.getCurrentHeight());
-        //initImageTool(filteredOriginalImage);
-    }
-    public ImageDimensions getOriginalImageObject(){
-        return this.originalImageObject;
-    }
-    public void drawUnfilteredCanvasImage(){
-        GraphicsContext gc = editorCanvasImage.getGraphicsContext2D();
-        gc.clearRect(0, 0, editorCanvasImage.getWidth(), editorCanvasImage.getHeight());
-        gc.drawImage(editorImageObject.getFilteredImage(), editorImageObject.getCurrentXPosition(), editorImageObject.getCurrentYPosition(), editorImageObject.getCurrentWidth(), editorImageObject.getCurrentHeight());
-    }
-
     @FXML
-    private void handleResetImage(ActionEvent actionEvent) {
+    private void handleResetImage() {
         ic.setImportedImgOnCanvas(editorCanvasImage, editorImageObject, false);
         ic.setImportedImgOnCanvas(originalCanvas, originalImageObject, true);
         originalImageObject.setPreviousImage(originalImageObject.getOriginalImage());
@@ -702,4 +703,17 @@ public class EditorController implements Initializable, ControlScreen {
         loadFilterOptions();
         loadEffectOptions();
     }
+    private void toggleFileMenuItems(boolean setDisabled) {
+        menuBarFile.getItems().stream().skip(1).forEach(menuItem -> menuItem.setDisable(setDisabled));
+    }
+    public void setImportedImage(Image img){
+        if(ic.setImageFromGallery(img)){
+            initImage();
+        }
+        orderStack();
+    }
+
+
+
+
 }

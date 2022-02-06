@@ -20,7 +20,6 @@ public class MovingControl {
     private Point2D offset, end;
     private int moveRef;
 
-
     public boolean overShape(Point2D point, DrawBoard db){
         MC_LOGGER.debug("overShape() entered");
         boolean overShape = false;
@@ -163,7 +162,6 @@ public class MovingControl {
             end = p.subtract(offset);
         }
     }
-
     public void addMovingShape(StackPane s){
         MC_LOGGER.debug("addMovingShape() entered");
         if(movingShape != null){

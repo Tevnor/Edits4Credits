@@ -17,6 +17,8 @@ import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.editor.tools.drawingtool.attributes.*;
 
 import java.net.URL;
@@ -27,6 +29,8 @@ import static org.editor.tools.drawingtool.handlers.HandlerFactory.*;
 
 
 public class DrawOptionsController implements Initializable {
+    private static final Logger DO_LOGGER = LogManager.getLogger(DrawOptionsController.class);
+
     @FXML
     private Slider sliderAlpha, sliderBloom, sliderGlow, sliderBoxBlur, sliderGaussianBlur, sliderMotionBlur;
     @FXML
@@ -113,6 +117,7 @@ public class DrawOptionsController implements Initializable {
                 general.setDisable(true);
                 break;
         }
+        DO_LOGGER.debug("set selected Shape to: " + drawHandler);
     }
     public void setSelShape(DrawHandler drawHandler){
         this.tmpDrawHandler = drawHandler;
@@ -158,6 +163,7 @@ public class DrawOptionsController implements Initializable {
                 general.setDisable(false);
                 break;
         }
+        DO_LOGGER.debug("reset layout");
     }
 
     private Bloom getBloom(){
@@ -202,6 +208,7 @@ public class DrawOptionsController implements Initializable {
         }else return !sel.equals(radioStroke);
     }
     private General getGeneral(){
+        DO_LOGGER.debug("created new General object");
         return new General(getTxtNumFields(txtRotation,0),
                 cbBlendMode.getValue(),
                 getTxtNumFields(txtLineWidth,1),
@@ -210,17 +217,21 @@ public class DrawOptionsController implements Initializable {
                 isFill());
     }
     private ArcAttributes getArcAttributes(){
+        DO_LOGGER.debug("created new ArcAttributes object");
         return new ArcAttributes(getGeneral(),cbArcType.getValue(),
                 getTxtNumFields(txtArcStart,0),getTxtNumFields(txtArcExtent,0));
     }
     private PolygonAttributes getPolyAttributes(){
+        DO_LOGGER.debug("created new PolyAttributes object");
         return new PolygonAttributes(getGeneral(), checkPolyClosed.isSelected());
     }
     private RoundRectAttributes getRoundRectAttributes(){
+        DO_LOGGER.debug("created new RoundRectAttributes object");
         return new RoundRectAttributes(getGeneral(),
                 getTxtNumFields(txtArcWidth, 0), getTxtNumFields(txtArcHeight,0));
     }
     private TextAttributes getTextAttributes(){
+        DO_LOGGER.debug("created new TextAttributes object");
         Font font;
         String fontfamily = cbFontFamily.getValue();
         switch (cbFontStyle.getValue()){
@@ -240,6 +251,7 @@ public class DrawOptionsController implements Initializable {
         return new TextAttributes(getGeneral(),txtContent.getText(),font,cbTxtAlignment.getValue());
     }
     private EraserAttributes getEraserAttributes(){
+        DO_LOGGER.debug("created new EraserAttributes object");
         boolean circle = eraserShape.getSelectedToggle() == eraserCircle;
         return new EraserAttributes(getGeneral(),sliderEraserSize.getValue(), circle);
     }
@@ -298,8 +310,8 @@ public class DrawOptionsController implements Initializable {
     public AbstractGeneral getAttributes(){
         return addSelectedEffects(initAttributes());
     }
-
-    public void handleClose(ActionEvent e){
+    @FXML
+    private void handleClose(){
         stage = (Stage) closeDrawOptions.getScene().getWindow();
         stage.close();
     }

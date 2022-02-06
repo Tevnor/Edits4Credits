@@ -39,8 +39,6 @@ public class GalleryController implements Initializable, ControlScreen {
     public static final String galleryPath = System.getProperty("user.home") + "\\.edits4credits_gallery";
 
     @FXML
-    private MenuBar menuBar;
-    @FXML
     private MenuItem toProject, toEditor;
     @FXML
     private ImageView img0, img1,img2,img3,img4,img5,img6,img7,img8;
@@ -146,6 +144,12 @@ public class GalleryController implements Initializable, ControlScreen {
     }
 
     /* helper */
+    /**
+     * Loads all images from a directory
+     * @param dir File as directory of to be loaded images
+     * @param descend boolean if subdirectories should be loaded
+     * @return true if all images are loaded successfully or files is empty - false otherwise
+     */
     public boolean loadImagesDir(File dir, boolean descend, boolean init){
         try {
             if(dir.exists() && dir.isDirectory() && dir.listFiles().length > 0){
@@ -155,7 +159,7 @@ public class GalleryController implements Initializable, ControlScreen {
                 return false;
             }
         }catch (SecurityException e){
-            GC_LOGGER.debug("You have no access to dir: '" + dir.getPath() + "'" );
+            GC_LOGGER.warn("You have no access to dir: '" + dir.getPath() + "'" );
             return false;
         }
 
@@ -184,7 +188,7 @@ public class GalleryController implements Initializable, ControlScreen {
             }
             return importOk;
         }else{
-            GC_LOGGER.debug("No files in selected directory/files");
+            GC_LOGGER.warn("No files in selected directory/files");
             return true;
         }
     }
@@ -234,6 +238,10 @@ public class GalleryController implements Initializable, ControlScreen {
             gallery.mkdir();
         }
     }
+    /**
+     * Creates a FileChooses object fitted to saving an Image
+     * @return initialized FileChooser
+     */
     private FileChooser getFileChooser(){
         FileChooser fc = new FileChooser();
         FileChooser.ExtensionFilter types = new FileChooser.ExtensionFilter("Image Types","*.jpeg", "*jpg", "*.gif", "*.png", "*.tif");
@@ -241,6 +249,13 @@ public class GalleryController implements Initializable, ControlScreen {
         fc.getExtensionFilters().add(types);
         return fc;
     }
+    /**
+     * Checks if file name is already used and if yes creates path with added (number) at the end of the file name
+     * @param dir directory of file
+     * @param baseName file name without extension
+     * @param extension file extension e.g. "png"
+     * @return (new) target Path (if file already exists)
+     */
     private Path findFileName(final String dir, final String baseName, final String extension) {
         Path ret = Paths.get(dir,String.format("%s.%s",baseName,extension));
         if (!Files.exists(ret))
