@@ -151,7 +151,6 @@
             <MenuBar fx:id="menuBar" maxHeight="29.0" minHeight="29.0" minWidth="270.0" prefHeight="29.0" prefWidth="330.0">
               <menus>
                   <Menu fx:id="menuBarFile" mnemonicParsing="false" text="File">
-                      <MenuItem fx:id="openFile" mnemonicParsing="false" onAction="#importImageFromExplorer" text="Open File" />
                       <Menu mnemonicParsing="false" text="Save">
                           <MenuItem fx:id="saveGallery" mnemonicParsing="false" onAction="#handleSaveGallery" text="to Gallery" />
                           <MenuItem fx:id="saveExtern" mnemonicParsing="false" onAction="#handleSaveExtern" text="to Extern" />
@@ -159,6 +158,7 @@
                       <MenuItem fx:id="deleteFile" mnemonicParsing="false" onAction="#handleDeleteFile" text="Delete File" />
                   </Menu>
                   <Menu fx:id="menuBarImage" mnemonicParsing="false" text="Image">
+                      <MenuItem fx:id="openFile" mnemonicParsing="false" onAction="#importImageFromExplorer" text="Open Image" />
                       <MenuItem fx:id="moveImage" mnemonicParsing="false" onAction="#handleMoveImage" text="Move Image" />
                       <MenuItem fx:id="scaleImage" mnemonicParsing="false" onAction="#handleScaleImage" text="Scale Image" />
                       <MenuItem fx:id="resetImage" mnemonicParsing="false" onAction="#handleResetImage" text="Reset Image" />
@@ -194,6 +194,11 @@
                     <MenuItem mnemonicParsing="false" text="About" />
                   </items>
                 </Menu>
+                  <Menu mnemonicParsing="false" text="Exit">
+                    <items>
+                      <MenuItem mnemonicParsing="false" onAction="#handleLogOut" text="Log Out" />
+                    </items>
+                  </Menu>
               </menus>
                <cursor>
                   <Cursor fx:constant="HAND" />

@@ -4,18 +4,25 @@ import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.stage.StageStyle;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.database.LogInController;
 import org.screencontrol.ScreensController;
 import org.screencontrol.Window;
 
+import java.util.Objects;
+
 
 public class GuiDriver  extends Application {
+  private static final Logger GD_LOGGER = LogManager.getLogger(GuiDriver.class);
+  private static Image icon = null;
   private Window window;
   private ScreensController sc;
   private double screenWidth;
@@ -40,7 +47,6 @@ public class GuiDriver  extends Application {
   }
 
   private void openLogin() {
-
     Task<Void> openLoginTask = new Task<>() {
 
       @Override
@@ -64,18 +70,30 @@ public class GuiDriver  extends Application {
             loginStage.setMaximized(true);
             loginStage.centerOnScreen();
             loginStage.setScene(loginScene);
+            try {
+              icon = new Image(getClass().getResource("/images/icon/icon_128x128.png").toString());
+              loginStage.getIcons().add(icon);
+            } catch (NullPointerException e){
+              GD_LOGGER.error("icon could not be loaded");
+            }
             loginStage.show();
 
 
             logInController.startLoginAnimation();
           } catch (Exception e) {
-            e.printStackTrace();
-            e.getCause();
+            GD_LOGGER.fatal("Unknown error application could not be started");
           }
         });
         return null;
       }
     };
+    GD_LOGGER.info("Main app started");
     new Thread(openLoginTask).start();
+  }
+  public static Image getIcon(){
+    if(icon != null){
+      return new Image(icon.getUrl());
+    }
+    return null;
   }
 }

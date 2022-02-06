@@ -40,6 +40,7 @@ import org.editor.tools.filtertool.NoiseController;
 import org.editor.tools.imagetool.ImageDimensions;
 import org.editor.tools.imagetool.PositionOptionsController;
 import org.editor.tools.imagetool.ScaleOptionsController;
+import org.launcher.GuiDriver;
 import org.marketplace.gallery.GalleryController;
 import org.screencontrol.ControlScreen;
 import org.screencontrol.ScreenName;
@@ -303,7 +304,6 @@ public class EditorController implements Initializable, ControlScreen {
     /**
      *  Drawing
      **/
-
     @FXML
     private void handleArc(){
         initShapeHandler();
@@ -712,7 +712,38 @@ public class EditorController implements Initializable, ControlScreen {
         }
         orderStack();
     }
+    /**
+     * Close
+     * */
+    @FXML
+    private void handleLogOut(){
+        Dialog<ButtonType> alert = new Dialog();
+        Stage dialog = (Stage)alert.getDialogPane().getScene().getWindow();
+        if(GuiDriver.getIcon() != null){
+            dialog.getIcons().add(GuiDriver.getIcon());
+        }
+        alert.getDialogPane().getButtonTypes().addAll(ButtonType.YES,ButtonType.NO,ButtonType.CANCEL);
+        alert.setResultConverter(buttonType -> {
+            if(buttonType == ButtonType.YES){
+                return ButtonType.YES;
+            }else if(buttonType == ButtonType.NO){
+                return ButtonType.NO;
+            }else{
+                return ButtonType.CANCEL;
+            }
+        });
+        alert.setTitle("Confirmation");
+        alert.setHeaderText("Do you want to save before quitting?");
+        alert.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.YES) {
+                handleSaveExtern();
+                ((Stage)stack.getScene().getWindow()).close();
+            } else if (response == ButtonType.NO){
+                ((Stage)stack.getScene().getWindow()).close();
+            }
+        });
 
+    }
 
 
 
