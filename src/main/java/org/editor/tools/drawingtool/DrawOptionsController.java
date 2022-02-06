@@ -80,10 +80,10 @@ public class DrawOptionsController implements Initializable {
 
     private Stage stage;
     private Point2D delta;
-    private DrawHandler tmpDrawHandler;
+    private DrawHandlerType tmpDrawHandlerType;
 
-    private void initSelShape(DrawHandler drawHandler){
-        switch (drawHandler){
+    private void initSelShape(DrawHandlerType drawHandlerType){
+        switch (drawHandlerType){
             case ARC:
                 selectShapePane(arc);
                 break;
@@ -113,11 +113,11 @@ public class DrawOptionsController implements Initializable {
                 general.setDisable(true);
                 break;
         }
-        DO_LOGGER.debug("set selected Shape to: " + drawHandler);
+        DO_LOGGER.debug("set selected Shape to: " + drawHandlerType);
     }
-    public void setSelShape(DrawHandler drawHandler){
-        this.tmpDrawHandler = drawHandler;
-        initSelShape(drawHandler);
+    public void setSelShape(DrawHandlerType drawHandlerType){
+        this.tmpDrawHandlerType = drawHandlerType;
+        initSelShape(drawHandlerType);
     }
     private void selectShapePane(TitledPane shapeOpt){
         shapes.setDisable(false);
@@ -135,7 +135,7 @@ public class DrawOptionsController implements Initializable {
         tabPane.getSelectionModel().select(general);
     }
     public void resetLayout(){
-        switch(tmpDrawHandler) {
+        switch(tmpDrawHandlerType) {
             case ARC:
             case ROUNDED_RECTANGLE:
             case POLYGON:
@@ -284,7 +284,7 @@ public class DrawOptionsController implements Initializable {
         return opt;
     }
     private AbstractGeneral initAttributes(){
-        switch (tmpDrawHandler){
+        switch (tmpDrawHandlerType){
             case ARC:
                 return getArcAttributes();
             case ROUNDED_RECTANGLE:
@@ -300,8 +300,8 @@ public class DrawOptionsController implements Initializable {
         }
     }
 
-    public DrawHandler getTmpHandler(){
-        return tmpDrawHandler;
+    public DrawHandlerType getTmpHandler(){
+        return tmpDrawHandlerType;
     }
     public AbstractGeneral getAttributes(){
         return addSelectedEffects(initAttributes());

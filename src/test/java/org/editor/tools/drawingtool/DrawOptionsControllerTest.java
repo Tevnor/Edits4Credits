@@ -10,7 +10,7 @@ public class DrawOptionsControllerTest extends TestCase {
     @Test
     public void testGetTmpHandler() {
         dc = new DrawOptionsController();
-        dc.setSelShape(HandlerFactory.DrawHandler.ELLIPSES);
+        dc.setSelShape(HandlerFactory.DrawHandlerType.ELLIPSES);
     }
 
     public void testGetAttributes() {

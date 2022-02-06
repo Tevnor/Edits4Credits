@@ -14,7 +14,7 @@ public abstract class AbstractGeneral {
     private final boolean fill;
     private final ArrayList<Effect> effects;
 
-    public AbstractGeneral(double rotation, BlendMode bm, double lineWidth, Paint color, double alpha, boolean fill) {
+    protected AbstractGeneral(double rotation, BlendMode bm, double lineWidth, Paint color, double alpha, boolean fill) {
         this.rotation = rotation;
         this.bm = bm;
         this.lineWidth = lineWidth;
@@ -23,7 +23,7 @@ public abstract class AbstractGeneral {
         this.fill = fill;
         this.effects = new ArrayList<>();
     }
-    AbstractGeneral(AbstractGeneral abstractGeneral){
+    protected AbstractGeneral(AbstractGeneral abstractGeneral){
         this.rotation = abstractGeneral.getRotation();
         this.bm = abstractGeneral.getBm();
         this.lineWidth = abstractGeneral.getLineWidth();

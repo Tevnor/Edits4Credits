@@ -1,8 +1,6 @@
 package org.editor.tools.drawingtool.handlers;
 
 
-import javafx.event.EventHandler;
-import javafx.scene.input.MouseEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.editor.tools.drawingtool.DrawingTool;
@@ -10,7 +8,7 @@ import org.editor.tools.drawingtool.DrawingTool;
 public class HandlerFactory {
     private static final Logger HF_LOGGER = LogManager.getLogger(HandlerFactory.class.getName());
 
-    public enum DrawHandler {
+    public enum DrawHandlerType {
         ARC,
         CIRCLE,
         ELLIPSES,
@@ -27,8 +25,8 @@ public class HandlerFactory {
     public HandlerFactory(){
 
     }
-    public org.editor.tools.drawingtool.handlers.DrawHandler getHandler(DrawingTool dt, DrawHandler drawHandler){
-        switch(drawHandler){
+    public org.editor.tools.drawingtool.handlers.DrawHandler getHandler(DrawingTool dt, DrawHandlerType drawHandlerType){
+        switch(drawHandlerType){
 
             case ARC:
                 HF_LOGGER.debug("returned ArcDrawer");
@@ -65,7 +63,7 @@ public class HandlerFactory {
                 return null;
         }
     }
-    public EventHandler<MouseEvent> getMove(DrawingTool dt){
+    public MoveHandler getMove(DrawingTool dt){
         HF_LOGGER.debug("returned MoveHandler");
         return new MoveHandler(dt);
     }

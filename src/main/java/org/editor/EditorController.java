@@ -231,7 +231,7 @@ public class EditorController implements Initializable, ControlScreen {
         loadDrawOptions();
         drawOptStage = initStage(drawOptRoot);
         drawOptStage.setOnHiding( w -> {
-            if(options.getTmpHandler() != HandlerFactory.DrawHandler.MOVE){
+            if(options.getTmpHandler() != HandlerFactory.DrawHandlerType.MOVE){
                 drawer = handlerFactory.getHandler(dt, options.getTmpHandler());
                 stack.addEventHandler(MouseEvent.ANY,drawer);
                 drawer.setAttributes(options.getAttributes());
@@ -304,7 +304,7 @@ public class EditorController implements Initializable, ControlScreen {
     @FXML
     private void handleArc(){
         initShapeHandler();
-        openDrawOptions(HandlerFactory.DrawHandler.ARC);
+        openDrawOptions(HandlerFactory.DrawHandlerType.ARC);
     }
     @FXML
     private void handleMove(){
@@ -315,49 +315,49 @@ public class EditorController implements Initializable, ControlScreen {
     @FXML
     private void handleCircle(){
         initShapeHandler();
-        openDrawOptions(HandlerFactory.DrawHandler.CIRCLE);
+        openDrawOptions(HandlerFactory.DrawHandlerType.CIRCLE);
     }
     @FXML
     private void handleEllipses(){
         initShapeHandler();
-        openDrawOptions(HandlerFactory.DrawHandler.ELLIPSES);
+        openDrawOptions(HandlerFactory.DrawHandlerType.ELLIPSES);
     }
     @FXML
     private void handleEraser(){
         initShapeHandler();
         dt.getDc().removeMarkingHandler(stack);
-        openDrawOptions(HandlerFactory.DrawHandler.ERASER);
+        openDrawOptions(HandlerFactory.DrawHandlerType.ERASER);
     }
     @FXML
     private void handleRectangle(){
         initShapeHandler();
-        openDrawOptions(HandlerFactory.DrawHandler.RECTANGLE);
+        openDrawOptions(HandlerFactory.DrawHandlerType.RECTANGLE);
     }
     @FXML
     private void handleRoundedRectangle(){
         initShapeHandler();
-        openDrawOptions(HandlerFactory.DrawHandler.ROUNDED_RECTANGLE);
+        openDrawOptions(HandlerFactory.DrawHandlerType.ROUNDED_RECTANGLE);
     }
     @FXML
     private void handleLine(){
         initShapeHandler();
-        openDrawOptions(HandlerFactory.DrawHandler.LINE);
+        openDrawOptions(HandlerFactory.DrawHandlerType.LINE);
     }
     @FXML
     private void handleText(){
         initShapeHandler();
-        openDrawOptions(HandlerFactory.DrawHandler.TEXT);
+        openDrawOptions(HandlerFactory.DrawHandlerType.TEXT);
     }
     @FXML
     private void handlePolygon(){
         initShapeHandler();
-        openDrawOptions(HandlerFactory.DrawHandler.POLYGON);
+        openDrawOptions(HandlerFactory.DrawHandlerType.POLYGON);
     }
     @FXML
     private void handlePath(){
         initShapeHandler();
         dt.getDc().removeMarkingHandler(stack);
-        openDrawOptions(HandlerFactory.DrawHandler.PATH);
+        openDrawOptions(HandlerFactory.DrawHandlerType.PATH);
     }
     @FXML
     private void handleDrawPolygon(){
@@ -381,9 +381,9 @@ public class EditorController implements Initializable, ControlScreen {
     private void handleDrawRedo(){
         dt.forward();
     }
-    private void openDrawOptions(HandlerFactory.DrawHandler drawHandler){
+    private void openDrawOptions(HandlerFactory.DrawHandlerType drawHandlerType){
         drawOptStage.centerOnScreen();
-        options.setSelShape(drawHandler);
+        options.setSelShape(drawHandlerType);
         drawOptStage.show();
     }
     private void initShapeHandler(){
