@@ -24,10 +24,15 @@ import java.util.Objects;
 import static org.screencontrol.ScreenName.*;
 
 /**
- * Switching between the application's GUI screens is facilitated here.
- * Coordination between screen names and FXML files is done via HashMaps
- * Smooth user experience is created by timed transitions and fades.
- *
+ * <p>
+ *     Switching between the application's GUI screens is facilitated here.
+ *     Coordination between screen names and FXML files is done via HashMaps
+ *     Smooth user experience is created by timed transitions and fades.
+ * </p>
+ * @see StackPane
+ * @see HashMap
+ * @see Window
+ * @see Node
  */
 public class ScreensController extends StackPane {
 
@@ -67,6 +72,8 @@ public class ScreensController extends StackPane {
 
     /**
      * Analyze the user's monitor specification to make a tailored screen fit possible.
+     * @see Screen
+     * @see GraphicsDevice
      */
     public void getMonitorInfo() {
         Screen screen = Screen.getPrimary();
@@ -96,6 +103,9 @@ public class ScreensController extends StackPane {
      *
      * @param screenName the name
      * @return the boolean
+     * @see ScreenName
+     * @see FXMLLoader
+     * @see Parent
      */
 // Load FXML file, use addScreen(), get controller from parent tree structure, and inject screen into controller
     public boolean loadScreen(ScreenName screenName){
@@ -162,6 +172,10 @@ public class ScreensController extends StackPane {
      *
      * @param name the name of the upcoming screen
      * @return the boolean depending on successful execution
+     * @see Timeline
+     * @see KeyFrame
+     * @see KeyValue
+     * @see PauseTransition
      */
     public boolean setScreen(final ScreenName name) {
         if (SCREEN_TO_NODE_MAP.get(name) != null) {
