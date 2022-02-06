@@ -1,6 +1,5 @@
 package org.editor.tools.imagetool;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Point2D;
@@ -9,12 +8,15 @@ import javafx.scene.control.ButtonBar;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.editor.EditorController;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class ScaleOptionsController implements Initializable {
+    private static final Logger SO_LOGGER = LogManager.getLogger(ScaleOptionsController.class);
     @FXML
     private TextField scaleFactorInput;
     @FXML
@@ -27,7 +29,8 @@ public class ScaleOptionsController implements Initializable {
     private Stage stage;
     private Point2D delta;
 
-    public void handleApplyScale(ActionEvent event) {
+    @FXML
+    private void handleApplyScale() {
         scaleFactor = Double.parseDouble(scaleFactorInput.getText());
 
         double newWidth = editorController.getEditorImageObject().getScaledWidth(scaleFactor);
@@ -43,29 +46,31 @@ public class ScaleOptionsController implements Initializable {
 
         editorController.drawScaledOriginalImage(newOriginalWidth, newOriginalHeight);
         editorController.drawScaledImage(newWidth, newHeight);
-
+        SO_LOGGER.debug("applied scaling change");
     }
-
-    public void handleChangeInput(ActionEvent e){
+    @FXML
+    private void handleChangeInput(){
         if(!scaleFactorInput.getText().equals("")){
             try {
                 scaleFactor = Double.parseDouble(scaleFactorInput.getText());
                 double newWidth = editorController.getEditorImageObject().getScaledWidth(scaleFactor);
                 double newHeight = editorController.getEditorImageObject().getScaledHeight(scaleFactor);
-
                 editorController.drawScaledImage(newWidth, newHeight);
-
-
                 } catch (NumberFormatException exception){
-                exception.printStackTrace();
+                SO_LOGGER.warn("Could not read number from input field");
             }
         }
+    }
+    @FXML
+    private void handleCloseScaleOptions() {
+        stage = (Stage) closeScaleOptions.getScene().getWindow();
+        editorController.drawUnfilteredCanvasImage();
+        stage.close();
     }
 
     public void setEditorController(EditorController editorController) {
         this.editorController = editorController;
     }
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         scaleFactorInput.textProperty().addListener((observableValue, oldValue, newValue) -> {
@@ -75,12 +80,6 @@ public class ScaleOptionsController implements Initializable {
 
         });
         initButtons();
-    }
-
-    public void handleScaleOptions(ActionEvent event) {
-        stage = (Stage) closeScaleOptions.getScene().getWindow();
-        editorController.drawUnfilteredCanvasImage();
-        stage.close();
     }
     private void initButtons(){
         bar.addEventHandler(MouseEvent.ANY, event -> {
