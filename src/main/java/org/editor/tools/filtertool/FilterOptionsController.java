@@ -16,7 +16,6 @@ import org.editor.tools.filtertool.filtercontrol.FilterApplicationType;
 import org.editor.tools.filtertool.filtercontrol.FilterInputAttributes;
 import org.editor.tools.filtertool.filtercontrol.filter.FilterType;
 import org.editor.tools.imagetool.ImageGrid;
-
 import java.net.URL;
 import java.util.*;
 
@@ -78,9 +77,19 @@ public class FilterOptionsController implements Initializable {
     private FilterType filterType;
     private List<FilterType> filterTypeList;
 
-    public FilterOptionsController(Image original, Image resized, EditorController ec) {
+    /**
+     * Upon opening a filter menu, the FilterOptionsController instantiates two ImageGrid objects,
+     * one for the original image dimensions and another for the resized dimensions.
+     *
+     * The view of the pop-up menu gets set according to the selected filter.
+     *
+     * @param original   the original image
+     * @param resized    the resized image
+     * @param editorController         the object of the EditorController
+     */
+    public FilterOptionsController(Image original, Image resized, EditorController editorController) {
         inputAttributes = new FilterInputAttributes();
-        this.editorController = ec;
+        this.editorController = editorController;
         this.originalImageGrid = new ImageGrid(original);
         this.resizedImageGrid = new ImageGrid(resized);
         originalImageGrid.readPixelsIntoArray();
@@ -106,31 +115,8 @@ public class FilterOptionsController implements Initializable {
 
     }
 
-    /**
-     * Upon opening a filter menu, the FilterOptionsController instantiates two ImageGrid objects,
-     * one for the original image dimensions and another for the resized dimensions.
-     *
-     * The view of the pop-up menu gets set according to the selected filter.
-     *
-     * @param original   the original image
-     * @param resized    the resized image
-     * @param appType    the application type of the selected filter
-     * @param filterType the type of the selected filter
-     * @param ec         the object of the EditorController
-     */
-//    public void initFilterOptions(Image original, Image resized, FilterApplicationType appType, FilterType filterType, EditorController ec) {
-//        inputAttributes = new FilterInputAttributes();
-//        this.ec = ec;
-//        this.originalImageGrid = new ImageGrid(original);
-//        this.resizedImageGrid = new ImageGrid(resized);
-//        originalImageGrid.readPixelsIntoArray();
-//        resizedImageGrid.readPixelsIntoArray();
-//
-//        filterTypeList = new ArrayList<>();
-//        this.filterType = filterType;
-//
-//        setMenu(appType, filterType);
-//    }
+
+
 
     /**
      * Applies filter to the ImageGrid arrays of the original and resized images.

@@ -101,9 +101,6 @@ public class ScreensController extends StackPane {
     public boolean loadScreen(ScreenName screenName){
         try {
             FXMLLoader screenLoader = new FXMLLoader(Objects.requireNonNull(getClass().getResource(SCREEN_NAME_TO_PATH_MAP.get(screenName))));
-            //TODO NEW
-//            initController(screenName);
-
             Parent loadScreen = screenLoader.load();
             ControlScreen controlScreen = screenLoader.getController();
             controlScreen.setScreenParent(this);
@@ -116,19 +113,15 @@ public class ScreensController extends StackPane {
 
             addScreen(screenName, loadPane);
 
-            SC_LOGGER.debug("Screen '" + screenName + "' loaded.");
+            SC_LOGGER.debug("Screen {} loaded.", screenName);
             return true;
         } catch (IOException e) {
             e.printStackTrace();
-            SC_LOGGER.error("Screen '" + screenName + "' could not be loaded.");
+            SC_LOGGER.error("Screen {} could not be loaded.", screenName);
             return false;
         }
     }
-//
-//    private void initController(ScreenName screenName) {
-//
-//        screenLoader.setController(new SCREEN_NAME_TO_CONTROLLER_MAP.get(screenName));
-//    }
+
 
 
     /**
@@ -219,7 +212,7 @@ public class ScreensController extends StackPane {
      * @param name the name of the departing screen
      * @return the boolean depending on successful execution
      */
-    private boolean unloadScreen(ScreenName name) {
+    public boolean unloadScreen(ScreenName name) {
         if (SCREEN_TO_NODE_MAP.remove(name) != null) {
             SC_LOGGER.debug(name + " screen unloaded.");
             return true;

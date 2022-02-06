@@ -18,17 +18,44 @@ import java.util.concurrent.Executors;
  * Mapping of filter selections to their respective functionalities.
  * Calculation of panel size, position, and array index hops to enable concurrency by geometric partition.
  *
+ * To determine the starting index of each panel within a certain block:
+ * Notation:
+ * W_t = width of the total image
+ * W_p = width of a panel
+ * H_p = height of a panel
+ * i_s = starting index of the block
+ * i_0 = starting index of the top-left panel
+ * i_1 = starting index of the top-right panel
+ * i_2 = starting index of the bottom-left panel
+ * i_3 = starting index of the bottom-right panel
+ *
+ * i_0 = i_s
+ * i_1 = W_p + i_s
+ * i_2 = W_t * H_p + i_s
+ * i_3 = W_t * H_p + W_p + i_s
+ *
+ *
+ * The of calculations to determine the dimensions of the last panel summarized in one equation:
+ * Notation:
+ * P_last = width|height of the last panel of the column/row
+ * T_dim = width|height of the total image
+ * N_p = Total amount of panels in column/row
+ *
+ * P_last = T_dim - ⌊(T_dim / N_p)⌉ * (N_p - 1)
+ *
  */
 public class FilterOperation {
 
     private final Logger FO_LOGGER = LogManager.getLogger(this.getClass());
 
     private final int runs;
-    private final int width;
+    private final int totalWidth;
     private final int blockWidth;
     private final int blockHeight;
     private final int panelWidth;
+    private final int panelWidthLast;
     private final int panelHeight;
+    private final int panelHeightLast;
     private final int[] pixelArray;
     private final int[] pixelArrayNew;
     private final List<FilterType> filterTypeList;
@@ -38,9 +65,6 @@ public class FilterOperation {
     private final boolean isComplement;
     private final boolean isSilhouette;
 
-    private int mainThreadCount = 0;
-    private int subThreadCount = 0;
-
     /**
      * Instantiates a new Filter operation.
      *
@@ -48,44 +72,87 @@ public class FilterOperation {
      * @param inputAttributes the input attributes
      */
     public FilterOperation(ImageGrid imageGrid, FilterInputAttributes inputAttributes) {
-        this.runs = inputAttributes.getRuns();
-        this.pixelArray = imageGrid.getPixelArray();
-        this.pixelArrayNew = new int[pixelArray.length];
-        this.filterTypeList = inputAttributes.getFilterTypeList();
-        this.factorX = inputAttributes.getFactorX();
-        this.factorY = inputAttributes.getFactorY();
-        this.isComplement = inputAttributes.isComplementToggle();
-        this.isSilhouette = inputAttributes.isSilhouetteToggle();
+        runs = inputAttributes.getRuns();
+        int panelsOnAxis = runs * 2;
+        pixelArray = imageGrid.getPixelArray();
+        pixelArrayNew = new int[pixelArray.length];
 
-        this.width = imageGrid.getWidth();
+        filterTypeList = inputAttributes.getFilterTypeList();
+        factorX = inputAttributes.getFactorX();
+        factorY = inputAttributes.getFactorY();
+        isComplement = inputAttributes.isComplementToggle();
+        isSilhouette = inputAttributes.isSilhouetteToggle();
+
+        totalWidth = imageGrid.getWidth();
         int height = imageGrid.getHeight();
-        this.blockWidth = width / runs;
-        this.blockHeight = height / runs;
-        this.panelWidth = width / (runs * 2);
-        this.panelHeight = height / (runs * 2);
+
+        panelWidth = calculatePanelDimension(totalWidth, panelsOnAxis);
+        panelWidthLast = calculatePanelDimensionLast(totalWidth, panelWidth, panelsOnAxis);
+        blockWidth = calculateBlockDimension(panelWidth);
+
+        panelHeight = calculatePanelDimension(height, panelsOnAxis);
+        panelHeightLast = calculatePanelDimensionLast(height, panelHeight, panelsOnAxis);
+        blockHeight = calculateBlockDimension(panelHeight);
 
         FO_LOGGER.debug("New FilterOperation object instantiated.");
     }
 
     /**
-     * Start the filter process by dividing the grid into the chosen number of partitions.
+     * Checks if image dimensions are cleanly divisible by the number of panels on each axis.
+     * Calculates the dimensions for each panel but the last by rounding the division of the total dimension by the amount of panels on the axis.
+     *
+     * @param dimension int value for either the total width or the total height of the image
+     * @param panelsOnAxis int value for the number of panels on the x or y axis
+     * @return the rounded integer for the dimensions of all panels but the last
+     * */
+    public int calculatePanelDimension(int dimension, int panelsOnAxis) {
+        return (int) Math.round((double) dimension / panelsOnAxis);
+    }
+    /**
+     * Calculate the dimensions of the last panel by subtracting the combined dimension of all panels but the last from the dimension of the total image.
+     * @param dimension int value for either the total width or the total height of the image
+     * @param panelDimension the previously calculated dimensions of all panels but the last
+     * @param panelsOnAxis int value for the number of panels on the x or y axis
+     * @return the rounded integer for the dimensions of the last panel
+     * */
+    public int calculatePanelDimensionLast(int dimension, int panelDimension, int panelsOnAxis) {
+        return dimension - (panelDimension * (panelsOnAxis - 1));
+    }
+    /**
+     *
+     * */
+    public int calculateBlockDimension(int panelDimension) {
+        return panelDimension * 2;
+    }
+
+    /**
+     * Start the filter process by dividing the grid into the chosen number of partitions 'blocks'.
      * Set up and manage multi-threading functionalities via ExecutorServices, Runnable Lists, and CountDownLatches.
      *
      * @return the integer array containing the new argb values
      */
     public int[] startFilter() {
         int index = 0;
+        boolean isLastHorizontalBlock = false;
+        boolean isLastVerticalBlock = false;
 
         for (int blockRow = 0; blockRow < runs; blockRow++) {
+            if (blockRow == runs - 1) {
+                isLastVerticalBlock = true;
+            }
+
             CountDownLatch blockFinish = new CountDownLatch(runs);
             ExecutorService blockExecs = Executors.newFixedThreadPool(runs);
             ArrayList<Runnable> blockRunnableList = new ArrayList<>();
 
             for (int blockCol = 0; blockCol < runs; blockCol++) {
-                Runnable blockRunnable = new BlockOperation(blockFinish, index);
+                if (blockCol == runs - 1) {
+                    isLastHorizontalBlock = true;
+                }
+
+                Runnable blockRunnable = new BlockOperation(index, isLastHorizontalBlock, isLastVerticalBlock, blockFinish);
                 blockRunnableList.add(blockRunnable);
                 index += blockWidth;
-                mainThreadCount++;
             }
 
             for (Runnable r: blockRunnableList) {
@@ -97,7 +164,8 @@ public class FilterOperation {
                 eb.printStackTrace();
             }
             blockRunnableList.clear();
-            index = (blockRow + 1) * (blockHeight * width);
+            index = (blockRow + 1) * (blockHeight * totalWidth);
+            isLastHorizontalBlock = false;
         }
         return pixelArrayNew;
     }
@@ -108,8 +176,10 @@ public class FilterOperation {
      *
      * Dimensions and index positions of the low-level are set according to the amount of partitions to be made.
      */
-    class BlockOperation implements Runnable {
+    public class BlockOperation implements Runnable {
         private final int index;
+        private final boolean isLastHorizontalBlock;
+        private final boolean isLastVerticalBlock;
         private final CountDownLatch blockFinish;
 
         /**
@@ -118,15 +188,17 @@ public class FilterOperation {
          * @param blockFinish the block finish
          * @param index       the index
          */
-        BlockOperation(CountDownLatch blockFinish, int index) {
+        BlockOperation(int index, boolean isLastHorizontalBlock, boolean isLastVerticalBlock, CountDownLatch blockFinish) {
             this.index = index;
+            this.isLastHorizontalBlock = isLastHorizontalBlock;
+            this.isLastVerticalBlock = isLastVerticalBlock;
             this.blockFinish = blockFinish;
         }
 
         @Override
         public void run() {
             try {
-                startBlock();
+                startBlock(isLastHorizontalBlock, isLastVerticalBlock);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -138,7 +210,7 @@ public class FilterOperation {
          * Map the user selected filters to their functions with the FILTER_TO_ENUM_MAP.
          *
          */
-        private void startBlock() {
+        private void startBlock(boolean isLastHorizontalBlock, boolean isLastVerticalBlock) {
             CountDownLatch panelFinish = new CountDownLatch(4);
             ExecutorService panelExecs = Executors.newFixedThreadPool(4);
             ArrayList<Runnable> panelRunnableList = new ArrayList<>();
@@ -147,10 +219,9 @@ public class FilterOperation {
             for (FilterType filterType : filterTypeList) {
                 int panelIndex = getPanelStartingIndex(index, listIndex);
                 Filter filter = FilterType.TYPE_TO_FILTER_ENUM_MAP.get(filterType);
-                Runnable panelRunnable = new PanelOperation(panelIndex, filter, panelFinish);
+                Runnable panelRunnable = new PanelOperation(panelIndex, isLastHorizontalBlock, isLastVerticalBlock, filter, panelFinish);
                 panelRunnableList.add(panelRunnable);
                 listIndex++;
-                subThreadCount++;
             }
 
             for (Runnable rP: panelRunnableList) {
@@ -171,7 +242,7 @@ public class FilterOperation {
          * @param ordinal the ordinal of the panel
          * @return the panel starting index
          */
-        private int getPanelStartingIndex(int index, int ordinal) {
+        public int getPanelStartingIndex(int index, int ordinal) {
             switch (ordinal) {
                 case 0:
                     // Index stays the same
@@ -180,10 +251,10 @@ public class FilterOperation {
                     index += panelWidth;
                     break;
                 case 2:
-                    index += (panelHeight * width);
+                    index += (panelHeight * totalWidth);
                     break;
                 case 3:
-                    index += (panelWidth + (panelHeight) * width);
+                    index += (panelWidth + (panelHeight) * totalWidth);
                     break;
                 default:
                     throw new IllegalStateException("Unexpected value: " + ordinal);
@@ -197,6 +268,8 @@ public class FilterOperation {
      */
     class PanelOperation implements Runnable {
         private int pixelIndex;
+        private final boolean isLastHorizontalPanel;
+        private final boolean isLastVerticalPanel;
         private final Filter filter;
         private final CountDownLatch panelFinish;
 
@@ -207,14 +280,16 @@ public class FilterOperation {
          * @param filter      the filter
          * @param panelFinish the panel finish
          */
-        public PanelOperation(int pixelIndex, Filter filter, CountDownLatch panelFinish) {
+        public PanelOperation(int pixelIndex, boolean isLastHorizontalPanel, boolean isLastVerticalPanel, Filter filter, CountDownLatch panelFinish) {
             this.pixelIndex = pixelIndex;
+            this.isLastHorizontalPanel = isLastHorizontalPanel;
+            this.isLastVerticalPanel = isLastVerticalPanel;
             this.filter = filter;
             this.panelFinish = panelFinish;
         }
         @Override
         public void run() {
-            startPanel();
+            startPanel(isLastHorizontalPanel, isLastVerticalPanel);
             panelFinish.countDown();
         }
 
@@ -225,14 +300,15 @@ public class FilterOperation {
          * If silhouette is toggled on, integer values are cast to shorts, effectively manipulating some pixels into falling into their alpha channel's zero range, thus being set invisible.
          * If complement is toggled on, all these pixel values are shifted bitwise to create a negative.
          */
-        private void startPanel() {
+        private void startPanel(boolean isLastHorizontalPanel, boolean isLastVerticalPanel) {
             int rowIndex = pixelIndex;
+            int width = !isLastHorizontalPanel ? panelWidth : panelWidthLast;
+            int height = !isLastVerticalPanel ? panelHeight : panelHeightLast;
 
-            for (int row = 0; row < panelHeight; row++) {
-                for (int col = 0; col < panelWidth; col++) {
+            for (int row = 0; row < height; row++) {
+                for (int col = 0; col < width; col++) {
                     int argbOriginal = pixelArray[pixelIndex];
 
-                    //TODO new
                     double factorXY = factorX / factorY;
 
                     int argb = filter.applyFilter(pixelArray[pixelIndex], factorXY);
@@ -251,7 +327,7 @@ public class FilterOperation {
                     pixelArrayNew[pixelIndex] = argb;
                     pixelIndex++;
                 }
-                rowIndex += width;
+                rowIndex += totalWidth;
                 pixelIndex = rowIndex;
             }
         }
