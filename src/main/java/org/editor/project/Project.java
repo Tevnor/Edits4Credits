@@ -17,7 +17,6 @@ public class Project {
     private ImageView bgTransparent;
     private Rectangle bgColor;
     private Color backgroundColor;
-    //private String backgroundColor;
 
 
     public Project(String projectName, int projectWidth, int projectHeight, boolean isTransparent, Color backgroundColor) {

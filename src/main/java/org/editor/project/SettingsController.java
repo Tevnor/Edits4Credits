@@ -88,7 +88,6 @@ public class SettingsController implements Initializable, ControlScreen {
             });
         } catch (Exception e){
             SC_LOGGER.error(e.getCause());
-            e.printStackTrace();
         }
 
     }
