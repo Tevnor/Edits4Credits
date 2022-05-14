@@ -1,0 +1,39 @@
+cache:
+  paths:
+    - .m2/repository
+
+variables:
+  MAVEN_OPTS: "-Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository"
+
+stages:
+  - build
+  - test
+  - package
+
+build-musicmanager:
+  stage: build
+  image: maven
+  script:
+    - "echo 'Starting Build Stage'"
+    - "mvn compile"
+
+test-musicmanager:
+  stage: test
+  image: maven
+  script:
+    - "echo 'Starting Test Stage'"
+    - "mvn test"
+
+package-musicmanager:
+  stage: package
+  image: maven
+  script:
+    - "echo 'Starting Package Stage'"
+    - "mvn package"
+  only:
+    refs:
+      - main
+  artifacts:
+    paths:
+      - target/*.jar
+    expire_in: 2 days
