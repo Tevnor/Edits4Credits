@@ -10,21 +10,21 @@ stages:
   - test
   - package
 
-build-musicmanager:
+build-edits4credits:
   stage: build
   image: maven
   script:
     - "echo 'Starting Build Stage'"
     - "mvn compile"
 
-test-musicmanager:
+test-edits4credits:
   stage: test
   image: maven
   script:
     - "echo 'Starting Test Stage'"
     - "mvn test"
 
-package-musicmanager:
+package-edits4credits:
   stage: package
   image: maven
   script:
